@@ -1,0 +1,10 @@
+syntax = "proto3";
+package User;
+
+message Input_data {
+    repeated int32 data = 1;
+}
+
+message Output_data {
+    int32 response = 1;
+}
