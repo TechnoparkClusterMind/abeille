@@ -1,5 +1,5 @@
 syntax = "proto3";
-package User;
+package Proto.User;
 
 message Input_data {
     repeated int32 data = 1;

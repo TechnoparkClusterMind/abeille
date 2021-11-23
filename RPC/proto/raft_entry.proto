@@ -1,13 +1,13 @@
 syntax = "proto3";
-package Raft_server.RPC.Raft_entry;
+package Proto.Raft_entry;
 
 import "example.proto";
 
 message Task {
     uint64 task_id = 1;
     uint64 assignee = 2;
-    User.Input_data input_d = 3;
-    User.Output_data output_d = 4;
+    Proto.User.Input_data input_d = 3;
+    Proto.User.Output_data output_d = 4;
 }
 
 enum Task_status {
