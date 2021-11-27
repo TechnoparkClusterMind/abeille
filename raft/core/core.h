@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "raft.h"
+#include "raft/raft.h"
 #include "raft_client.h"
 #include "raft_server.h"
 
