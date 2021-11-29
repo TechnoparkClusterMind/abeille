@@ -1,5 +1,5 @@
-#ifndef ABEILLE_USER_CLIENT_H
-#define ABEILLE_USER_CLIENT_H
+#ifndef ABEILLE_USER_CLIENT_H_
+#define ABEILLE_USER_CLIENT_H_
 
 #include <grpcpp/grpcpp.h>
 
@@ -12,16 +12,18 @@
 using grpc::Channel;
 using grpc::ClientContext;
 
-namespace User {
+namespace abeille {
+namespace user {
+
 class Client {
- public:
+public:
   Client() = default;
-  explicit Client(const std::string& host) noexcept : host_(host) {}
+  explicit Client(const std::string &host) noexcept : host_(host) {}
   ~Client() = default;
 
-  void StreamData(const std::vector<std::vector<int>>& data);
+  void StreamData(const std::vector<std::vector<int>> &data);
 
- private:
+private:
   // connect initializes stub if it's not set yet (is nullptr)
   void connect();
 
@@ -29,12 +31,14 @@ class Client {
 
   void createStub();
 
-  void streamData(const std::vector<std::vector<int>>& arr);
+  void streamData(const std::vector<std::vector<int>> &arr);
 
   std::string host_;
   std::unique_ptr<ClientContext> ctx_ptr_ = nullptr;
   std::unique_ptr<UserService::Stub> stub_ptr_ = nullptr;
 };
-}  // namespace User
 
-#endif  // ABEILLE_USER_CLIENT_H
+} // namespace user
+} // namespace abeille
+
+#endif // ABEILLE_USER_CLIENT_H_
