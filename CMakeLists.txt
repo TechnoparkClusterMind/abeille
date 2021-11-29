@@ -53,7 +53,8 @@ endif()
 
 add_subdirectory(rpc)
 add_subdirectory(user)
+add_subdirectory(errors)
 add_subdirectory(constants)
 
-add_executable(main src/main.cpp)
+add_executable(main cmd/main.cpp)
 target_link_libraries(main rpc constants)
