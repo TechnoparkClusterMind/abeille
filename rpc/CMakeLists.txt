@@ -1,7 +1,7 @@
 find_package(gRPC REQUIRED)
-add_library(rpc
-            protos/abeille.pb.cc protos/abeille.grpc.pb.cc
-            src/raft_server.cpp src/raft_service.cpp
-            src/user_server.cpp src/user_service.cpp)
-target_include_directories(rpc PUBLIC include protos)
-target_link_libraries(rpc PUBLIC gRPC::grpc++)
+add_library(proto proto/abeille.pb.cc proto/abeille.grpc.pb.cc)
+target_include_directories(proto PUBLIC proto)
+
+add_library(rpc src/server.cpp)
+target_include_directories(rpc PUBLIC include)
+target_link_libraries(rpc PUBLIC utils proto gRPC::grpc++)

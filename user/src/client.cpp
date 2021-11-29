@@ -8,12 +8,14 @@
 using grpc::ClientContext;
 using grpc::Status;
 
-void User::Client::StreamData(const std::vector<std::vector<int>>& arr) {
+namespace abeille {
+
+void user::Client::StreamData(const std::vector<std::vector<int>> &arr) {
   connect();
   streamData(arr);
 }
 
-void User::Client::connect() {
+void user::Client::connect() {
   while (true) {
     if (pingRemote()) {
       break;
@@ -23,7 +25,7 @@ void User::Client::connect() {
   }
 }
 
-bool User::Client::pingRemote() {
+bool user::Client::pingRemote() {
   createStub();
 
   Empty req, resp;
@@ -34,14 +36,15 @@ bool User::Client::pingRemote() {
   return ok;
 }
 
-void User::Client::createStub() {
+void user::Client::createStub() {
   if (stub_ptr_ == nullptr) {
-    auto channel = grpc::CreateChannel(host_, grpc::InsecureChannelCredentials());
+    auto channel =
+        grpc::CreateChannel(host_, grpc::InsecureChannelCredentials());
     stub_ptr_ = UserService::NewStub(channel);
   }
 }
 
-void User::Client::streamData(const std::vector<std::vector<int>>& arr) {
+void user::Client::streamData(const std::vector<std::vector<int>> &arr) {
   ClientContext ctx;
   auto stream = stub_ptr_->StreamData(&ctx);
 
@@ -61,6 +64,9 @@ void User::Client::streamData(const std::vector<std::vector<int>>& arr) {
 
   Status status = stream->Finish();
   if (!status.ok()) {
-    std::cout << "RPC failed: " << status.error_code() << ": " << status.error_message() << std::endl;
+    std::cout << "RPC failed: " << status.error_code() << ": "
+              << status.error_message() << std::endl;
   }
 }
+
+} // namespace abeille
