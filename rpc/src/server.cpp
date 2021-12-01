@@ -2,22 +2,24 @@
 
 namespace abeille {
 namespace rpc {
+
 Server::Server(const std::vector<std::string>& hosts, const std::vector<grpc::Service*>& services) noexcept
-    : hosts_(hosts), services_(services) {
-  for (const std::string& host : hosts) {
-    std::cout << "Starting listening " << host << std::endl;
-    builder.AddListeningPort(host, grpc::InsecureServerCredentials());
-  }
+    : hosts_(hosts), services_(services) {}
 
-  std::cout << "Registering services..." << std::endl;
-  for (const auto service : services) {
-    builder.RegisterService(service);
-  }
+Server& Server::operator=(Server&& other) noexcept {
+  if (this != &other) {
+    hosts_ = std::move(other.hosts_);
+    services_ = std::move(other.services_);
 
-  std::cout << "Finished server initialization" << std::endl;
+    thread_ = std::move(other.thread_);
+    server_ = std::move(other.server_);
+  }
+  return *this;
 }
 
 error Server::Run() {
+  init();
+
   thread_ = std::make_unique<std::thread>(std::thread(&Server::launch_and_wait, this));
 
   std::unique_lock<std::mutex> lk(mut);
@@ -38,10 +40,24 @@ void Server::Shutdown() {
   thread_->join();
 }
 
+void Server::init() {
+  for (const std::string& host : hosts_) {
+    std::cout << "Starting listening " << host << std::endl;
+    builder_.AddListeningPort(host, grpc::InsecureServerCredentials());
+  }
+
+  std::cout << "Registering services..." << std::endl;
+  for (const auto service : services_) {
+    builder_.RegisterService(service);
+  }
+
+  std::cout << "Finished server initialization" << std::endl;
+}
+
 void Server::launch_and_wait() {
   {
     std::lock_guard<std::mutex> lk(mut);
-    server_ = builder.BuildAndStart();
+    server_ = builder_.BuildAndStart();
     ready = true;
   }
   cv.notify_one();
@@ -49,5 +65,6 @@ void Server::launch_and_wait() {
     server_->Wait();
   }
 }
+
 }  // namespace rpc
 }  // namespace abeille

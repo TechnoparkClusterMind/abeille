@@ -19,19 +19,15 @@ class Server {
  public:
   Server() = default;
   Server(const std::vector<std::string>& hosts, const std::vector<grpc::Service*>& services) noexcept;
-  Server& operator=(const Server& other) noexcept {
-    if (this != &other) {
-      hosts_ = other.hosts_;
-      services_ = other.services_;
-    }
-    return *this;
-  }
+
+  Server& operator=(Server&& other) noexcept;
 
   error Run();
   void Wait();
   void Shutdown();
 
  private:
+  void init();
   void launch_and_wait();
   inline bool is_ready() const noexcept { return ready; }
 

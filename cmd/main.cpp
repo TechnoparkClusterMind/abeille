@@ -6,18 +6,24 @@
 #include "user_service.hpp"
 
 using abeille::rpc::Server;
+using abeille::rpc::UserServiceImpl;
 
-void signal_handler(int signal) {}
+Server server;
+
+void signal_handler(int signal) {
+  std::cout << "Exiting..." << std::endl;
+  server.Shutdown();
+}
 
 int main() {
   std::signal(SIGINT, signal_handler);
 
-  std::vector<std::string> hosts = {USER_SERVICE_HOST};
+  std::vector<std::string> hosts = {abeille::USER_SERVICE_HOST};
 
-  rpc::UserServiceImpl user_service;
+  UserServiceImpl user_service;
   std::vector<grpc::Service*> services = {&user_service};
 
-  Server server(hosts, services);
+  server = Server(hosts, services);
 
   error err = server.Run();
   if (!err.ok()) {

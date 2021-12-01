@@ -10,9 +10,9 @@ using grpc::Status;
 
 namespace abeille {
 
-void user::Client::StreamData(const std::vector<std::vector<int>> &arr) {
+void user::Client::Upload(const std::vector<int> &arr) {
   connect();
-  streamData(arr);
+  upload(arr);
 }
 
 void user::Client::connect() {
@@ -38,35 +38,28 @@ bool user::Client::pingRemote() {
 
 void user::Client::createStub() {
   if (stub_ptr_ == nullptr) {
-    auto channel =
-        grpc::CreateChannel(host_, grpc::InsecureChannelCredentials());
+    auto channel = grpc::CreateChannel(host_, grpc::InsecureChannelCredentials());
     stub_ptr_ = UserService::NewStub(channel);
   }
 }
 
-void user::Client::streamData(const std::vector<std::vector<int>> &arr) {
-  ClientContext ctx;
-  auto stream = stub_ptr_->StreamData(&ctx);
-
-  for (size_t i = 0; i < arr.size(); ++i) {
-    UserRequest user_request;
-    user_request.set_task_id(i);
-    for (int value : arr[i]) {
-      user_request.add_data(value);
-    }
-    stream->Write(user_request);
-
-    UserResponse user_response;
-    stream->Read(&user_response);
-    std::cout << user_response.result() << std::endl;
+void user::Client::upload(const std::vector<int> &data) {
+  TaskData *task_data = new TaskData();
+  for (int value : data) {
+    task_data->add_data(value);
   }
-  stream->WritesDone();
 
-  Status status = stream->Finish();
+  UploadRequest request;
+  request.set_allocated_task_data(task_data);
+
+  ClientContext ctx;
+  UploadResponse response;
+  Status status = stub_ptr_->Upload(&ctx, request, &response);
   if (!status.ok()) {
-    std::cout << "RPC failed: " << status.error_code() << ": "
-              << status.error_message() << std::endl;
+    std::cout << "RPC failed: " << status.error_code() << ": " << status.error_message() << std::endl;
+  } else {
+    std::cout << "Response: " << response.task_id() << std::endl;
   }
 }
 
-} // namespace abeille
+}  // namespace abeille
