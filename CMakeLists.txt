@@ -8,7 +8,7 @@ option(ENABLE_COVERAGE "Enable coverage" OFF)
 option(ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
 # add_compile_options(-Wpedantic -Werror -Wall -Wextra -Wshadow)
-add_compile_options(-Wpedantic -Wall -Wextra -Wshadow)
+add_compile_options(-Wpedantic -Wall -Wextra -Wshadow -Wno-unused-parameter)
 
 if(ENABLE_TESTS)
     enable_testing()
@@ -51,17 +51,19 @@ elseif(NOT ENABLE_COVERAGE)
   add_compile_options("-O3")
 endif()
 
-find_package(gRPC REQUIRED)
-
 # Common libraries for all executables
-add_subdirectory(utils)
 add_subdirectory(rpc)
+add_subdirectory(utils)
+add_subdirectory(errors)
 
 # Three executables will be compiled
 # * abeille-raft -- launch raft node
 # * abeille-worker -- launch worker node
 # * abeille-client -- launch the interface 
 #                     for communication with the raft cluster
-add_subdirectory(raft_node)
-add_subdirectory(worker_node)
+# add_subdirectory(raft_node)
+# add_subdirectory(worker_node)
 add_subdirectory(user)
+
+add_executable(main cmd/main.cpp)
+target_link_libraries(main rpc utils)

@@ -1,42 +1,70 @@
 #include "server.hpp"
 
-using grpc::Status;
-using grpc::StatusCode;
-
 namespace abeille {
+namespace rpc {
 
-rpc::Server::Server(const std::string &address,
-                    std::unique_ptr<grpc::Service> service)
-    : server_(nullptr), address_(address), ready_(false) {
-  // Listen on the given address without any auth mechanism
-  builder_.AddListeningPort(address, grpc::InsecureServerCredentials());
-  builder_.RegisterService(service.get());
+Server::Server(const std::vector<std::string>& hosts, const std::vector<grpc::Service*>& services) noexcept
+    : hosts_(hosts), services_(services) {}
+
+Server& Server::operator=(Server&& other) noexcept {
+  if (this != &other) {
+    hosts_ = std::move(other.hosts_);
+    services_ = std::move(other.services_);
+
+    thread_ = std::move(other.thread_);
+    server_ = std::move(other.server_);
+  }
+  return *this;
 }
 
-Status rpc::Server::Run() {
-  std::thread(&Server::Launch, this).detach();
+error Server::Run() {
+  init();
 
-  std::unique_lock<std::mutex> lk(mut_);
-  while (!ready_)
-    cv_.wait(lk);
+  thread_ = std::make_unique<std::thread>(std::thread(&Server::launch_and_wait, this));
 
-  return (server_ == nullptr) ? Status(StatusCode::UNKNOWN, 
-      "Port or service are incorrect") : Status::OK;
+  std::unique_lock<std::mutex> lk(mut);
+  cv.wait(lk, [&] { return ready; });
+
+  if (server_ == nullptr) {
+    return error(error::Code::FAILURE);
+  }
+
+  return error();
 }
 
-void rpc::Server::Launch() {
-  server_ = builder_.BuildAndStart();
+void Server::Wait() { server_->Wait(); }
 
-  std::lock_guard<std::mutex> lk(mut_);
-  ready_ = true;
-  cv_.notify_one();
-
-  if (server_ == nullptr)
-    return;
-
-  server_->Wait();
+void Server::Shutdown() {
+  std::cout << "Shutting down..." << std::endl;
+  server_->Shutdown();
+  thread_->join();
 }
 
-void rpc::Server::Shutdown() { server_->Shutdown(); }
+void Server::init() {
+  for (const std::string& host : hosts_) {
+    std::cout << "Starting listening " << host << std::endl;
+    builder_.AddListeningPort(host, grpc::InsecureServerCredentials());
+  }
 
-} // namespace abeille
+  std::cout << "Registering services..." << std::endl;
+  for (const auto service : services_) {
+    builder_.RegisterService(service);
+  }
+
+  std::cout << "Finished server initialization" << std::endl;
+}
+
+void Server::launch_and_wait() {
+  {
+    std::lock_guard<std::mutex> lk(mut);
+    server_ = builder_.BuildAndStart();
+    ready = true;
+  }
+  cv.notify_one();
+  if (server_ != nullptr) {
+    server_->Wait();
+  }
+}
+
+}  // namespace rpc
+}  // namespace abeille

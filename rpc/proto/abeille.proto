@@ -6,19 +6,22 @@ message Empty {}
 
 // ----------------------------- User ----------------------------- //
 
-message UserRequest {
-  uint64 task_id = 1;
-  repeated int32 data = 2;
-}
+message TaskData { repeated int32 data = 1; }
 
-message UserResponse {
-  uint64 task_id = 1;
-  int32 result = 2;
-}
+message TaskResult { int32 result = 1; }
+
+message UploadRequest { TaskData task_data = 1; }
+
+message UploadResponse { uint64 task_id = 1; }
+
+message GetResultRequest { uint64 task_id = 1; }
+
+message GetResultResponse { TaskResult task_result = 1; }
 
 service UserService {
   rpc Ping(Empty) returns (Empty);
-  rpc StreamData(stream UserRequest) returns (stream UserResponse) {}
+  rpc Upload(UploadRequest) returns (UploadResponse);
+  rpc GetResult(GetResultRequest) returns (GetResultResponse);
 }
 
 // ----------------------------- Raft Entry ----------------------------- //
@@ -26,8 +29,8 @@ service UserService {
 message Task {
   uint64 task_id = 1;
   uint64 assignee = 2;
-  UserRequest user_request = 3;
-  UserResponse user_response = 4;
+  TaskData task_data = 3;
+  TaskResult task_result = 4;
 }
 
 enum TaskStatus {

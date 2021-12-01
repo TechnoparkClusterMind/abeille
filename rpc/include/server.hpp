@@ -1,51 +1,49 @@
-#ifndef ABEILLE_RPC_RAFT_SERVER_H
-#define ABEILLE_RPC_RAFT_SERVER_H
+#ifndef ABEILLE_RPC_SERVER_H_
+#define ABEILLE_RPC_SERVER_H_
 
 #include <grpcpp/grpcpp.h>
 
 #include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <string>
 #include <thread>
 #include <vector>
 
-using grpc::Status;
+#include "errors.hpp"
 
 namespace abeille {
 namespace rpc {
 
-// Depending on service:
-// * Raft server (Raft_service)
-// * User server (User_service)
-// * Worker server (Worker_service)
 class Server {
-public:
-  // Initialize server
-  // Service is allocated by Core
-  // (in order to get rid of cyclic dependency)
-  explicit Server(const std::string &address,
-                  std::unique_ptr<grpc::Service> service);
+ public:
+  Server() = default;
+  Server(const std::vector<std::string>& hosts, const std::vector<grpc::Service*>& services) noexcept;
 
-  // async run in detached thread launch_and_wait
-  Status Run();
+  Server& operator=(Server&& other) noexcept;
 
-  // shutdown server
+  error Run();
+  void Wait();
   void Shutdown();
 
-private:
-  // Maybe we'll add some new logic in the future
-  std::unique_ptr<grpc::Server> server_;
+ private:
+  void init();
+  void launch_and_wait();
+  inline bool is_ready() const noexcept { return ready; }
+
+  std::vector<std::string> hosts_;
+  std::vector<grpc::Service*> services_;
+
   grpc::ServerBuilder builder_;
-  std::string address_;
+  std::unique_ptr<std::thread> thread_ = nullptr;
+  std::unique_ptr<grpc::Server> server_ = nullptr;
 
-  bool ready_;
-  std::condition_variable cv_;
-  std::mutex mut_;
-
-  // Launch and wait (supposed to be invoked async)
-  void Launch();
+  std::mutex mut;
+  bool ready = false;
+  std::condition_variable cv;
 };
 
-} // namespace rpc
-} // namespace abeille
+}  // namespace rpc
+}  // namespace abeille
 
-#endif // ABEILLE_RPC_RAFT_SERVER_H
+#endif  // ABEILLE_RPC_SERVER_H_
