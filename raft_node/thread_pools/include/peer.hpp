@@ -45,12 +45,16 @@ private:
   std::thread peer_thread_;
 
   // for peer_thread_main to know when shutdown
-  bool exit;
+  bool exiting;
 
-  std::atomic<uint64_t> num_peers_thread_;
+  bool vote_request_done;
+  bool have_vote;
 
+  RaftConsensus::timePoint next_heartbeat_time_;
 
-  // TODO: ...
+  uint64_t next_index_;
+
+  friend class RaftConsensus;
 };
 
 } // namespace raft_node

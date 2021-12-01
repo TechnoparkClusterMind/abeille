@@ -1,10 +1,13 @@
 #ifndef ABEILLE_RAFT_CORE_H_
 #define ABEILLE_RAFT_CORE_H_
 
+#include <atomic>
+#include <condition_variable>
 #include <memory>
 
 #include "raft_consensus.hpp"
 #include "raft_pool.hpp"
+#include "config.hpp"
 #include "worker_pool.hpp"
 #include "server.hpp"
 #include "task_manager.hpp"
@@ -39,6 +42,10 @@ public:
 public:
   uint64_t server_id_;
 
+  // Triggered when anything changes
+  std::condition_variable state_changed_;
+  std::mutex mutex;
+
 private:
   // Making outbound RPCs to Raft_nodes
   std::shared_ptr<RaftPool> raft_pool_;
@@ -57,6 +64,18 @@ private:
 
   // Raft_node::Config
   Config config_;
+
+  // The number of peer's thread currently active
+  std::atomic<uint64_t> num_peers_thread_;
+
+  // The number of worker's thread currently active
+  std::atomic<uint64_t> num_workers_thread_;
+
+
+  // Is core exiting
+  bool exiting;
+
+  void shutdown();
 };
 
 } // namespace raft_node

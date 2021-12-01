@@ -1,13 +1,13 @@
 #ifndef ABEILLE_RAFT_RAFT_H_
 #define ABEILLE_RAFT_RAFT_H_
 
-#include <atomic>
 #include <chrono>
 #include <memory>
 #include <thread>
+#include <condition_variable>
 
 #include "abeille.pb.h"
-#include "config.hpp"
+#include "core.hpp"
 #include "log.hpp"
 #include "peer.hpp"
 
@@ -27,8 +27,7 @@ private:
 
 public: // Methods
   // Constructor
-  // FIXME: do i need pool
-  explicit RaftConsensus();
+  explicit RaftConsensus(Core* core);
 
   // Destrictor
   ~RaftConsensus();
@@ -44,6 +43,8 @@ public: // Methods
   // start timer and peer threads
   void Run();
 
+  void Shutdown();
+
 private: // Methods
   // Initiate RPCs if needed
   void peerThreadMain(std::shared_ptr<Peer> peer);
@@ -54,36 +55,57 @@ private: // Methods
   // Start election process
   void startNewElection();
 
-public:
-  // FIXME: do I need to store config
-  State state_;
+  void resetElectionTimer();
 
-  // The number of peer's thread currently active
-  std::atomic<uint64_t> num_peers_thread_;
+  void becomeLeader();
+
+  // return to the follower state
+  void stepDown();
+
+  // RPC request
+  void appendEntry(Peer& peer);
+  void requestVote(Peer& peer);
+
+public:
+  State state_;
+  uint64_t id_;
+  uint64_t leader_id_;
 
 private:
   typedef std::chrono::time_point<std::chrono::steady_clock> timePoint;
+
   std::unique_ptr<Log> log_;
+
+  // in order to get the current time
+  std::chrono::steady_clock clock_;
 
   // this thread executes timer_thread_main
   // it begins new eleciton if needed
   std::thread timer_thread_;
 
-  // shows when the next heartbeat should be sent
-  timePoint heartbeat_time_;
+  // when the next heartbeat should be sent
+  timePoint heartbeat_period_;
 
   // randomized time point for every server
-  timePoint start_election_at_;
+  timePoint election_timeout_;
+
+  // the time at which timerThreadMain() should start a new election
+  timePoint start_new_election_at_;
 
   // the latest term this server has seen
   uint64_t current_term_;
+
+  // Index of the last commited Entry
+  uint64_t commit_index;
 
   // the server id that this server voted for during this term
   // if 0 then no vote has been given
   uint64_t voted_for_;
 
-  // in order to read the current time
-  std::chrono::steady_clock clock_;
+  // is raft exiting
+  bool exiting_;
+
+  Core* core_;
 
   friend class Peer;
 };
