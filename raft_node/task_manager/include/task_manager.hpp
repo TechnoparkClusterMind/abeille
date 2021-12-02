@@ -6,23 +6,25 @@
 #include <thread>
 
 #include "abeille.grpc.pb.h"
+#include "core.hpp"
 
 namespace abeille {
 namespace raft_node {
 
+// forward declaration
+class Core;
+
 class TaskManager {
 public:
   TaskManager() = default;
+  explicit TaskManager(Core* core);
   ~TaskManager() = default;
 
-<<<<<<< HEAD:task_manager/include/task_manager.hpp
   void Run();
+  void Shutdown();
 
- private:
-=======
 private:
   std::thread scheduler_thread_;
->>>>>>> dev_serpent:raft_node/task_manager/include/task_manager.hpp
   std::queue<Entry> queued_entries_;
   std::unique_ptr<std::thread> scheduler_thread_ptr_;
 };

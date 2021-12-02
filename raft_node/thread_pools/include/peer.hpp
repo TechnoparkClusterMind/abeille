@@ -3,6 +3,7 @@
 
 #include <grpcpp/channel.h>
 
+#include <chrono>
 #include <memory>
 #include <queue>
 #include <thread>
@@ -21,6 +22,9 @@ class RaftConsensus;
 // when we are the candidate or the leader
 class Peer {
 public:
+
+  typedef std::chrono::steady_clock::time_point timePoint;
+
   // grpc stub is initialized with channel
   explicit Peer(std::shared_ptr<grpc::Channel> channel,
                 std::shared_ptr<RaftConsensus> raft, uint64_t id);
@@ -45,12 +49,12 @@ private:
   std::thread peer_thread_;
 
   // for peer_thread_main to know when shutdown
-  bool exiting;
+  bool exiting_;
 
-  bool vote_request_done;
-  bool have_vote;
+  bool vote_request_done_;
+  bool have_vote_;
 
-  RaftConsensus::timePoint next_heartbeat_time_;
+  timePoint next_heartbeat_time_;
 
   uint64_t next_index_;
 

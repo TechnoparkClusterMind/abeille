@@ -52,18 +52,19 @@ elseif(NOT ENABLE_COVERAGE)
 endif()
 
 # Common libraries for all executables
-add_subdirectory(rpc)
 add_subdirectory(utils)
 add_subdirectory(errors)
+add_subdirectory(rpc_global)
 
 # Three executables will be compiled
 # * abeille-raft -- launch raft node
 # * abeille-worker -- launch worker node
 # * abeille-client -- launch the interface 
 #                     for communication with the raft cluster
-# add_subdirectory(raft_node)
+add_subdirectory(raft_node)
 # add_subdirectory(worker_node)
 add_subdirectory(user)
 
+
 add_executable(main cmd/main.cpp)
-target_link_libraries(main rpc utils)
+target_link_libraries(main rpc_global rpc_raft utils)

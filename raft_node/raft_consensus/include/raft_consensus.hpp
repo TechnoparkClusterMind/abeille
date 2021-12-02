@@ -16,6 +16,7 @@ namespace raft_node {
 
 // forward declaration
 class Peer;
+class Core;
 
 class RaftConsensus {
 private:
@@ -26,6 +27,7 @@ private:
   };
 
 public: // Methods
+  RaftConsensus() = default;
   // Constructor
   explicit RaftConsensus(Core* core);
 
@@ -60,7 +62,7 @@ private: // Methods
   void becomeLeader();
 
   // return to the follower state
-  void stepDown();
+  void stepDown(uint64_t term);
 
   // RPC request
   void appendEntry(Peer& peer);
@@ -72,16 +74,13 @@ public:
   uint64_t leader_id_;
 
 private:
-  typedef std::chrono::time_point<std::chrono::steady_clock> timePoint;
+  typedef std::chrono::milliseconds timeDuration;
+  typedef std::chrono::steady_clock Clock;
+  typedef Clock::time_point timePoint;
 
-  std::unique_ptr<Log> log_;
 
   // in order to get the current time
-  std::chrono::steady_clock clock_;
-
-  // this thread executes timer_thread_main
-  // it begins new eleciton if needed
-  std::thread timer_thread_;
+  Clock clock_;
 
   // when the next heartbeat should be sent
   timePoint heartbeat_period_;
@@ -91,6 +90,12 @@ private:
 
   // the time at which timerThreadMain() should start a new election
   timePoint start_new_election_at_;
+
+  std::unique_ptr<Log> log_;
+
+  // this thread executes timer_thread_main
+  // it begins new eleciton if needed
+  std::thread timer_thread_;
 
   // the latest term this server has seen
   uint64_t current_term_;
@@ -106,6 +111,8 @@ private:
   bool exiting_;
 
   Core* core_;
+
+  std::atomic<uint64_t>* num_peers_threads_;
 
   friend class Peer;
 };

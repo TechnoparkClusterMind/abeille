@@ -1,5 +1,5 @@
 #include "peer.hpp"
-
+#include "macroses.hpp"
 #include "abeille.pb.h"
 #include "raft_consensus.hpp"
 
@@ -12,7 +12,7 @@ Peer::Peer(std::shared_ptr<grpc::Channel> channel, std::shared_ptr<RaftConsensus
     : id_(id), stub_(RaftService::NewStub(channel)), raft_(raft) {}
 
 void Peer::Run(std::shared_ptr<Peer> self) {
-  ++raft_->num_peers_thread_;
+  ++raft_->num_peers_threads_;
   LOG("Starting peer thread for server %lu", id_);
   std::thread(&RaftConsensus::peerThreadMain, raft_, self).detach();
 }

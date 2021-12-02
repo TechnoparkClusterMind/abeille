@@ -7,12 +7,18 @@
 #include "abeille.pb.h"
 #include "worker.hpp"
 #include "raft_consensus.hpp"
+#include "task_manager.hpp"
 
 namespace abeille {
 namespace raft_node {
+
+class TaskManager;
+
 class WorkerPool {
 public:
-  WorkerPool();
+  WorkerPool(std::shared_ptr<TaskManager> task_mgr);
+  void Run();
+  void Shutdown();
 };
 
 } // namespace raft_node

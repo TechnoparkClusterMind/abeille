@@ -6,7 +6,7 @@
 #include "user_service.hpp"
 
 using abeille::rpc::Server;
-using abeille::rpc::UserServiceImpl;
+using abeille::raft_node::UserServiceImpl;
 
 Server server;
 

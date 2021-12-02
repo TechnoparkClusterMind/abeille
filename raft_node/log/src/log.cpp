@@ -32,7 +32,7 @@ bool Log::Check(Index index, Term term) const noexcept {
   return true;
 }
 
-Entry Log::GetEntry(Index index) { return log_[index]; }
+Entry* Log::GetEntry(Index index) { return &log_[index]; }
 
 } // namespace raft_node
 } // namespace abeille

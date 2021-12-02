@@ -1,20 +1,22 @@
 #include "raft_consensus.hpp"
-#include "grpcpp/grpc.h"
-#import "abeille.pb.h"
+#include "abeille.grpc.pb.h"
 #include "core.hpp"
+#include "macroses.hpp"
 #include <chrono>
 #include <cstdlib>
-#include <macroses.hpp>
+#include <grpcpp/grpcpp.h>
 
 namespace abeille {
 namespace raft_node {
 
 RaftConsensus::RaftConsensus(Core *core)
-    : core_(core), state_(State::FOLLOWER), id_(id_), leader_id_(0), log_(),
-      clock_(), timer_thread_(), heartbeat_period_(election_timeout_ / 2),
-      election_timeout_(std::chrono::milliseconds(500)), current_term_(0),
-      voted_for_(0), start_new_election_at_(timePoint::max()), exiting_(false) {
-}
+    : state_(State::FOLLOWER), id_(core->config_.GetId()), leader_id_(0),
+      clock_(), heartbeat_period_(timePoint(std::chrono::milliseconds(
+                    election_timeout_.time_since_epoch().count() / 2))),
+      election_timeout_(std::chrono::milliseconds(500)),
+      start_new_election_at_(timePoint::max()), log_(), timer_thread_(),
+      current_term_(0), commit_index(0), voted_for_(0), exiting_(false),
+      core_(core), num_peers_threads_(&core_->num_peers_threads_) {}
 
 RaftConsensus::~RaftConsensus() {
   if (timer_thread_.joinable())
@@ -25,6 +27,8 @@ void RaftConsensus::Run() {
   timer_thread_ = std::thread(&RaftConsensus::timerThreadMain, this);
   LOG("RaftConsensus was started\n");
 }
+
+void RaftConsensus::stepDown(uint64_t term) {}
 
 // If election timeout elapses wihtout recieving AppendEntries
 // initiates startNewElection()
@@ -41,11 +45,11 @@ void RaftConsensus::timerThreadMain() {
 }
 
 void RaftConsensus::resetElectionTimer() {
-  start_new_election_at_ =
-      clock_.now() + election_timeout_ +
-      timePoint(std::chrono::milliseconds(
-          std::rand() % election_timeout_.time_since_epoch().count()));
-
+  uint64_t rand_duration =
+      rand() % election_timeout_.time_since_epoch().count() +
+      election_timeout_.time_since_epoch().count();
+  std::chrono::milliseconds duration(rand_duration);
+  start_new_election_at_ = Clock::now() + duration;
   core_->state_changed_.notify_all();
 }
 
@@ -71,11 +75,11 @@ void RaftConsensus::startNewElection() {
   ++current_term_;
   voted_for_ = id_;
   resetElectionTimer();
-  core_->raft_pool->BeginRequestVote();
+  core_->raft_pool_->BeginRequestVote();
 
   // if we are the only server
-  if (core_->raft_pool->QuorumAll())
-      becomeLeader();
+  if (core_->raft_pool_->QuorumAll())
+    becomeLeader();
 }
 
 void RaftConsensus::appendEntry(Peer &peer) {
@@ -83,62 +87,60 @@ void RaftConsensus::appendEntry(Peer &peer) {
   request.set_term(current_term_);
   request.set_leader_id(id_);
   request.set_prev_log_index(peer.next_index_ - 1);
-  request.set_prev_log_term(log_->GetEntry(peer.next_index_ - 1).term);
+  request.set_prev_log_term(log_->GetEntry(peer.next_index_ - 1)->term());
   request.set_leader_commit(commit_index);
 
   if (log_->LastIndex() >= peer.next_index_)
-    request.set_Entry(log_->GetEntry(peer.next_index_));
+    request.set_allocated_entry(log_->GetEntry(peer.next_index_));
 
   AppendEntryResponse response;
   grpc::ClientContext context;
   grpc::Status status = peer.stub_->AppendEntry(&context, request, &response);
 
-  if (!status.ok())
-  {
-      LOG("AppendEntry to peer %lu failed\n", peer.id_);
-      return;
+  if (!status.ok()) {
+    LOG("AppendEntry to peer %lu failed\n", peer.id_);
+    return;
   }
 
   if (current_term_ != request.term() || peer.exiting_)
-      return;
+    return;
 
   (response.success()) ? ++peer.next_index_ : --peer.next_index_;
 }
 
-void requestVote(Peer &peer) {
-    RequestVoteRequest request;
-    request.set_term(current_term_);
-    request.set_candidate_id(id_);
-    request.set_last_log_entry(log_->LastIndex());
-    request.set_last_log_term(log_->GetEntry(log_->LastIndex).term);
+void RaftConsensus::requestVote(Peer &peer) {
+  RequestVoteRequest request;
+  request.set_term(current_term_);
+  request.set_candidate_id(id_);
+  request.set_last_log_entry(log_->LastIndex());
+  request.set_last_log_term(log_->GetEntry(log_->LastIndex())->term());
 
-    RequestVoteResponse response;
-    grpc::ClientContext context;
-    grpc::Status status = peer.stub_->RequestVote(&context, request, &response);
+  RequestVoteResponse response;
+  grpc::ClientContext context;
+  grpc::Status status = peer.stub_->RequestVote(&context, request, &response);
 
-    if (!status.ok())
-    {
-        LOG("AppendEntry to peer %lu failed\n", peer.id_);
-        return;
-    }
+  if (!status.ok()) {
+    LOG("AppendEntry to peer %lu failed\n", peer.id_);
+    return;
+  }
 
-    if (current_term_ != request.term() || state_ != State::CANDIDATE ||
-        peer.exiting_)
-        return;
+  if (current_term_ != request.term() || state_ != State::CANDIDATE ||
+      peer.exiting_)
+    return;
 
-    if (response.term() > current_term_)
-        stepDown(response.term());
-    else {
-        peer.vote_request_done_ = true;
-        core_->state_changed_.notify_all();
+  if (response.term() > current_term_)
+    stepDown(response.term());
+  else {
+    peer.vote_request_done_ = true;
+    core_->state_changed_.notify_all();
 
-        if (response.vote_granted()) {
-            peer.have_vote_ = true;
-            if (core_->raft_pool->QuorumAll())
-                becomeLeader();
-        } else
-            LOG("RequestEntry was declined\n");
-    }
+    if (response.vote_granted()) {
+      peer.have_vote_ = true;
+      if (core_->raft_pool_->QuorumAll())
+        becomeLeader();
+    } else
+      LOG("RequestEntry was declined\n");
+  }
 }
 
 void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
@@ -147,23 +149,23 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
   timePoint wait_until = timePoint::min();
 
   // issue RPC or sleeps on the cv
-  while (!peer->exiting) {
+  while (!peer->exiting_) {
     switch (state_) {
     case State::FOLLOWER:
       wait_until = timePoint::max();
       break;
 
     case State::CANDIDATE:
-      if (!peer->vote_request_done)
-        requestVote(lock_guard, *peer);
+      if (!peer->vote_request_done_)
+        requestVote(*peer);
       else
         wait_until = timePoint::max();
       break;
 
     case State::LEADER:
       if (log_->LastIndex() >= peer->next_index_ ||
-          peer->next_heartbeat_time_ <= now)
-        appendEntry(lock_guard, *peer);
+          peer->next_heartbeat_time_ <= Clock::now())
+        appendEntry(*peer);
       else
         wait_until = peer->next_heartbeat_time_;
       break;
@@ -172,6 +174,16 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
   core_->state_changed_.wait_until(lock_guard, wait_until);
 }
+
+// TODO: implement:
+
+void RaftConsensus::HandleAppendEntries(const AppendEntryRequest *msg,
+                                        AppendEntryResponse *resp) {}
+
+void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg,
+                                      RequestVoteResponse *resp) {}
+
+void RaftConsensus::Shutdown(){};
 
 } // namespace raft_node
 } // namespace abeille
