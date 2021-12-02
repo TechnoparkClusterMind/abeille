@@ -70,7 +70,7 @@ void RaftConsensus::startNewElection() {
         "(previous term %lu timed out)",
         current_term_ + 1, current_term_);
   else
-    LOG("Starting election in term %lu", current_term_ + 1);
+    LOG("Starting election in term %lu\n", current_term_ + 1);
 
   ++current_term_;
   voted_for_ = id_;

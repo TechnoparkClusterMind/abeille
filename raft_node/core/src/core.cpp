@@ -23,15 +23,13 @@ Core::Core(Config &&conf)
   num_peers_threads_ = 0;
   num_workers_threads_ = 0;
 
-  raft_ = nullptr;
-  task_mgr_ = nullptr;
+  // raft_ = nullptr;
+  // task_mgr_ = nullptr;
 
-  /*
   raft_ = std::make_shared<RaftConsensus>(this);
   task_mgr_ = std::make_shared<TaskManager>(this);
   raft_pool_ = std::make_shared<RaftPool>(raft_);
   worker_pool_ = std::make_shared<WorkerPool>(task_mgr_);
-  */
 
   raft_service_ = std::make_unique<RaftServiceImpl>(raft_);
   user_service_ = std::make_unique<UserServiceImpl>(task_mgr_);
@@ -52,19 +50,19 @@ void Core::Run() {
   raft_server_->Run();
   user_server_->Run();
   // FIXME: not fully implemented
-  // raft_pool_->Run();
-  // worker_pool_->Run();
-  // raft_->Run();
-  // task_mgr_->Run();
+  raft_pool_->Run();
+  worker_pool_->Run();
+  raft_->Run();
+  task_mgr_->Run();
 }
 
 void Core::Shutdown() {
   user_server_->Shutdown();
   // FIXME: not fully implemented
-  // task_mgr_->Shutdown();
-  // raft_->Shutdown();
-  // worker_pool_->Shutdown();
-  // raft_pool_->Shutdown();
+  task_mgr_->Shutdown();
+  raft_->Shutdown();
+  worker_pool_->Shutdown();
+  raft_pool_->Shutdown();
   raft_server_->Shutdown();
 }
 

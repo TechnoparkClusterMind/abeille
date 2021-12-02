@@ -5,9 +5,9 @@
 #include <unordered_map>
 
 #include "abeille.pb.h"
-#include "worker.hpp"
 #include "raft_consensus.hpp"
 #include "task_manager.hpp"
+#include "worker.hpp"
 
 namespace abeille {
 namespace raft_node {
@@ -16,9 +16,13 @@ class TaskManager;
 
 class WorkerPool {
 public:
-  WorkerPool(std::shared_ptr<TaskManager> task_mgr);
-  void Run();
-  void Shutdown();
+  WorkerPool(std::shared_ptr<TaskManager> task_mgr) : task_mgr_(task_mgr) {}
+  // FIXME: Not implemented
+  void Run(){};
+  void Shutdown(){};
+
+private:
+  std::shared_ptr<TaskManager> task_mgr_;
 };
 
 } // namespace raft_node

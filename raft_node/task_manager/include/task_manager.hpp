@@ -17,16 +17,19 @@ class Core;
 class TaskManager {
 public:
   TaskManager() = default;
-  explicit TaskManager(Core* core);
+  // FIXME: not done yet
+  explicit TaskManager(Core *core) : core_(core) {}
   ~TaskManager() = default;
 
-  void Run();
-  void Shutdown();
+  // FIXME: not implemented
+  void Run(){};
+  void Shutdown(){};
 
 private:
   std::thread scheduler_thread_;
   std::queue<Entry> queued_entries_;
   std::unique_ptr<std::thread> scheduler_thread_ptr_;
+  Core *core_;
 };
 
 } // namespace raft_node

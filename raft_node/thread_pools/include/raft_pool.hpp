@@ -19,24 +19,22 @@ class Peer;
 class RaftPool {
 public:
   // Init all peers with raft_consensus
-  explicit RaftPool(std::shared_ptr<RaftConsensus> raft);
-  ~RaftPool();
+  explicit RaftPool(std::shared_ptr<RaftConsensus> raft) : raft_(raft) {}
+  ~RaftPool() = default;
+
+  // FIXME: impelement !!!:
 
   // Launches peer_thread_main from raft_consensus for all peers
-  // FIXME: impelement
-  void Run();
-
-  // FIXME: impelement
-  void Shutdown();
-
-  void BeginRequestVote();
-  bool QuorumAll();
-
+  void Run(){};
+  void Shutdown(){};
+  void BeginRequestVote(){};
+  bool QuorumAll() { return true; };
   // Appends Entry to all peers
-  void AppendAll(const Entry &entry);
+  void AppendAll(const Entry &entry){};
 
 private:
-  std::unordered_map<uint64_t, Peer*> peers_;
+  std::unordered_map<uint64_t, Peer *> peers_;
+  std::shared_ptr<RaftConsensus> raft_;
 };
 
 } // namespace raft_node
