@@ -1,5 +1,5 @@
-#ifndef ABEILLE_ERRORS_ERRORS_H
-#define ABEILLE_ERRORS_ERRORS_H
+#ifndef ABEILLE_ERRORS_H_
+#define ABEILLE_ERRORS_H_
 
 #include <string>
 
@@ -23,4 +23,4 @@ class error {
   std::string message_;
 };
 
-#endif  // ABEILLE_ERRORS_ERRORS_H
+#endif  // ABEILLE_ERRORS_H_

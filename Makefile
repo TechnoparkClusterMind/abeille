@@ -28,7 +28,7 @@ build-debug:
 
 test:
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
-	scan-build make ${MAKE_FLAGS} -C ${BUILD_DIR} all test
+	scan-build make ${CMAKE_TEST_FLAGS} -C ${BUILD_DIR} all test
 
 clean:
 	rm -rf ${BUILD_DIR}

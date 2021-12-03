@@ -4,15 +4,19 @@ syntax = "proto3";
 
 message Empty {}
 
-// ----------------------------- User ----------------------------- //
-
 message TaskData { repeated int32 data = 1; }
 
 message TaskResult { int32 result = 1; }
 
-message UploadRequest { TaskData task_data = 1; }
+// ----------------------------- User Service ----------------------------- //
 
-message UploadResponse { uint64 task_id = 1; }
+message UploadDataRequest { TaskData task_data = 1; }
+
+message UploadDataResponse {
+  bool success = 1;
+  uint64 task_id = 2;
+  uint64 leader_id = 3;
+}
 
 message GetResultRequest { uint64 task_id = 1; }
 
@@ -20,7 +24,7 @@ message GetResultResponse { TaskResult task_result = 1; }
 
 service UserService {
   rpc Ping(Empty) returns (Empty);
-  rpc Upload(UploadRequest) returns (UploadResponse);
+  rpc UploadData(UploadDataRequest) returns (UploadDataResponse);
   rpc GetResult(GetResultRequest) returns (GetResultResponse);
 }
 

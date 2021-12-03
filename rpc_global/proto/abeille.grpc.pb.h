@@ -40,12 +40,12 @@ class UserService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>> PrepareAsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>>(PrepareAsyncPingRaw(context, request, cq));
     }
-    virtual ::grpc::Status Upload(::grpc::ClientContext* context, const ::UploadRequest& request, ::UploadResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>> AsyncUpload(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>>(AsyncUploadRaw(context, request, cq));
+    virtual ::grpc::Status UploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::UploadDataResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>> AsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>>(AsyncUploadDataRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>> PrepareAsyncUpload(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>>(PrepareAsyncUploadRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>> PrepareAsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>>(PrepareAsyncUploadDataRaw(context, request, cq));
     }
     virtual ::grpc::Status GetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::GetResultResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>> AsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
@@ -59,8 +59,8 @@ class UserService final {
       virtual ~async_interface() {}
       virtual void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)>) = 0;
       virtual void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void Upload(::grpc::ClientContext* context, const ::UploadRequest* request, ::UploadResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void Upload(::grpc::ClientContext* context, const ::UploadRequest* request, ::UploadResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
@@ -70,8 +70,8 @@ class UserService final {
    private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::Empty>* AsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::Empty>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>* AsyncUploadRaw(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadResponse>* PrepareAsyncUploadRaw(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>* AsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>* PrepareAsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>* AsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>* PrepareAsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
@@ -85,12 +85,12 @@ class UserService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>> PrepareAsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>>(PrepareAsyncPingRaw(context, request, cq));
     }
-    ::grpc::Status Upload(::grpc::ClientContext* context, const ::UploadRequest& request, ::UploadResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadResponse>> AsyncUpload(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadResponse>>(AsyncUploadRaw(context, request, cq));
+    ::grpc::Status UploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::UploadDataResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>> AsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>>(AsyncUploadDataRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadResponse>> PrepareAsyncUpload(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadResponse>>(PrepareAsyncUploadRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>> PrepareAsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>>(PrepareAsyncUploadDataRaw(context, request, cq));
     }
     ::grpc::Status GetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::GetResultResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetResultResponse>> AsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
@@ -104,8 +104,8 @@ class UserService final {
      public:
       void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)>) override;
       void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void Upload(::grpc::ClientContext* context, const ::UploadRequest* request, ::UploadResponse* response, std::function<void(::grpc::Status)>) override;
-      void Upload(::grpc::ClientContext* context, const ::UploadRequest* request, ::UploadResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, std::function<void(::grpc::Status)>) override;
+      void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, std::function<void(::grpc::Status)>) override;
       void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
@@ -121,12 +121,12 @@ class UserService final {
     class async async_stub_{this};
     ::grpc::ClientAsyncResponseReader< ::Empty>* AsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::Empty>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::UploadResponse>* AsyncUploadRaw(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::UploadResponse>* PrepareAsyncUploadRaw(::grpc::ClientContext* context, const ::UploadRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>* AsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>* PrepareAsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::GetResultResponse>* AsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::GetResultResponse>* PrepareAsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Ping_;
-    const ::grpc::internal::RpcMethod rpcmethod_Upload_;
+    const ::grpc::internal::RpcMethod rpcmethod_UploadData_;
     const ::grpc::internal::RpcMethod rpcmethod_GetResult_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
@@ -136,7 +136,7 @@ class UserService final {
     Service();
     virtual ~Service();
     virtual ::grpc::Status Ping(::grpc::ServerContext* context, const ::Empty* request, ::Empty* response);
-    virtual ::grpc::Status Upload(::grpc::ServerContext* context, const ::UploadRequest* request, ::UploadResponse* response);
+    virtual ::grpc::Status UploadData(::grpc::ServerContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response);
     virtual ::grpc::Status GetResult(::grpc::ServerContext* context, const ::GetResultRequest* request, ::GetResultResponse* response);
   };
   template <class BaseClass>
@@ -160,22 +160,22 @@ class UserService final {
     }
   };
   template <class BaseClass>
-  class WithAsyncMethod_Upload : public BaseClass {
+  class WithAsyncMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_Upload() {
+    WithAsyncMethod_UploadData() {
       ::grpc::Service::MarkMethodAsync(1);
     }
-    ~WithAsyncMethod_Upload() override {
+    ~WithAsyncMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestUpload(::grpc::ServerContext* context, ::UploadRequest* request, ::grpc::ServerAsyncResponseWriter< ::UploadResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestUploadData(::grpc::ServerContext* context, ::UploadDataRequest* request, ::grpc::ServerAsyncResponseWriter< ::UploadDataResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -199,7 +199,7 @@ class UserService final {
       ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Ping<WithAsyncMethod_Upload<WithAsyncMethod_GetResult<Service > > > AsyncService;
+  typedef WithAsyncMethod_Ping<WithAsyncMethod_UploadData<WithAsyncMethod_GetResult<Service > > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_Ping : public BaseClass {
    private:
@@ -228,31 +228,31 @@ class UserService final {
       ::grpc::CallbackServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_Upload : public BaseClass {
+  class WithCallbackMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_Upload() {
+    WithCallbackMethod_UploadData() {
       ::grpc::Service::MarkMethodCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::UploadRequest, ::UploadResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::UploadDataRequest, ::UploadDataResponse>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::UploadRequest* request, ::UploadResponse* response) { return this->Upload(context, request, response); }));}
-    void SetMessageAllocatorFor_Upload(
-        ::grpc::MessageAllocator< ::UploadRequest, ::UploadResponse>* allocator) {
+                   ::grpc::CallbackServerContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response) { return this->UploadData(context, request, response); }));}
+    void SetMessageAllocatorFor_UploadData(
+        ::grpc::MessageAllocator< ::UploadDataRequest, ::UploadDataResponse>* allocator) {
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::UploadRequest, ::UploadResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::UploadDataRequest, ::UploadDataResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_Upload() override {
+    ~WithCallbackMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Upload(
-      ::grpc::CallbackServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerUnaryReactor* UploadData(
+      ::grpc::CallbackServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
   class WithCallbackMethod_GetResult : public BaseClass {
@@ -281,7 +281,7 @@ class UserService final {
     virtual ::grpc::ServerUnaryReactor* GetResult(
       ::grpc::CallbackServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_Ping<WithCallbackMethod_Upload<WithCallbackMethod_GetResult<Service > > > CallbackService;
+  typedef WithCallbackMethod_Ping<WithCallbackMethod_UploadData<WithCallbackMethod_GetResult<Service > > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Ping : public BaseClass {
@@ -301,18 +301,18 @@ class UserService final {
     }
   };
   template <class BaseClass>
-  class WithGenericMethod_Upload : public BaseClass {
+  class WithGenericMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_Upload() {
+    WithGenericMethod_UploadData() {
       ::grpc::Service::MarkMethodGeneric(1);
     }
-    ~WithGenericMethod_Upload() override {
+    ~WithGenericMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -355,22 +355,22 @@ class UserService final {
     }
   };
   template <class BaseClass>
-  class WithRawMethod_Upload : public BaseClass {
+  class WithRawMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawMethod_Upload() {
+    WithRawMethod_UploadData() {
       ::grpc::Service::MarkMethodRaw(1);
     }
-    ~WithRawMethod_Upload() override {
+    ~WithRawMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestUpload(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestUploadData(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -417,25 +417,25 @@ class UserService final {
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_Upload : public BaseClass {
+  class WithRawCallbackMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_Upload() {
+    WithRawCallbackMethod_UploadData() {
       ::grpc::Service::MarkMethodRawCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->Upload(context, request, response); }));
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->UploadData(context, request, response); }));
     }
-    ~WithRawCallbackMethod_Upload() override {
+    ~WithRawCallbackMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Upload(
+    virtual ::grpc::ServerUnaryReactor* UploadData(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
@@ -488,31 +488,31 @@ class UserService final {
     virtual ::grpc::Status StreamedPing(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::Empty,::Empty>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_Upload : public BaseClass {
+  class WithStreamedUnaryMethod_UploadData : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithStreamedUnaryMethod_Upload() {
+    WithStreamedUnaryMethod_UploadData() {
       ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::UploadRequest, ::UploadResponse>(
+          ::UploadDataRequest, ::UploadDataResponse>(
             [this](::grpc::ServerContext* context,
                    ::grpc::ServerUnaryStreamer<
-                     ::UploadRequest, ::UploadResponse>* streamer) {
-                       return this->StreamedUpload(context,
+                     ::UploadDataRequest, ::UploadDataResponse>* streamer) {
+                       return this->StreamedUploadData(context,
                          streamer);
                   }));
     }
-    ~WithStreamedUnaryMethod_Upload() override {
+    ~WithStreamedUnaryMethod_UploadData() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status Upload(::grpc::ServerContext* /*context*/, const ::UploadRequest* /*request*/, ::UploadResponse* /*response*/) override {
+    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedUpload(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::UploadRequest,::UploadResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedUploadData(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::UploadDataRequest,::UploadDataResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_GetResult : public BaseClass {
@@ -541,9 +541,9 @@ class UserService final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedGetResult(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::GetResultRequest,::GetResultResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_Upload<WithStreamedUnaryMethod_GetResult<Service > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_UploadData<WithStreamedUnaryMethod_GetResult<Service > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_Upload<WithStreamedUnaryMethod_GetResult<Service > > > StreamedService;
+  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_UploadData<WithStreamedUnaryMethod_GetResult<Service > > > StreamedService;
 };
 
 // ----------------------------- Raft Service ----------------------------- //
