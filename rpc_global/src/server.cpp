@@ -1,5 +1,7 @@
 #include "server.hpp"
 
+#include "logger.hpp"
+
 namespace abeille {
 namespace rpc {
 
@@ -35,23 +37,23 @@ error Server::Run() {
 void Server::Wait() { server_->Wait(); }
 
 void Server::Shutdown() {
-  std::cout << "Shutting down..." << std::endl;
+  LOG_INFO("Shutting down...");
   server_->Shutdown();
   thread_->join();
 }
 
 void Server::init() {
   for (const std::string& host : hosts_) {
-    std::cout << "Starting listening " << host << std::endl;
+    LOG_INFO("Starting listening %s", host.c_str());
     builder_.AddListeningPort(host, grpc::InsecureServerCredentials());
   }
 
-  std::cout << "Registering services..." << std::endl;
+  LOG_INFO("Registering services...");
   for (const auto service : services_) {
     builder_.RegisterService(service);
   }
 
-  std::cout << "Finished server initialization" << std::endl;
+  LOG_INFO("Finished server initialization");
 }
 
 void Server::launch_and_wait() {
