@@ -1,5 +1,7 @@
 #include "logger.hpp"
 
+#include <sstream>
+
 std::string timestamp() {
   std::time_t now = std::time(nullptr);
 
@@ -35,10 +37,14 @@ void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *f
   vsnprintf(message, 512, format, args);
   va_end(args);
 
-  std::cout << LOG_LEVEL_COLOR[log_level] << timestamp() << '[' << LOG_LEVEL_PREFIX[log_level] << ']';
-  std::cout << '[' << file << ':' << func << ']';
+  // construct output before printing for thread safety
+  std::stringstream stream;
+  stream << LOG_LEVEL_COLOR[log_level] << timestamp() << '[' << LOG_LEVEL_PREFIX[log_level] << ']';
+  stream << '[' << file << ':' << func << ']';
   if (log_level != LOG_LEVEL_TRACE) {
-    std::cout << ": " << message;
+    stream << ": " << message;
   }
-  std::cout << RESET_COLOR << std::endl;
+  stream << RESET_FONT << std::endl;
+
+  std::cout << stream.str();
 }

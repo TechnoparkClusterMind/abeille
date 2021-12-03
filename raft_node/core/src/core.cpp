@@ -25,9 +25,6 @@ Core::Core(Config &&conf)
   num_peers_threads_ = 0;
   num_workers_threads_ = 0;
 
-  // raft_ = nullptr;
-  // task_mgr_ = nullptr;
-
   raft_ = std::make_shared<RaftConsensus>(this);
   task_mgr_ = std::make_shared<TaskManager>(this);
   raft_pool_ = std::make_shared<RaftPool>(raft_);

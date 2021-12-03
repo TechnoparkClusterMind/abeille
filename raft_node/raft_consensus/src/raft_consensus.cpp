@@ -12,22 +12,8 @@
 namespace abeille {
 namespace raft_node {
 
-RaftConsensus::RaftConsensus(Core *core)
-    : state_(State::FOLLOWER),
-      id_(core->config_.GetId()),
-      leader_id_(0),
-      clock_(),
-      heartbeat_period_(timePoint(std::chrono::milliseconds(election_timeout_.time_since_epoch().count() / 2))),
-      election_timeout_(std::chrono::milliseconds(500)),
-      start_new_election_at_(timePoint::max()),
-      log_(),
-      timer_thread_(),
-      current_term_(0),
-      commit_index(0),
-      voted_for_(0),
-      exiting_(false),
-      core_(core),
-      num_peers_threads_(&core_->num_peers_threads_) {}
+RaftConsensus::RaftConsensus(Core *core) noexcept
+    : id_(core->config_.GetId()), core_(core), num_peers_threads_(&core_->num_peers_threads_) {}
 
 RaftConsensus::~RaftConsensus() {
   if (timer_thread_.joinable()) timer_thread_.join();
@@ -55,7 +41,7 @@ void RaftConsensus::timerThreadMain() {
 }
 
 void RaftConsensus::resetElectionTimer() {
-  uint64_t rand_duration =
+  int64_t rand_duration =
       rand() % election_timeout_.time_since_epoch().count() + election_timeout_.time_since_epoch().count();
   std::chrono::milliseconds duration(rand_duration);
   start_new_election_at_ = Clock::now() + duration;
@@ -63,25 +49,20 @@ void RaftConsensus::resetElectionTimer() {
 }
 
 void RaftConsensus::becomeLeader() {
-  LOG_INFO("I'm the leader now (term %lu)\n", current_term_);
+  LOG_INFO("I'm the leader now (term %lu)", current_term_);
   state_ = State::LEADER;
   leader_id_ = id_;
-  start_new_election_at_ = timePoint::max();
+  start_new_election_at_ = TimePoint::max();
 }
 
 void RaftConsensus::startNewElection() {
-  if (leader_id_ > 0)
-    LOG_INFO(
-        "Starting election in term %lu "
-        "(haven't heard from leader %lu lately",
-        current_term_ + 1, leader_id_);
-  else if (state_ == State::CANDIDATE)
-    LOG_INFO(
-        "Starting election in term %lu"
-        "(previous term %lu timed out)",
-        current_term_ + 1, current_term_);
-  else
-    LOG_INFO("Starting election in term %lu\n", current_term_ + 1);
+  if (leader_id_ > 0) {
+    LOG_INFO("Starting election in term %lu (haven't heard from leader %lu lately", current_term_ + 1, leader_id_);
+  } else if (state_ == State::CANDIDATE) {
+    LOG_INFO("Starting election in term %lu (previous term %lu timed out)", current_term_ + 1, current_term_);
+  } else {
+    LOG_INFO("Starting election in term %lu", current_term_ + 1);
+  }
 
   ++current_term_;
   voted_for_ = id_;
@@ -107,7 +88,7 @@ void RaftConsensus::appendEntry(Peer &peer) {
   grpc::Status status = peer.stub_->AppendEntry(&context, request, &response);
 
   if (!status.ok()) {
-    LOG_INFO("AppendEntry to peer %lu failed\n", peer.id_);
+    LOG_INFO("AppendEntry to peer %lu failed", peer.id_);
     return;
   }
 
@@ -128,7 +109,7 @@ void RaftConsensus::requestVote(Peer &peer) {
   grpc::Status status = peer.stub_->RequestVote(&context, request, &response);
 
   if (!status.ok()) {
-    LOG_INFO("AppendEntry to peer %lu failed\n", peer.id_);
+    LOG_INFO("AppendEntry to peer %lu failed", peer.id_);
     return;
   }
 
@@ -151,20 +132,20 @@ void RaftConsensus::requestVote(Peer &peer) {
 void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
   LOG_INFO("Peer thread for server %lu", peer->id_);
   std::unique_lock<std::mutex> lock_guard(core_->mutex);
-  timePoint wait_until = timePoint::min();
+  TimePoint wait_until = TimePoint::min();
 
   // issue RPC or sleeps on the cv
   while (!peer->exiting_) {
     switch (state_) {
       case State::FOLLOWER:
-        wait_until = timePoint::max();
+        wait_until = TimePoint::max();
         break;
 
       case State::CANDIDATE:
         if (!peer->vote_request_done_)
           requestVote(*peer);
         else
-          wait_until = timePoint::max();
+          wait_until = TimePoint::max();
         break;
 
       case State::LEADER:

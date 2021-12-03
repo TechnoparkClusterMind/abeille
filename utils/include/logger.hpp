@@ -19,13 +19,12 @@ std::string timestamp();
 void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *format, ...);
 
 // Colors for printing
-static constexpr const char *COLOR_NORM = "\x1B[1m\x1B[0m";     // Bold Normal
-static constexpr const char *COLOR_ERROR = "\x1B[1m\x1B[31m";   // Bold Red
-static constexpr const char *COLOR_WARN = "\x1B[1m\x1B[33m";    // Bold Yellow
-static constexpr const char *COLOR_INFO = "\x1B[1m\x1B[30m";    // Bold Cyan
-static constexpr const char *COLOR_TRACE = "\x1B[1m\x1B[35m";   // Bold Magenta
-static constexpr const char *COLOR_DEBUG = "\x1B[1m\x1B[34m";   // Bold Blue
-static constexpr const char *RESET_COLOR = "\x1B[39m\x1B[22m";  // Reset color and font weight
+static constexpr const char *COLOR_ERROR = "\x1B[1m\x1B[31m";  // Bold Red
+static constexpr const char *COLOR_WARN = "\x1B[1m\x1B[33m";   // Bold Yellow
+static constexpr const char *COLOR_INFO = "\x1B[1m\x1B[36m";   // Bold Cyan
+static constexpr const char *COLOR_TRACE = "\x1B[1m\x1B[35m";  // Bold Magenta
+static constexpr const char *COLOR_DEBUG = "\x1B[7m\x1B[1m";   // Reversed Bold
+static constexpr const char *RESET_FONT = "\x1B[0m";           // Reset font settings
 
 // Log levels and colors
 static constexpr const char *LOG_LEVEL_PREFIX[] = {"ERROR", "WARN", "INFO", "TRACE", "DEBUG"};
