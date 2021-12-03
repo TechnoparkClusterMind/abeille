@@ -1,16 +1,17 @@
 #ifndef ABEILLE_UTILS_CONVERT_H_
 #define ABEILLE_UTILS_CONVERT_H_
 
+#include <cstdint>
+#include <string>
+
 #include "abeille.grpc.pb.h"
 
-TaskData* RawData2TaskData(const std::vector<int>& raw_data) {
-  TaskData* task_data = new TaskData();
-  for (int value : raw_data) {
-    task_data->add_data(value);
-  }
-  return task_data;
-}
+static const uint64_t shift_mask[] = {40, 32, 24, 16};
 
-// TODO: add host converter
+uint64_t host2uint(const std::string& host);
+
+std::string uint2host(uint64_t n);
+
+TaskData* RawData2TaskData(const std::vector<int>& raw_data);
 
 #endif  // ABEILLE_UTILS_CONVERT_H_

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(abeille)
 
+option(ENABLE_DEBUG "Enable debug mode" OFF)
 option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_CPPCHECK "Enable cppcheck" OFF)
 option(ENABLE_COVERAGE "Enable coverage" OFF)
@@ -9,6 +10,10 @@ option(ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
 add_compile_options(-Wpedantic -Wall -Wextra -Wshadow)
 add_compile_options(-Wno-unused-parameter -Wno-unused-function)
+
+if(ENABLE_DEBUG)
+add_compile_definitions(DEBUG)
+endif()
 
 if(ENABLE_TESTS)
     enable_testing()
