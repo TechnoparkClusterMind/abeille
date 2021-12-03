@@ -2,22 +2,28 @@
 #include <iostream>
 
 #include "constants.hpp"
+#include "logger.hpp"
 #include "server.hpp"
 #include "user_service.hpp"
 
-using abeille::rpc::Server;
 using abeille::raft_node::UserServiceImpl;
+using abeille::rpc::Server;
 
 Server server;
+bool shutdown = false;
 
-void signal_handler(int signal) {
-  std::cout << "Exiting..." << std::endl;
-  server.Shutdown();
+void signal_handler(int signal) { shutdown = true; }
+
+void listen_shutdown() {
+  while (true) {
+    if (shutdown) {
+      server.Shutdown();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+  }
 }
 
-int main() {
-  std::signal(SIGINT, signal_handler);
-
+void run() {
   std::vector<std::string> hosts = {abeille::USER_SERVICE_HOST};
 
   UserServiceImpl user_service;
@@ -31,6 +37,11 @@ int main() {
   } else {
     server.Wait();
   }
+}
 
+int main() {
+  std::signal(SIGINT, signal_handler);
+  std::thread(&listen_shutdown).detach();
+  run();
   return 0;
 }

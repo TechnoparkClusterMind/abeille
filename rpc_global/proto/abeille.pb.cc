@@ -106,7 +106,7 @@ constexpr Task::Task(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : task_data_(nullptr)
   , task_result_(nullptr)
-  , task_id_(uint64_t{0u})
+  , id_(uint64_t{0u})
   , assignee_(uint64_t{0u}){}
 struct TaskDefaultTypeInternal {
   constexpr TaskDefaultTypeInternal()
@@ -299,7 +299,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_abeille_2eproto::offsets[] PRO
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::Task, task_id_),
+  PROTOBUF_FIELD_OFFSET(::Task, id_),
   PROTOBUF_FIELD_OFFSET(::Task, assignee_),
   PROTOBUF_FIELD_OFFSET(::Task, task_data_),
   PROTOBUF_FIELD_OFFSET(::Task, task_result_),
@@ -422,42 +422,42 @@ const char descriptor_table_protodef_abeille_2eproto[] PROTOBUF_SECTION_VARIABLE
   "cess\030\001 \001(\010\022\017\n\007task_id\030\002 \001(\004\022\021\n\tleader_id"
   "\030\003 \001(\004\"#\n\020GetResultRequest\022\017\n\007task_id\030\001 "
   "\001(\004\"5\n\021GetResultResponse\022 \n\013task_result\030"
-  "\001 \001(\0132\013.TaskResult\"i\n\004Task\022\017\n\007task_id\030\001 "
-  "\001(\004\022\020\n\010assignee\030\002 \001(\004\022\034\n\ttask_data\030\003 \001(\013"
-  "2\t.TaskData\022 \n\013task_result\030\004 \001(\0132\013.TaskR"
-  "esult\"%\n\nAddRequest\022\027\n\002to\030\001 \001(\0162\013.TaskSt"
-  "atus\"A\n\013MoveRequest\022\027\n\002to\030\001 \001(\0162\013.TaskSt"
-  "atus\022\031\n\004from\030\002 \001(\0162\013.TaskStatus\"*\n\rDelet"
-  "eRequest\022\031\n\004from\030\001 \001(\0162\013.TaskStatus\"\314\001\n\007"
-  "Command\022%\n\007command\030\001 \001(\0162\024.Command.Comma"
-  "ndType\022 \n\013add_request\030\002 \001(\0132\013.AddRequest"
-  "\022\"\n\014move_request\030\003 \001(\0132\014.MoveRequest\022&\n\016"
-  "delete_request\030\004 \001(\0132\016.DeleteRequest\",\n\013"
-  "CommandType\022\007\n\003ADD\020\000\022\010\n\004MOVE\020\001\022\n\n\006DELETE"
-  "\020\002\"E\n\005Entry\022\014\n\004term\030\001 \001(\004\022\023\n\004task\030\002 \001(\0132"
-  "\005.Task\022\031\n\007command\030\003 \001(\0132\010.Command\"\222\001\n\022Ap"
-  "pendEntryRequest\022\014\n\004term\030\001 \001(\004\022\021\n\tleader"
-  "_id\030\002 \001(\004\022\026\n\016prev_log_index\030\003 \001(\004\022\025\n\rpre"
-  "v_log_term\030\004 \001(\004\022\025\n\005entry\030\005 \001(\0132\006.Entry\022"
-  "\025\n\rleader_commit\030\006 \001(\004\"4\n\023AppendEntryRes"
-  "ponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002 \001(\010\"g\n\022"
-  "RequestVoteRequest\022\014\n\004term\030\001 \001(\004\022\024\n\014cand"
-  "idate_id\030\002 \001(\004\022\026\n\016last_log_entry\030\003 \001(\004\022\025"
-  "\n\rlast_log_term\030\004 \001(\004\"9\n\023RequestVoteResp"
-  "onse\022\014\n\004term\030\001 \001(\004\022\024\n\014vote_granted\030\002 \001(\010"
-  "*2\n\nTaskStatus\022\t\n\005TO_DO\020\000\022\017\n\013IN_PROGRESS"
-  "\020\002\022\010\n\004DONE\020\0012\220\001\n\013UserService\022\026\n\004Ping\022\006.E"
-  "mpty\032\006.Empty\0225\n\nUploadData\022\022.UploadDataR"
-  "equest\032\023.UploadDataResponse\0222\n\tGetResult"
-  "\022\021.GetResultRequest\032\022.GetResultResponse2"
-  "\205\001\n\013RaftService\022:\n\013AppendEntry\022\023.AppendE"
-  "ntryRequest\032\024.AppendEntryResponse\"\000\022:\n\013R"
-  "equestVote\022\023.RequestVoteRequest\032\024.Reques"
-  "tVoteResponse\"\000b\006proto3"
+  "\001 \001(\0132\013.TaskResult\"d\n\004Task\022\n\n\002id\030\001 \001(\004\022\020"
+  "\n\010assignee\030\002 \001(\004\022\034\n\ttask_data\030\003 \001(\0132\t.Ta"
+  "skData\022 \n\013task_result\030\004 \001(\0132\013.TaskResult"
+  "\"%\n\nAddRequest\022\027\n\002to\030\001 \001(\0162\013.TaskStatus\""
+  "A\n\013MoveRequest\022\027\n\002to\030\001 \001(\0162\013.TaskStatus\022"
+  "\031\n\004from\030\002 \001(\0162\013.TaskStatus\"*\n\rDeleteRequ"
+  "est\022\031\n\004from\030\001 \001(\0162\013.TaskStatus\"\314\001\n\007Comma"
+  "nd\022%\n\007command\030\001 \001(\0162\024.Command.CommandTyp"
+  "e\022 \n\013add_request\030\002 \001(\0132\013.AddRequest\022\"\n\014m"
+  "ove_request\030\003 \001(\0132\014.MoveRequest\022&\n\016delet"
+  "e_request\030\004 \001(\0132\016.DeleteRequest\",\n\013Comma"
+  "ndType\022\007\n\003ADD\020\000\022\010\n\004MOVE\020\001\022\n\n\006DELETE\020\002\"E\n"
+  "\005Entry\022\014\n\004term\030\001 \001(\004\022\023\n\004task\030\002 \001(\0132\005.Tas"
+  "k\022\031\n\007command\030\003 \001(\0132\010.Command\"\222\001\n\022AppendE"
+  "ntryRequest\022\014\n\004term\030\001 \001(\004\022\021\n\tleader_id\030\002"
+  " \001(\004\022\026\n\016prev_log_index\030\003 \001(\004\022\025\n\rprev_log"
+  "_term\030\004 \001(\004\022\025\n\005entry\030\005 \001(\0132\006.Entry\022\025\n\rle"
+  "ader_commit\030\006 \001(\004\"4\n\023AppendEntryResponse"
+  "\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002 \001(\010\"g\n\022Reque"
+  "stVoteRequest\022\014\n\004term\030\001 \001(\004\022\024\n\014candidate"
+  "_id\030\002 \001(\004\022\026\n\016last_log_entry\030\003 \001(\004\022\025\n\rlas"
+  "t_log_term\030\004 \001(\004\"9\n\023RequestVoteResponse\022"
+  "\014\n\004term\030\001 \001(\004\022\024\n\014vote_granted\030\002 \001(\010*2\n\nT"
+  "askStatus\022\t\n\005TO_DO\020\000\022\017\n\013IN_PROGRESS\020\002\022\010\n"
+  "\004DONE\020\0012\220\001\n\013UserService\022\026\n\004Ping\022\006.Empty\032"
+  "\006.Empty\0225\n\nUploadData\022\022.UploadDataReques"
+  "t\032\023.UploadDataResponse\0222\n\tGetResult\022\021.Ge"
+  "tResultRequest\032\022.GetResultResponse2\205\001\n\013R"
+  "aftService\022:\n\013AppendEntry\022\023.AppendEntryR"
+  "equest\032\024.AppendEntryResponse\"\000\022:\n\013Reques"
+  "tVote\022\023.RequestVoteRequest\032\024.RequestVote"
+  "Response\"\000b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_abeille_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_abeille_2eproto = {
-  false, false, 1543, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
+  false, false, 1538, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
   &descriptor_table_abeille_2eproto_once, nullptr, 0, 17,
   schemas, file_default_instances, TableStruct_abeille_2eproto::offsets,
   file_level_metadata_abeille_2eproto, file_level_enum_descriptors_abeille_2eproto, file_level_service_descriptors_abeille_2eproto,
@@ -1906,9 +1906,9 @@ Task::Task(const Task& from)
   } else {
     task_result_ = nullptr;
   }
-  ::memcpy(&task_id_, &from.task_id_,
+  ::memcpy(&id_, &from.id_,
     static_cast<size_t>(reinterpret_cast<char*>(&assignee_) -
-    reinterpret_cast<char*>(&task_id_)) + sizeof(assignee_));
+    reinterpret_cast<char*>(&id_)) + sizeof(assignee_));
   // @@protoc_insertion_point(copy_constructor:Task)
 }
 
@@ -1956,9 +1956,9 @@ void Task::Clear() {
     delete task_result_;
   }
   task_result_ = nullptr;
-  ::memset(&task_id_, 0, static_cast<size_t>(
+  ::memset(&id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&assignee_) -
-      reinterpret_cast<char*>(&task_id_)) + sizeof(assignee_));
+      reinterpret_cast<char*>(&id_)) + sizeof(assignee_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1968,10 +1968,10 @@ const char* Task::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::inter
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // uint64 task_id = 1;
+      // uint64 id = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          task_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2025,10 +2025,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint64 task_id = 1;
-  if (this->_internal_task_id() != 0) {
+  // uint64 id = 1;
+  if (this->_internal_id() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(1, this->_internal_task_id(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(1, this->_internal_id(), target);
   }
 
   // uint64 assignee = 2;
@@ -2083,11 +2083,11 @@ size_t Task::ByteSizeLong() const {
         *task_result_);
   }
 
-  // uint64 task_id = 1;
-  if (this->_internal_task_id() != 0) {
+  // uint64 id = 1;
+  if (this->_internal_id() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64Size(
-        this->_internal_task_id());
+        this->_internal_id());
   }
 
   // uint64 assignee = 2;
@@ -2131,8 +2131,8 @@ void Task::MergeFrom(const Task& from) {
   if (from._internal_has_task_result()) {
     _internal_mutable_task_result()->::TaskResult::MergeFrom(from._internal_task_result());
   }
-  if (from._internal_task_id() != 0) {
-    _internal_set_task_id(from._internal_task_id());
+  if (from._internal_id() != 0) {
+    _internal_set_id(from._internal_id());
   }
   if (from._internal_assignee() != 0) {
     _internal_set_assignee(from._internal_assignee());

@@ -1,10 +1,12 @@
+#include "core.hpp"
+
 #include <grpcpp/grpcpp.h>
+
 #include <memory>
 #include <vector>
 
 #include "config.hpp"
-#include "core.hpp"
-#include "macroses.hpp"
+#include "logger.hpp"
 #include "raft_service.hpp"
 #include "user_service.hpp"
 
@@ -13,13 +15,13 @@ namespace raft_node {
 
 // Initializing all main objects of the raft_node
 Core::Core(Config &&conf)
-    : server_id_(config_.GetId()), config_(std::move(conf))
-      // raft_pool_(new RaftPool{raft_}), worker_pool_(new WorkerPool{task_mgr_}),
-      // raft_(new RaftConsensus{this}), task_mgr_(new TaskManager{this}),
-      // raft_service_(new RaftServiceImpl(raft_)),
-      // user_service_(new UserServiceImpl(task_mgr_))
-  {
-
+    : server_id_(config_.GetId()),
+      config_(std::move(conf))
+// raft_pool_(new RaftPool{raft_}), worker_pool_(new WorkerPool{task_mgr_}),
+// raft_(new RaftConsensus{this}), task_mgr_(new TaskManager{this}),
+// raft_service_(new RaftServiceImpl(raft_)),
+// user_service_(new UserServiceImpl(task_mgr_))
+{
   num_peers_threads_ = 0;
   num_workers_threads_ = 0;
 
@@ -46,7 +48,7 @@ Core::Core(Config &&conf)
 
 // TODO: Test for EXPECT_DEATH
 void Core::Run() {
-  LOG("Launching top-level objects\n");
+  LOG_INFO("Launching top-level objects");
   raft_server_->Run();
   user_server_->Run();
   // FIXME: not fully implemented
@@ -67,20 +69,17 @@ void Core::Shutdown() {
 }
 
 Core::~Core() {
-  if (!exiting_)
-    Shutdown();
+  if (!exiting_) Shutdown();
 
   std::unique_lock<std::mutex> lock_guard(mutex);
-  while (num_workers_threads_ > 0)
-    state_changed_.wait(lock_guard);
-  while (num_peers_threads_ > 0)
-    state_changed_.wait(lock_guard);
+  while (num_workers_threads_ > 0) state_changed_.wait(lock_guard);
+  while (num_peers_threads_ > 0) state_changed_.wait(lock_guard);
 }
 
 void Core::HandleSignal(int signum) {
-  LOG("Shutting down ...\n");
+  LOG_INFO("Shutting down ...");
   Shutdown();
 }
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille

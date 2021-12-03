@@ -31,7 +31,7 @@ service UserService {
 // ----------------------------- Raft Entry ----------------------------- //
 
 message Task {
-  uint64 task_id = 1;
+  uint64 id = 1;
   uint64 assignee = 2;
   TaskData task_data = 3;
   TaskResult task_result = 4;

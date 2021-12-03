@@ -1310,7 +1310,7 @@ class Task final :
   enum : int {
     kTaskDataFieldNumber = 3,
     kTaskResultFieldNumber = 4,
-    kTaskIdFieldNumber = 1,
+    kIdFieldNumber = 1,
     kAssigneeFieldNumber = 2,
   };
   // .TaskData task_data = 3;
@@ -1349,13 +1349,13 @@ class Task final :
       ::TaskResult* task_result);
   ::TaskResult* unsafe_arena_release_task_result();
 
-  // uint64 task_id = 1;
-  void clear_task_id();
-  ::PROTOBUF_NAMESPACE_ID::uint64 task_id() const;
-  void set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  // uint64 id = 1;
+  void clear_id();
+  ::PROTOBUF_NAMESPACE_ID::uint64 id() const;
+  void set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_task_id() const;
-  void _internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_id() const;
+  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
   // uint64 assignee = 2;
@@ -1376,7 +1376,7 @@ class Task final :
   typedef void DestructorSkippable_;
   ::TaskData* task_data_;
   ::TaskResult* task_result_;
-  ::PROTOBUF_NAMESPACE_ID::uint64 task_id_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 id_;
   ::PROTOBUF_NAMESPACE_ID::uint64 assignee_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
@@ -3260,24 +3260,24 @@ inline void GetResultResponse::set_allocated_task_result(::TaskResult* task_resu
 
 // Task
 
-// uint64 task_id = 1;
-inline void Task::clear_task_id() {
-  task_id_ = uint64_t{0u};
+// uint64 id = 1;
+inline void Task::clear_id() {
+  id_ = uint64_t{0u};
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Task::_internal_task_id() const {
-  return task_id_;
+inline ::PROTOBUF_NAMESPACE_ID::uint64 Task::_internal_id() const {
+  return id_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Task::task_id() const {
-  // @@protoc_insertion_point(field_get:Task.task_id)
-  return _internal_task_id();
+inline ::PROTOBUF_NAMESPACE_ID::uint64 Task::id() const {
+  // @@protoc_insertion_point(field_get:Task.id)
+  return _internal_id();
 }
-inline void Task::_internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void Task::_internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   
-  task_id_ = value;
+  id_ = value;
 }
-inline void Task::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _internal_set_task_id(value);
-  // @@protoc_insertion_point(field_set:Task.task_id)
+inline void Task::set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:Task.id)
 }
 
 // uint64 assignee = 2;

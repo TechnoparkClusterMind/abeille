@@ -53,7 +53,6 @@ endif()
 
 # Common libraries for all executables
 add_subdirectory(utils)
-add_subdirectory(errors)
 add_subdirectory(rpc_global)
 
 # Three executables will be compiled
