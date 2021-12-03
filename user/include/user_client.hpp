@@ -19,7 +19,7 @@ namespace user {
 class Client {
  public:
   Client() = default;
-  explicit Client(const std::string &host) noexcept : host_(host) {}
+  explicit Client(const std::vector<std::string> &addresses) noexcept : addresses_(addresses) {}
   ~Client() = default;
 
   UploadDataResponse UploadData(TaskData *task_data);
@@ -27,7 +27,7 @@ class Client {
   TaskResult GetResult(uint64_t task_id);
 
  private:
-  void createStub();
+  void createStub(const std::string &address);
 
   void connect();
 
@@ -35,11 +35,13 @@ class Client {
 
   UploadDataResponse uploadData(TaskData *task_data);
 
-  std::string host_;
   std::unique_ptr<UserService::Stub> stub_ptr_ = nullptr;
 
   std::vector<uint64_t> task_ids_;
   std::unordered_map<uint64_t, int> results_;
+
+  size_t address_index_ = 0;
+  std::vector<std::string> addresses_;
 };
 
 }  // namespace user

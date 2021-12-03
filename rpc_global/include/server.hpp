@@ -18,9 +18,10 @@ namespace rpc {
 class Server {
  public:
   Server() = default;
-  Server(const std::vector<std::string>& hosts, const std::vector<grpc::Service*>& services) noexcept;
+  Server(const std::vector<std::string> &hosts, const std::vector<grpc::Service *> &services) noexcept;
 
-  Server& operator=(Server&& other) noexcept;
+  Server(Server &&other) noexcept;
+  Server &operator=(Server &&other) noexcept;
 
   error Run();
   void Wait();
@@ -32,7 +33,7 @@ class Server {
   inline bool is_ready() const noexcept { return ready; }
 
   std::vector<std::string> hosts_;
-  std::vector<grpc::Service*> services_;
+  std::vector<grpc::Service *> services_;
 
   grpc::ServerBuilder builder_;
   std::unique_ptr<std::thread> thread_ = nullptr;

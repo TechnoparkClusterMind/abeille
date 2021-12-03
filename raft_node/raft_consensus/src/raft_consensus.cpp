@@ -16,7 +16,9 @@ RaftConsensus::RaftConsensus(Core *core) noexcept
     : id_(core->config_.GetId()), core_(core), num_peers_threads_(&core_->num_peers_threads_) {}
 
 RaftConsensus::~RaftConsensus() {
-  if (timer_thread_.joinable()) timer_thread_.join();
+  if (timer_thread_.joinable()) {
+    timer_thread_.join();
+  }
 }
 
 void RaftConsensus::Run() {
@@ -26,7 +28,7 @@ void RaftConsensus::Run() {
 
 void RaftConsensus::stepDown(uint64_t term) {}
 
-// If election timeout elapses wihtout recieving AppendEntries
+// If election timeout elapses without recieving AppendEntries
 // initiates startNewElection()
 void RaftConsensus::timerThreadMain() {
   std::unique_lock<std::mutex> lock_guard(core_->mutex);

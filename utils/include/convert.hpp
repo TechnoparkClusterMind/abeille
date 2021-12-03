@@ -8,9 +8,9 @@
 
 static const uint64_t shift_mask[] = {40, 32, 24, 16};
 
-uint64_t host2uint(const std::string& host);
+uint64_t address2uint(const std::string& host);
 
-std::string uint2host(uint64_t n);
+std::string uint2address(uint64_t n);
 
 TaskData* RawData2TaskData(const std::vector<int>& raw_data);
 

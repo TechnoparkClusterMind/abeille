@@ -22,7 +22,7 @@ void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *f
 static constexpr const char *COLOR_ERROR = "\x1B[1m\x1B[31m";  // Bold Red
 static constexpr const char *COLOR_WARN = "\x1B[1m\x1B[33m";   // Bold Yellow
 static constexpr const char *COLOR_INFO = "\x1B[1m\x1B[36m";   // Bold Cyan
-static constexpr const char *COLOR_TRACE = "\x1B[1m\x1B[35m";  // Bold Magenta
+static constexpr const char *COLOR_TRACE = "\x1B[7m\x1B[1m";   // Reversed Bold
 static constexpr const char *COLOR_DEBUG = "\x1B[7m\x1B[1m";   // Reversed Bold
 static constexpr const char *RESET_FONT = "\x1B[0m";           // Reset font settings
 

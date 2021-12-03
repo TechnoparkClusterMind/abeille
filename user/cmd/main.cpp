@@ -1,3 +1,4 @@
+#include <string>
 #include <vector>
 
 #include "constants.hpp"
@@ -5,12 +6,13 @@
 #include "logger.hpp"
 #include "user_client.hpp"
 
-using namespace abeille;
+using abeille::user::Client;
 
 // TODO: implement cli for user
 
 int main() {
-  user::Client user_client(USER_SERVICE_HOST);
+  std::vector<std::string> addresses = {"127.0.0.1:50051", "127.0.0.1:50052"};
+  Client user_client(addresses);
 
   std::vector<std::vector<int>> arrays = {{1, 2}, {3, 4}};
   for (const auto &data : arrays) {
