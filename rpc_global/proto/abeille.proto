@@ -113,6 +113,15 @@ message RequestVoteResponse {
 
 // ----------------------------- Worker Service ----------------------------- //
 
+enum NodeStatus {
+  IDLE = 0;
+  BUSY = 1;
+}
+
+message WorkerStatus {
+  NodeStatus status = 1;
+}
+
 message AssignTaskRequest {
   uint64 task_id = 1;
 }
@@ -141,7 +150,7 @@ message GetWorkerResultResponse {
 }
 
 service WorkerService {
-  rpc Connect(stream Empty) returns (stream Empty) {}
+  rpc Connect(stream WorkerStatus) returns (stream Empty) {}
   rpc AssignTask(AssignTaskRequest) returns (AssignTaskResponse) {}
   rpc SendTask(SendTaskRequest) returns (SendTaskResponse) {}
   rpc GetWorkerResult(GetWorkerResultRequest) returns (GetWorkerResultResponse) {}

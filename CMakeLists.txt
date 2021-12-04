@@ -66,10 +66,5 @@ add_subdirectory(rpc_global)
 # * abeille-client -- launch the interface 
 #                     for communication with the raft cluster
 add_subdirectory(raft_node)
-add_subdirectory(worker_service)
-add_subdirectory(user)
 add_subdirectory(worker)
-
-
-add_executable(main cmd/main.cpp)
-target_link_libraries(main rpc_global rpc_raft utils)
+add_subdirectory(user)

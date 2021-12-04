@@ -288,20 +288,20 @@ WorkerService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chan
   , rpcmethod_GetWorkerResult_(WorkerService_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::ClientReaderWriter< ::Empty, ::Empty>* WorkerService::Stub::ConnectRaw(::grpc::ClientContext* context) {
-  return ::grpc::internal::ClientReaderWriterFactory< ::Empty, ::Empty>::Create(channel_.get(), rpcmethod_Connect_, context);
+::grpc::ClientReaderWriter< ::WorkerStatus, ::Empty>* WorkerService::Stub::ConnectRaw(::grpc::ClientContext* context) {
+  return ::grpc::internal::ClientReaderWriterFactory< ::WorkerStatus, ::Empty>::Create(channel_.get(), rpcmethod_Connect_, context);
 }
 
-void WorkerService::Stub::async::Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::Empty,::Empty>* reactor) {
-  ::grpc::internal::ClientCallbackReaderWriterFactory< ::Empty,::Empty>::Create(stub_->channel_.get(), stub_->rpcmethod_Connect_, context, reactor);
+void WorkerService::Stub::async::Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerStatus,::Empty>* reactor) {
+  ::grpc::internal::ClientCallbackReaderWriterFactory< ::WorkerStatus,::Empty>::Create(stub_->channel_.get(), stub_->rpcmethod_Connect_, context, reactor);
 }
 
-::grpc::ClientAsyncReaderWriter< ::Empty, ::Empty>* WorkerService::Stub::AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
-  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::Empty, ::Empty>::Create(channel_.get(), cq, rpcmethod_Connect_, context, true, tag);
+::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::Empty>* WorkerService::Stub::AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::WorkerStatus, ::Empty>::Create(channel_.get(), cq, rpcmethod_Connect_, context, true, tag);
 }
 
-::grpc::ClientAsyncReaderWriter< ::Empty, ::Empty>* WorkerService::Stub::PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::Empty, ::Empty>::Create(channel_.get(), cq, rpcmethod_Connect_, context, false, nullptr);
+::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::Empty>* WorkerService::Stub::PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::WorkerStatus, ::Empty>::Create(channel_.get(), cq, rpcmethod_Connect_, context, false, nullptr);
 }
 
 ::grpc::Status WorkerService::Stub::AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) {
@@ -377,11 +377,11 @@ WorkerService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       WorkerService_method_names[0],
       ::grpc::internal::RpcMethod::BIDI_STREAMING,
-      new ::grpc::internal::BidiStreamingHandler< WorkerService::Service, ::Empty, ::Empty>(
+      new ::grpc::internal::BidiStreamingHandler< WorkerService::Service, ::WorkerStatus, ::Empty>(
           [](WorkerService::Service* service,
              ::grpc::ServerContext* ctx,
              ::grpc::ServerReaderWriter<::Empty,
-             ::Empty>* stream) {
+             ::WorkerStatus>* stream) {
                return service->Connect(ctx, stream);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
@@ -419,7 +419,7 @@ WorkerService::Service::Service() {
 WorkerService::Service::~Service() {
 }
 
-::grpc::Status WorkerService::Service::Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::Empty, ::Empty>* stream) {
+::grpc::Status WorkerService::Service::Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::Empty, ::WorkerStatus>* stream) {
   (void) context;
   (void) stream;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");

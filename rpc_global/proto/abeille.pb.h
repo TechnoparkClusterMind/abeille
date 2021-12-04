@@ -47,7 +47,7 @@ struct TableStruct_abeille_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[23]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[24]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -123,6 +123,9 @@ extern UploadDataRequestDefaultTypeInternal _UploadDataRequest_default_instance_
 class UploadDataResponse;
 struct UploadDataResponseDefaultTypeInternal;
 extern UploadDataResponseDefaultTypeInternal _UploadDataResponse_default_instance_;
+class WorkerStatus;
+struct WorkerStatusDefaultTypeInternal;
+extern WorkerStatusDefaultTypeInternal _WorkerStatus_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::AddRequest* Arena::CreateMaybeMessage<::AddRequest>(Arena*);
 template<> ::AppendEntryRequest* Arena::CreateMaybeMessage<::AppendEntryRequest>(Arena*);
@@ -147,6 +150,7 @@ template<> ::TaskData* Arena::CreateMaybeMessage<::TaskData>(Arena*);
 template<> ::TaskResult* Arena::CreateMaybeMessage<::TaskResult>(Arena*);
 template<> ::UploadDataRequest* Arena::CreateMaybeMessage<::UploadDataRequest>(Arena*);
 template<> ::UploadDataResponse* Arena::CreateMaybeMessage<::UploadDataResponse>(Arena*);
+template<> ::WorkerStatus* Arena::CreateMaybeMessage<::WorkerStatus>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 enum Command_CommandType : int {
@@ -200,6 +204,31 @@ inline bool TaskStatus_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, TaskStatus* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<TaskStatus>(
     TaskStatus_descriptor(), name, value);
+}
+enum NodeStatus : int {
+  IDLE = 0,
+  BUSY = 1,
+  NodeStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  NodeStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool NodeStatus_IsValid(int value);
+constexpr NodeStatus NodeStatus_MIN = IDLE;
+constexpr NodeStatus NodeStatus_MAX = BUSY;
+constexpr int NodeStatus_ARRAYSIZE = NodeStatus_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NodeStatus_descriptor();
+template<typename T>
+inline const std::string& NodeStatus_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, NodeStatus>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function NodeStatus_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    NodeStatus_descriptor(), enum_t_value);
+}
+inline bool NodeStatus_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, NodeStatus* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<NodeStatus>(
+    NodeStatus_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -2920,6 +2949,145 @@ class RequestVoteResponse final :
 };
 // -------------------------------------------------------------------
 
+class WorkerStatus final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WorkerStatus) */ {
+ public:
+  inline WorkerStatus() : WorkerStatus(nullptr) {}
+  ~WorkerStatus() override;
+  explicit constexpr WorkerStatus(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WorkerStatus(const WorkerStatus& from);
+  WorkerStatus(WorkerStatus&& from) noexcept
+    : WorkerStatus() {
+    *this = ::std::move(from);
+  }
+
+  inline WorkerStatus& operator=(const WorkerStatus& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WorkerStatus& operator=(WorkerStatus&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WorkerStatus& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const WorkerStatus* internal_default_instance() {
+    return reinterpret_cast<const WorkerStatus*>(
+               &_WorkerStatus_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(WorkerStatus& a, WorkerStatus& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WorkerStatus* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WorkerStatus* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline WorkerStatus* New() const final {
+    return new WorkerStatus();
+  }
+
+  WorkerStatus* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<WorkerStatus>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WorkerStatus& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const WorkerStatus& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WorkerStatus* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "WorkerStatus";
+  }
+  protected:
+  explicit WorkerStatus(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kStatusFieldNumber = 1,
+  };
+  // .NodeStatus status = 1;
+  void clear_status();
+  ::NodeStatus status() const;
+  void set_status(::NodeStatus value);
+  private:
+  ::NodeStatus _internal_status() const;
+  void _internal_set_status(::NodeStatus value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:WorkerStatus)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  int status_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_abeille_2eproto;
+};
+// -------------------------------------------------------------------
+
 class AssignTaskRequest final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:AssignTaskRequest) */ {
  public:
@@ -2964,7 +3132,7 @@ class AssignTaskRequest final :
                &_AssignTaskRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(AssignTaskRequest& a, AssignTaskRequest& b) {
     a.Swap(&b);
@@ -3103,7 +3271,7 @@ class AssignTaskResponse final :
                &_AssignTaskResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    19;
 
   friend void swap(AssignTaskResponse& a, AssignTaskResponse& b) {
     a.Swap(&b);
@@ -3253,7 +3421,7 @@ class SendTaskRequest final :
                &_SendTaskRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    20;
 
   friend void swap(SendTaskRequest& a, SendTaskRequest& b) {
     a.Swap(&b);
@@ -3401,7 +3569,7 @@ class SendTaskResponse final :
                &_SendTaskResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(SendTaskResponse& a, SendTaskResponse& b) {
     a.Swap(&b);
@@ -3540,7 +3708,7 @@ class GetWorkerResultRequest final :
                &_GetWorkerResultRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(GetWorkerResultRequest& a, GetWorkerResultRequest& b) {
     a.Swap(&b);
@@ -3690,7 +3858,7 @@ class GetWorkerResultResponse final :
                &_GetWorkerResultResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(GetWorkerResultResponse& a, GetWorkerResultResponse& b) {
     a.Swap(&b);
@@ -5347,6 +5515,30 @@ inline void RequestVoteResponse::set_vote_granted(bool value) {
 
 // -------------------------------------------------------------------
 
+// WorkerStatus
+
+// .NodeStatus status = 1;
+inline void WorkerStatus::clear_status() {
+  status_ = 0;
+}
+inline ::NodeStatus WorkerStatus::_internal_status() const {
+  return static_cast< ::NodeStatus >(status_);
+}
+inline ::NodeStatus WorkerStatus::status() const {
+  // @@protoc_insertion_point(field_get:WorkerStatus.status)
+  return _internal_status();
+}
+inline void WorkerStatus::_internal_set_status(::NodeStatus value) {
+  
+  status_ = value;
+}
+inline void WorkerStatus::set_status(::NodeStatus value) {
+  _internal_set_status(value);
+  // @@protoc_insertion_point(field_set:WorkerStatus.status)
+}
+
+// -------------------------------------------------------------------
+
 // AssignTaskRequest
 
 // uint64 task_id = 1;
@@ -5736,6 +5928,8 @@ inline void GetWorkerResultResponse::set_allocated_task_result(::TaskResult* tas
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -5751,6 +5945,11 @@ template <> struct is_proto_enum< ::TaskStatus> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::TaskStatus>() {
   return ::TaskStatus_descriptor();
+}
+template <> struct is_proto_enum< ::NodeStatus> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::NodeStatus>() {
+  return ::NodeStatus_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

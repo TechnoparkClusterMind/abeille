@@ -3,6 +3,7 @@
 
 #include <grpcpp/grpcpp.h>
 
+#include <chrono>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -15,6 +16,8 @@
 namespace abeille {
 namespace rpc {
 
+static constexpr const auto SHUTDOWN_TIMEOUT = std::chrono::seconds(5);
+
 class Server {
  public:
   Server() = default;
@@ -24,7 +27,7 @@ class Server {
   Server &operator=(Server &&other) noexcept;
 
   error Run();
-  void Wait();
+
   void Shutdown();
 
  private:

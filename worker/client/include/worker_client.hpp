@@ -3,6 +3,7 @@
 
 #include <grpcpp/grpcpp.h>
 
+#include <condition_variable>
 #include <memory>
 #include <thread>
 #include <unordered_map>
@@ -19,7 +20,7 @@ namespace worker {
 
 class Client {
  public:
-  using ConnectStream = grpc::ClientReaderWriter<Empty, Empty>;
+  using ConnectStream = grpc::ClientReaderWriter<WorkerStatus, Empty>;
 
   Client() = default;
   explicit Client(const std::string address) noexcept : address_(address) {}
@@ -34,15 +35,25 @@ class Client {
 
   void connect();
 
+  void keepAlive();
+
+  bool handshake();
+
   std::string address_;
 
   std::unique_ptr<WorkerService::Stub> stub_ptr_ = nullptr;
 
-  std::unique_ptr<ConnectStream> connect_stream_ptr_ = nullptr;
-
-  std::unique_ptr<std::thread> connect_thread_ = nullptr;
+  std::thread connect_thread_;
+  std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
+  std::unique_ptr<ConnectStream> connect_stream_ = nullptr;
 
   bool shutdown_ = false;
+  bool connected_ = false;
+
+  std::mutex mutex_;
+  std::condition_variable cv_;
+
+  NodeStatus status_ = NodeStatus::IDLE;
 };
 
 }  // namespace worker

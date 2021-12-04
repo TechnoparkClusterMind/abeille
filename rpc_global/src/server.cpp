@@ -27,38 +27,36 @@ Server &Server::operator=(Server &&other) noexcept {
 error Server::Run() {
   init();
 
+  LOG_INFO("launching the server...");
   thread_ = std::make_unique<std::thread>(std::thread(&Server::launch_and_wait, this));
 
   std::unique_lock<std::mutex> lk(mut);
   cv.wait(lk, [&] { return ready; });
 
   if (server_ == nullptr) {
-    return error(error::Code::FAILURE);
+    return error("failed to build and start the server");
   }
 
+  LOG_INFO("server is running");
   return error();
 }
 
-void Server::Wait() { server_->Wait(); }
-
 void Server::Shutdown() {
-  LOG_INFO("Shutting down...");
-  server_->Shutdown();
+  LOG_INFO("shutting down...");
+  server_->Shutdown(std::chrono::system_clock::now() + SHUTDOWN_TIMEOUT);
   thread_->join();
 }
 
 void Server::init() {
   for (const std::string &host : hosts_) {
-    LOG_INFO("Starting listening %s", host.c_str());
+    LOG_INFO("starting listening %s", host.c_str());
     builder_.AddListeningPort(host, grpc::InsecureServerCredentials());
   }
 
-  LOG_INFO("Registering services...");
+  LOG_INFO("registering services...");
   for (const auto service : services_) {
     builder_.RegisterService(service);
   }
-
-  LOG_INFO("Finished server initialization");
 }
 
 void Server::launch_and_wait() {
