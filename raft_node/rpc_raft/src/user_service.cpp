@@ -19,11 +19,6 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-bool UserServiceImpl::IsLeader() const noexcept {
-  return true;
-  // return id_ == leader_id_;
-}
-
 Status UserServiceImpl::Ping(ServerContext *context, const Empty *request, Empty *response) { return Status::OK; }
 
 Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataRequest *request,

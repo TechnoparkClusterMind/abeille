@@ -61,11 +61,21 @@ void Client::connect() {
   keepAlive();
 }
 
+// TODO: refactor it
 void Client::keepAlive() {
   // keep the connection alive: respond to beats from the server
-  Empty response;
+  ConnectResponse response;
   WorkerStatus request;
   while (connect_stream_->Read(&response) && !shutdown_) {
+    if (response.leader_id() != leader_id_) {
+      leader_id_ = response.leader_id();
+      address_ = uint2address(leader_id_);
+      LOG_INFO("got redirected to the [%s]", address_.c_str());
+      connected_ = false;
+      connect_stream_->WritesDone();
+      Run();
+    }
+
     request.set_status(status_);
     connect_stream_->Write(request);
   }

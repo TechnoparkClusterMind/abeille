@@ -9,6 +9,7 @@
 #include "logger.hpp"
 #include "raft_service.hpp"
 #include "user_service.hpp"
+#include "worker_service.hpp"
 
 namespace abeille {
 namespace raft_node {
@@ -29,9 +30,10 @@ Core::Core(Config &&conf) noexcept
 
   raft_service_ = std::make_unique<RaftServiceImpl>(raft_);
   user_service_ = std::make_unique<UserServiceImpl>(task_mgr_);
+  worker_service_ = std::make_unique<WorkerServiceImpl>();
 
-  std::vector<std::string> raft_addr = {config_.GetRaftAddress(), config_.GetUserAddress()};
-  std::vector<grpc::Service *> raft_vec = {raft_service_.get(), user_service_.get()};
+  std::vector<std::string> raft_addr = {config_.GetRaftAddress(), config_.GetUserAddress(), config_.GetWorkerAddress()};
+  std::vector<grpc::Service *> raft_vec = {raft_service_.get(), user_service_.get(), worker_service_.get()};
   raft_server_ = std::make_unique<abeille::rpc::Server>(raft_addr, raft_vec);
 }
 

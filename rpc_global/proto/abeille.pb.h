@@ -47,7 +47,7 @@ struct TableStruct_abeille_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[24]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[25]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -72,6 +72,9 @@ extern AssignTaskResponseDefaultTypeInternal _AssignTaskResponse_default_instanc
 class Command;
 struct CommandDefaultTypeInternal;
 extern CommandDefaultTypeInternal _Command_default_instance_;
+class ConnectResponse;
+struct ConnectResponseDefaultTypeInternal;
+extern ConnectResponseDefaultTypeInternal _ConnectResponse_default_instance_;
 class DeleteRequest;
 struct DeleteRequestDefaultTypeInternal;
 extern DeleteRequestDefaultTypeInternal _DeleteRequest_default_instance_;
@@ -133,6 +136,7 @@ template<> ::AppendEntryResponse* Arena::CreateMaybeMessage<::AppendEntryRespons
 template<> ::AssignTaskRequest* Arena::CreateMaybeMessage<::AssignTaskRequest>(Arena*);
 template<> ::AssignTaskResponse* Arena::CreateMaybeMessage<::AssignTaskResponse>(Arena*);
 template<> ::Command* Arena::CreateMaybeMessage<::Command>(Arena*);
+template<> ::ConnectResponse* Arena::CreateMaybeMessage<::ConnectResponse>(Arena*);
 template<> ::DeleteRequest* Arena::CreateMaybeMessage<::DeleteRequest>(Arena*);
 template<> ::Empty* Arena::CreateMaybeMessage<::Empty>(Arena*);
 template<> ::Entry* Arena::CreateMaybeMessage<::Entry>(Arena*);
@@ -208,12 +212,13 @@ inline bool TaskStatus_Parse(
 enum NodeStatus : int {
   IDLE = 0,
   BUSY = 1,
+  COMPLETED = 2,
   NodeStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   NodeStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool NodeStatus_IsValid(int value);
 constexpr NodeStatus NodeStatus_MIN = IDLE;
-constexpr NodeStatus NodeStatus_MAX = BUSY;
+constexpr NodeStatus NodeStatus_MAX = COMPLETED;
 constexpr int NodeStatus_ARRAYSIZE = NodeStatus_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NodeStatus_descriptor();
@@ -2949,6 +2954,165 @@ class RequestVoteResponse final :
 };
 // -------------------------------------------------------------------
 
+class ConnectResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ConnectResponse) */ {
+ public:
+  inline ConnectResponse() : ConnectResponse(nullptr) {}
+  ~ConnectResponse() override;
+  explicit constexpr ConnectResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ConnectResponse(const ConnectResponse& from);
+  ConnectResponse(ConnectResponse&& from) noexcept
+    : ConnectResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline ConnectResponse& operator=(const ConnectResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ConnectResponse& operator=(ConnectResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ConnectResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ConnectResponse* internal_default_instance() {
+    return reinterpret_cast<const ConnectResponse*>(
+               &_ConnectResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(ConnectResponse& a, ConnectResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ConnectResponse* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ConnectResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ConnectResponse* New() const final {
+    return new ConnectResponse();
+  }
+
+  ConnectResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ConnectResponse>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ConnectResponse& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ConnectResponse& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ConnectResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "ConnectResponse";
+  }
+  protected:
+  explicit ConnectResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTaskFieldNumber = 1,
+    kLeaderIdFieldNumber = 2,
+  };
+  // .Task task = 1;
+  bool has_task() const;
+  private:
+  bool _internal_has_task() const;
+  public:
+  void clear_task();
+  const ::Task& task() const;
+  PROTOBUF_MUST_USE_RESULT ::Task* release_task();
+  ::Task* mutable_task();
+  void set_allocated_task(::Task* task);
+  private:
+  const ::Task& _internal_task() const;
+  ::Task* _internal_mutable_task();
+  public:
+  void unsafe_arena_set_allocated_task(
+      ::Task* task);
+  ::Task* unsafe_arena_release_task();
+
+  // uint64 leader_id = 2;
+  void clear_leader_id();
+  ::PROTOBUF_NAMESPACE_ID::uint64 leader_id() const;
+  void set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_leader_id() const;
+  void _internal_set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:ConnectResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::Task* task_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 leader_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_abeille_2eproto;
+};
+// -------------------------------------------------------------------
+
 class WorkerStatus final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WorkerStatus) */ {
  public:
@@ -2993,7 +3157,7 @@ class WorkerStatus final :
                &_WorkerStatus_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(WorkerStatus& a, WorkerStatus& b) {
     a.Swap(&b);
@@ -3064,8 +3228,37 @@ class WorkerStatus final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kTaskResultFieldNumber = 3,
+    kTaskIdFieldNumber = 2,
     kStatusFieldNumber = 1,
   };
+  // .TaskResult task_result = 3;
+  bool has_task_result() const;
+  private:
+  bool _internal_has_task_result() const;
+  public:
+  void clear_task_result();
+  const ::TaskResult& task_result() const;
+  PROTOBUF_MUST_USE_RESULT ::TaskResult* release_task_result();
+  ::TaskResult* mutable_task_result();
+  void set_allocated_task_result(::TaskResult* task_result);
+  private:
+  const ::TaskResult& _internal_task_result() const;
+  ::TaskResult* _internal_mutable_task_result();
+  public:
+  void unsafe_arena_set_allocated_task_result(
+      ::TaskResult* task_result);
+  ::TaskResult* unsafe_arena_release_task_result();
+
+  // uint64 task_id = 2;
+  void clear_task_id();
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id() const;
+  void set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_task_id() const;
+  void _internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
   // .NodeStatus status = 1;
   void clear_status();
   ::NodeStatus status() const;
@@ -3082,6 +3275,8 @@ class WorkerStatus final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::TaskResult* task_result_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id_;
   int status_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
@@ -3132,7 +3327,7 @@ class AssignTaskRequest final :
                &_AssignTaskRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    19;
 
   friend void swap(AssignTaskRequest& a, AssignTaskRequest& b) {
     a.Swap(&b);
@@ -3271,7 +3466,7 @@ class AssignTaskResponse final :
                &_AssignTaskResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    20;
 
   friend void swap(AssignTaskResponse& a, AssignTaskResponse& b) {
     a.Swap(&b);
@@ -3421,7 +3616,7 @@ class SendTaskRequest final :
                &_SendTaskRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(SendTaskRequest& a, SendTaskRequest& b) {
     a.Swap(&b);
@@ -3569,7 +3764,7 @@ class SendTaskResponse final :
                &_SendTaskResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(SendTaskResponse& a, SendTaskResponse& b) {
     a.Swap(&b);
@@ -3708,7 +3903,7 @@ class GetWorkerResultRequest final :
                &_GetWorkerResultRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(GetWorkerResultRequest& a, GetWorkerResultRequest& b) {
     a.Swap(&b);
@@ -3858,7 +4053,7 @@ class GetWorkerResultResponse final :
                &_GetWorkerResultResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    24;
 
   friend void swap(GetWorkerResultResponse& a, GetWorkerResultResponse& b) {
     a.Swap(&b);
@@ -3930,7 +4125,6 @@ class GetWorkerResultResponse final :
 
   enum : int {
     kTaskResultFieldNumber = 2,
-    kSuccessFieldNumber = 1,
   };
   // .TaskResult task_result = 2;
   bool has_task_result() const;
@@ -3950,15 +4144,6 @@ class GetWorkerResultResponse final :
       ::TaskResult* task_result);
   ::TaskResult* unsafe_arena_release_task_result();
 
-  // bool success = 1;
-  void clear_success();
-  bool success() const;
-  void set_success(bool value);
-  private:
-  bool _internal_success() const;
-  void _internal_set_success(bool value);
-  public:
-
   // @@protoc_insertion_point(class_scope:GetWorkerResultResponse)
  private:
   class _Internal;
@@ -3967,7 +4152,6 @@ class GetWorkerResultResponse final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::TaskResult* task_result_;
-  bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
 };
@@ -5515,6 +5699,120 @@ inline void RequestVoteResponse::set_vote_granted(bool value) {
 
 // -------------------------------------------------------------------
 
+// ConnectResponse
+
+// .Task task = 1;
+inline bool ConnectResponse::_internal_has_task() const {
+  return this != internal_default_instance() && task_ != nullptr;
+}
+inline bool ConnectResponse::has_task() const {
+  return _internal_has_task();
+}
+inline void ConnectResponse::clear_task() {
+  if (GetArenaForAllocation() == nullptr && task_ != nullptr) {
+    delete task_;
+  }
+  task_ = nullptr;
+}
+inline const ::Task& ConnectResponse::_internal_task() const {
+  const ::Task* p = task_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Task&>(
+      ::_Task_default_instance_);
+}
+inline const ::Task& ConnectResponse::task() const {
+  // @@protoc_insertion_point(field_get:ConnectResponse.task)
+  return _internal_task();
+}
+inline void ConnectResponse::unsafe_arena_set_allocated_task(
+    ::Task* task) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(task_);
+  }
+  task_ = task;
+  if (task) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:ConnectResponse.task)
+}
+inline ::Task* ConnectResponse::release_task() {
+  
+  ::Task* temp = task_;
+  task_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::Task* ConnectResponse::unsafe_arena_release_task() {
+  // @@protoc_insertion_point(field_release:ConnectResponse.task)
+  
+  ::Task* temp = task_;
+  task_ = nullptr;
+  return temp;
+}
+inline ::Task* ConnectResponse::_internal_mutable_task() {
+  
+  if (task_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Task>(GetArenaForAllocation());
+    task_ = p;
+  }
+  return task_;
+}
+inline ::Task* ConnectResponse::mutable_task() {
+  ::Task* _msg = _internal_mutable_task();
+  // @@protoc_insertion_point(field_mutable:ConnectResponse.task)
+  return _msg;
+}
+inline void ConnectResponse::set_allocated_task(::Task* task) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete task_;
+  }
+  if (task) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::Task>::GetOwningArena(task);
+    if (message_arena != submessage_arena) {
+      task = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, task, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  task_ = task;
+  // @@protoc_insertion_point(field_set_allocated:ConnectResponse.task)
+}
+
+// uint64 leader_id = 2;
+inline void ConnectResponse::clear_leader_id() {
+  leader_id_ = uint64_t{0u};
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 ConnectResponse::_internal_leader_id() const {
+  return leader_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 ConnectResponse::leader_id() const {
+  // @@protoc_insertion_point(field_get:ConnectResponse.leader_id)
+  return _internal_leader_id();
+}
+inline void ConnectResponse::_internal_set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  leader_id_ = value;
+}
+inline void ConnectResponse::set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_leader_id(value);
+  // @@protoc_insertion_point(field_set:ConnectResponse.leader_id)
+}
+
+// -------------------------------------------------------------------
+
 // WorkerStatus
 
 // .NodeStatus status = 1;
@@ -5535,6 +5833,116 @@ inline void WorkerStatus::_internal_set_status(::NodeStatus value) {
 inline void WorkerStatus::set_status(::NodeStatus value) {
   _internal_set_status(value);
   // @@protoc_insertion_point(field_set:WorkerStatus.status)
+}
+
+// uint64 task_id = 2;
+inline void WorkerStatus::clear_task_id() {
+  task_id_ = uint64_t{0u};
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 WorkerStatus::_internal_task_id() const {
+  return task_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 WorkerStatus::task_id() const {
+  // @@protoc_insertion_point(field_get:WorkerStatus.task_id)
+  return _internal_task_id();
+}
+inline void WorkerStatus::_internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  task_id_ = value;
+}
+inline void WorkerStatus::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_task_id(value);
+  // @@protoc_insertion_point(field_set:WorkerStatus.task_id)
+}
+
+// .TaskResult task_result = 3;
+inline bool WorkerStatus::_internal_has_task_result() const {
+  return this != internal_default_instance() && task_result_ != nullptr;
+}
+inline bool WorkerStatus::has_task_result() const {
+  return _internal_has_task_result();
+}
+inline void WorkerStatus::clear_task_result() {
+  if (GetArenaForAllocation() == nullptr && task_result_ != nullptr) {
+    delete task_result_;
+  }
+  task_result_ = nullptr;
+}
+inline const ::TaskResult& WorkerStatus::_internal_task_result() const {
+  const ::TaskResult* p = task_result_;
+  return p != nullptr ? *p : reinterpret_cast<const ::TaskResult&>(
+      ::_TaskResult_default_instance_);
+}
+inline const ::TaskResult& WorkerStatus::task_result() const {
+  // @@protoc_insertion_point(field_get:WorkerStatus.task_result)
+  return _internal_task_result();
+}
+inline void WorkerStatus::unsafe_arena_set_allocated_task_result(
+    ::TaskResult* task_result) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(task_result_);
+  }
+  task_result_ = task_result;
+  if (task_result) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:WorkerStatus.task_result)
+}
+inline ::TaskResult* WorkerStatus::release_task_result() {
+  
+  ::TaskResult* temp = task_result_;
+  task_result_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::TaskResult* WorkerStatus::unsafe_arena_release_task_result() {
+  // @@protoc_insertion_point(field_release:WorkerStatus.task_result)
+  
+  ::TaskResult* temp = task_result_;
+  task_result_ = nullptr;
+  return temp;
+}
+inline ::TaskResult* WorkerStatus::_internal_mutable_task_result() {
+  
+  if (task_result_ == nullptr) {
+    auto* p = CreateMaybeMessage<::TaskResult>(GetArenaForAllocation());
+    task_result_ = p;
+  }
+  return task_result_;
+}
+inline ::TaskResult* WorkerStatus::mutable_task_result() {
+  ::TaskResult* _msg = _internal_mutable_task_result();
+  // @@protoc_insertion_point(field_mutable:WorkerStatus.task_result)
+  return _msg;
+}
+inline void WorkerStatus::set_allocated_task_result(::TaskResult* task_result) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete task_result_;
+  }
+  if (task_result) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::TaskResult>::GetOwningArena(task_result);
+    if (message_arena != submessage_arena) {
+      task_result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, task_result, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  task_result_ = task_result;
+  // @@protoc_insertion_point(field_set_allocated:WorkerStatus.task_result)
 }
 
 // -------------------------------------------------------------------
@@ -5771,26 +6179,6 @@ inline void GetWorkerResultRequest::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 
 
 // GetWorkerResultResponse
 
-// bool success = 1;
-inline void GetWorkerResultResponse::clear_success() {
-  success_ = false;
-}
-inline bool GetWorkerResultResponse::_internal_success() const {
-  return success_;
-}
-inline bool GetWorkerResultResponse::success() const {
-  // @@protoc_insertion_point(field_get:GetWorkerResultResponse.success)
-  return _internal_success();
-}
-inline void GetWorkerResultResponse::_internal_set_success(bool value) {
-  
-  success_ = value;
-}
-inline void GetWorkerResultResponse::set_success(bool value) {
-  _internal_set_success(value);
-  // @@protoc_insertion_point(field_set:GetWorkerResultResponse.success)
-}
-
 // .TaskResult task_result = 2;
 inline bool GetWorkerResultResponse::_internal_has_task_result() const {
   return this != internal_default_instance() && task_result_ != nullptr;
@@ -5884,6 +6272,8 @@ inline void GetWorkerResultResponse::set_allocated_task_result(::TaskResult* tas
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

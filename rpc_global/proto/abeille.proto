@@ -116,10 +116,18 @@ message RequestVoteResponse {
 enum NodeStatus {
   IDLE = 0;
   BUSY = 1;
+  COMPLETED = 2;
+}
+
+message ConnectResponse {
+  Task task = 1;
+  uint64 leader_id = 2;
 }
 
 message WorkerStatus {
   NodeStatus status = 1;
+  uint64 task_id = 2;
+  TaskResult task_result = 3;
 }
 
 message AssignTaskRequest {
@@ -145,12 +153,11 @@ message GetWorkerResultRequest {
 }
 
 message GetWorkerResultResponse {
-  bool success = 1;
   TaskResult task_result = 2;
 }
 
 service WorkerService {
-  rpc Connect(stream WorkerStatus) returns (stream Empty) {}
+  rpc Connect(stream WorkerStatus) returns (stream ConnectResponse) {}
   rpc AssignTask(AssignTaskRequest) returns (AssignTaskResponse) {}
   rpc SendTask(SendTaskRequest) returns (SendTaskResponse) {}
   rpc GetWorkerResult(GetWorkerResultRequest) returns (GetWorkerResultResponse) {}

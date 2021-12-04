@@ -6,9 +6,11 @@
 namespace abeille {
 
 // FIXME: have to be implemented in Config !!!
-static constexpr char USER_SERVICE_HOST[] = "localhost:50051";
+static constexpr const char USER_SERVICE_ADDRESS[] = "127.0.0.1:50051";
 
-static constexpr char RAFT_SERVICE_HOST[] = "localhost:50052";
+static constexpr const char RAFT_SERVICE_ADDRESS[] = "127.0.0.1:50052";
+
+static constexpr const char WORKER_SERVICE_ADDRESS[] = "127.0.0.1:50053";
 
 }  // namespace abeille
 

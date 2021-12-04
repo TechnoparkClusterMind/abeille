@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 
+#include "constants.hpp"
 #include "convert.hpp"
 #include "logger.hpp"
 #include "worker_client.hpp"
@@ -16,8 +17,7 @@ std::unique_ptr<Client> worker_client;
 void signal_handler(int signal) { shutdown = true; }
 
 void run() {
-  std::string address = "127.0.0.1:9999";
-  worker_client = std::make_unique<Client>(address);
+  worker_client = std::make_unique<Client>(abeille::WORKER_SERVICE_ADDRESS);
 
   error err = worker_client->Run();
   if (!err.ok()) {

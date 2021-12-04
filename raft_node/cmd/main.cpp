@@ -51,7 +51,5 @@ int main(int argc, char *argv[]) {
   auto shutdown_thread = std::thread(&listen_shutdown);
   shutdown_thread.join();
 
-  LOG_DEBUG("Exiting...");
-
   return 0;
 }

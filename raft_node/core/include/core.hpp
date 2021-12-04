@@ -65,6 +65,8 @@ class Core {
 
   std::unique_ptr<grpc::Service> user_service_ = nullptr;
 
+  std::unique_ptr<grpc::Service> worker_service_ = nullptr;
+
   // Listens for inbound RPCs from raft nodes and pass them to the services
   std::unique_ptr<Server> raft_server_ = nullptr;
 
