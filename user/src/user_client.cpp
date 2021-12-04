@@ -11,19 +11,20 @@ using grpc::ClientContext;
 using grpc::Status;
 
 namespace abeille {
+namespace user {
 
-UploadDataResponse user::Client::UploadData(TaskData *task_data) {
+UploadDataResponse Client::UploadData(TaskData *task_data) {
   createStub(addresses_[address_index_]);
   connect();
   return uploadData(task_data);
 }
 
-void user::Client::createStub(const std::string &address) {
+void Client::createStub(const std::string &address) {
   auto channel = grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
   stub_ptr_ = UserService::NewStub(channel);
 }
 
-void user::Client::connect() {
+void Client::connect() {
   while (true) {
     if (pingRemote()) {
       break;
@@ -33,7 +34,7 @@ void user::Client::connect() {
   }
 }
 
-bool user::Client::pingRemote() {
+bool Client::pingRemote() {
   Empty req, resp;
   ClientContext context;
   context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(3));
@@ -41,7 +42,7 @@ bool user::Client::pingRemote() {
   return ok;
 }
 
-UploadDataResponse user::Client::uploadData(TaskData *task_data) {
+UploadDataResponse Client::uploadData(TaskData *task_data) {
   while (true) {
     ClientContext context;
     context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(5));
@@ -84,4 +85,5 @@ UploadDataResponse user::Client::uploadData(TaskData *task_data) {
   }
 }
 
+}  // namespace user
 }  // namespace abeille

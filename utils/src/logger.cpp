@@ -1,5 +1,7 @@
 #include "logger.hpp"
 
+#include <ctime>
+#include <iostream>
 #include <sstream>
 
 std::string timestamp() {
@@ -21,9 +23,8 @@ std::string timestamp() {
   if (tm->tm_mday < 10) D = "0" + D;
   if (tm->tm_mon + 1 < 10) M = "0" + M;
 
-  std::string ret = '[' + Y + '-' + M + '-' + D + 'T' + h + ':' + m + ':' + s + ']';
-
-  return ret;
+  std::string result = '[' + Y + '-' + M + '-' + D + 'T' + h + ':' + m + ':' + s + ']';
+  return result;
 }
 
 void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *format, ...) {

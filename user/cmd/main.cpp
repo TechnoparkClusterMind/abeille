@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 
-#include "constants.hpp"
 #include "convert.hpp"
 #include "logger.hpp"
 #include "user_client.hpp"

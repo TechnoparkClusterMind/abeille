@@ -2,8 +2,6 @@
 #define ABEILLE_UTILS_LOGGER_H_
 
 #include <cstdarg>
-#include <ctime>
-#include <iostream>
 #include <string>
 
 enum LOG_LEVEL { LOG_LEVEL_ERROR, LOG_LEVEL_WARN, LOG_LEVEL_INFO, LOG_LEVEL_TRACE, LOG_LEVEL_DEBUG };

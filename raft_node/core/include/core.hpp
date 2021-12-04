@@ -12,12 +12,13 @@
 #include "raft_pool.hpp"
 #include "server.hpp"
 #include "task_manager.hpp"
-#include "worker_pool.hpp"
 
 using abeille::rpc::Server;
 
 namespace abeille {
 namespace raft_node {
+
+class TaskManager;
 
 // Holds the Abeille raft server's daemon's top-level objects
 // The purpose of main() is to create and run a Core object
@@ -59,9 +60,6 @@ class Core {
 
   // Making outbound RPCs to Raft_nodes
   std::shared_ptr<RaftPool> raft_pool_ = nullptr;
-
-  // Making outbound RPCs to Raft_nodes
-  std::shared_ptr<WorkerPool> worker_pool_ = nullptr;
 
   std::unique_ptr<grpc::Service> raft_service_ = nullptr;
 

@@ -17,7 +17,7 @@ namespace raft_node {
 Core::Core(Config &&conf) noexcept
     : server_id_(config_.GetId()),
       config_(std::move(conf))
-// raft_pool_(new RaftPool{raft_}), worker_pool_(new WorkerPool{task_mgr_}),
+// raft_pool_(new RaftPool{raft_}), worker_service_(new WorkerService{task_mgr_}),
 // raft_(new RaftConsensus{this}), task_mgr_(new TaskManager{this}),
 // raft_service_(new RaftServiceImpl(raft_)),
 // user_service_(new UserServiceImpl(task_mgr_))
@@ -26,7 +26,6 @@ Core::Core(Config &&conf) noexcept
   task_mgr_ = std::make_shared<TaskManager>(this);
 
   raft_pool_ = std::make_shared<RaftPool>(raft_);
-  worker_pool_ = std::make_shared<WorkerPool>(task_mgr_);
 
   raft_service_ = std::make_unique<RaftServiceImpl>(raft_);
   user_service_ = std::make_unique<UserServiceImpl>(task_mgr_);
@@ -40,7 +39,6 @@ Core::Core(Core &&other) noexcept
     : raft_(std::move(other.raft_)),
       task_mgr_(std::move(other.task_mgr_)),
       raft_pool_(std::move(other.raft_pool_)),
-      worker_pool_(std::move(other.worker_pool_)),
       raft_service_(std::move(other.raft_service_)),
       user_service_(std::move(other.user_service_)),
       raft_server_(std::move(other.raft_server_)) {}
@@ -52,7 +50,6 @@ void Core::Run() {
   raft_->Run();
   task_mgr_->Run();
   raft_pool_->Run();
-  worker_pool_->Run();
   raft_server_->Run();
 }
 
@@ -65,7 +62,6 @@ void Core::Shutdown() {
     raft_->Shutdown();
     task_mgr_->Shutdown();
     raft_pool_->Shutdown();
-    worker_pool_->Shutdown();
     raft_server_->Shutdown();
 
     LOG_INFO("Waiting for threads to finish...");

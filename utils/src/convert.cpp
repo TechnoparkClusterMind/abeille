@@ -1,13 +1,5 @@
 #include "convert.hpp"
 
-TaskData* RawData2TaskData(const std::vector<int>& raw_data) {
-  TaskData* task_data = new TaskData();
-  for (int value : raw_data) {
-    task_data->add_data(value);
-  }
-  return task_data;
-}
-
 uint64_t address2uint(const std::string& address) {
   size_t pos = address.find(':');
   uint64_t port = std::stoull(address.substr(pos + 1));
@@ -35,4 +27,14 @@ std::string uint2address(uint64_t n) {
   return std::to_string(((n >> 40) & 0xFF)) + "." + std::to_string(((n >> 32) & 0xFF)) + "." +
          std::to_string(((n >> 24) & 0xFF)) + "." + std::to_string(((n >> 16) & 0xFF)) + ":" +
          std::to_string(n & 0xFFFF);
+}
+
+std::string ExtractAddress(const std::string& str) { return str.substr(str.find(':') + 1); }
+
+TaskData* RawData2TaskData(const std::vector<int>& raw_data) {
+  TaskData* task_data = new TaskData();
+  for (int value : raw_data) {
+    task_data->add_data(value);
+  }
+  return task_data;
 }

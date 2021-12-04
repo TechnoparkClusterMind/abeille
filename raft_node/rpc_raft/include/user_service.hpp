@@ -8,7 +8,6 @@
 #include "task_manager.hpp"
 
 using grpc::ServerContext;
-using grpc::ServerReaderWriter;
 using grpc::Status;
 
 namespace abeille {
