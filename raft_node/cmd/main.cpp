@@ -19,7 +19,6 @@ std::unique_ptr<Core> core_ptr = nullptr;
 void signal_handler(int signal) { shutdown = true; }
 
 void listen_shutdown() {
-  LOG_DEBUG("Listening shutdown...");
   while (true) {
     if (shutdown) {
       if (core_ptr) {

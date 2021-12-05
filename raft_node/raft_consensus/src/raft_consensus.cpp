@@ -32,15 +32,17 @@ void RaftConsensus::stepDown(uint64_t term) {}
 // initiates startNewElection()
 void RaftConsensus::timerThreadMain() {
   std::unique_lock<std::mutex> lock_guard(core_->mutex);
-  while (!exiting_) {
+  while (!shutdown_) {
     if (start_new_election_at_ >= election_timeout_ && voted_for_ == 0) {
       // Resetting all votes ?
       LOG_INFO("New election was started");
       startNewElection();
     }
-    core_->state_changed_.wait_until(lock_guard, start_new_election_at_);
+    core_->state_changed_.wait_until(lock_guard, start_new_election_at_, [this] { return shutdown_; });
   }
 }
+
+void RaftConsensus::Shutdown() noexcept { shutdown_ = true; }
 
 void RaftConsensus::resetElectionTimer() {
   int64_t rand_duration =
@@ -167,8 +169,6 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 void RaftConsensus::HandleAppendEntries(const AppendEntryRequest *msg, AppendEntryResponse *resp) {}
 
 void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg, RequestVoteResponse *resp) {}
-
-void RaftConsensus::Shutdown(){};
 
 }  // namespace raft_node
 }  // namespace abeille

@@ -67,6 +67,7 @@ void Core::Shutdown() {
     raft_server_->Shutdown();
 
     LOG_INFO("Waiting for threads to finish...");
+    state_changed_.notify_all();
     std::unique_lock<std::mutex> lock_guard(mutex);
     while (num_workers_threads_ > 0) state_changed_.wait(lock_guard);
     while (num_peers_threads_ > 0) state_changed_.wait(lock_guard);
