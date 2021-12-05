@@ -1,6 +1,7 @@
 #include "peer.hpp"
-#include "macroses.hpp"
+
 #include "abeille.pb.h"
+#include "logger.hpp"
 #include "raft_consensus.hpp"
 
 // Must be replace with the logging system in the future
@@ -13,7 +14,7 @@ Peer::Peer(std::shared_ptr<grpc::Channel> channel, std::shared_ptr<RaftConsensus
 
 void Peer::Run(std::shared_ptr<Peer> self) {
   ++raft_->num_peers_threads_;
-  LOG("Starting peer thread for server %lu", id_);
+  LOG_INFO("Starting peer thread for server %lu", id_);
   std::thread(&RaftConsensus::peerThreadMain, raft_, self).detach();
 }
 

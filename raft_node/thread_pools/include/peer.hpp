@@ -21,13 +21,11 @@ class RaftConsensus;
 // Tracks various bits of state for each server, wich is used
 // when we are the candidate or the leader
 class Peer {
-public:
-
-  typedef std::chrono::steady_clock::time_point timePoint;
+ public:
+  using timePoint = std::chrono::steady_clock::time_point;
 
   // grpc stub is initialized with channel
-  explicit Peer(std::shared_ptr<grpc::Channel> channel,
-                std::shared_ptr<RaftConsensus> raft, uint64_t id);
+  explicit Peer(std::shared_ptr<grpc::Channel> channel, std::shared_ptr<RaftConsensus> raft, uint64_t id);
 
   // destructor
   ~Peer();
@@ -41,7 +39,7 @@ public:
   // to this queue entries are pushed (from task_manager)
   std::queue<Entry> entries_;
 
-private:
+ private:
   // for RPCs
   std::unique_ptr<RaftService::Stub> stub_;
   std::shared_ptr<RaftConsensus> raft_;
@@ -61,7 +59,7 @@ private:
   friend class RaftConsensus;
 };
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille
 
-#endif // ABEILLE_RAFT_PEER_H_
+#endif  // ABEILLE_RAFT_PEER_H_

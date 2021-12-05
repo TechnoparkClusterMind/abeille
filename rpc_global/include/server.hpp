@@ -3,6 +3,7 @@
 
 #include <grpcpp/grpcpp.h>
 
+#include <chrono>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -15,19 +16,21 @@
 namespace abeille {
 namespace rpc {
 
-class Server {
-public:
-  Server() = default;
-  Server(const std::vector<std::string> &hosts,
-         const std::vector<grpc::Service *> &services) noexcept;
+static constexpr const auto SHUTDOWN_TIMEOUT = std::chrono::seconds(5);
 
+class Server {
+ public:
+  Server() = default;
+  Server(const std::vector<std::string> &hosts, const std::vector<grpc::Service *> &services) noexcept;
+
+  Server(Server &&other) noexcept;
   Server &operator=(Server &&other) noexcept;
 
   error Run();
-  void Wait();
+
   void Shutdown();
 
-private:
+ private:
   void init();
   void launch_and_wait();
   inline bool is_ready() const noexcept { return ready; }
@@ -44,7 +47,7 @@ private:
   std::condition_variable cv;
 };
 
-} // namespace rpc
-} // namespace abeille
+}  // namespace rpc
+}  // namespace abeille
 
-#endif // ABEILLE_RPC_SERVER_H_
+#endif  // ABEILLE_RPC_SERVER_H_

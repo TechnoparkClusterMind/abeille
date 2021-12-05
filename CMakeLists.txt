@@ -2,13 +2,18 @@ cmake_minimum_required(VERSION 3.18)
 
 project(abeille)
 
+option(ENABLE_DEBUG "Enable debug mode" OFF)
 option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_CPPCHECK "Enable cppcheck" OFF)
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 option(ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
-# add_compile_options(-Wpedantic -Werror -Wall -Wextra -Wshadow)
-add_compile_options(-Wpedantic -Wall -Wextra -Wshadow -Wno-unused-parameter)
+add_compile_options(-Wpedantic -Wall -Wextra -Wshadow)
+add_compile_options(-Wno-unused-parameter -Wno-unused-function)
+
+if(ENABLE_DEBUG)
+add_compile_definitions(DEBUG)
+endif()
 
 if(ENABLE_TESTS)
     enable_testing()
@@ -27,7 +32,7 @@ find_program(CMAKE_CXX_CPPCHECK cppcheck)
       "lib"
     )
       
-    add_custom_target(cppcheck ALL DEPENDS ${PROJECT_NAME}
+    add_custom_target(cppcheck
       COMMAND ${CMAKE_CXX_CPPCHECK}
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
       COMMENT "Static code analysis using cppcheck"
@@ -53,7 +58,6 @@ endif()
 
 # Common libraries for all executables
 add_subdirectory(utils)
-add_subdirectory(errors)
 add_subdirectory(rpc_global)
 
 # Three executables will be compiled
@@ -62,9 +66,5 @@ add_subdirectory(rpc_global)
 # * abeille-client -- launch the interface 
 #                     for communication with the raft cluster
 add_subdirectory(raft_node)
-# add_subdirectory(worker_node)
+add_subdirectory(worker)
 add_subdirectory(user)
-
-
-add_executable(main cmd/main.cpp)
-target_link_libraries(main rpc_global rpc_raft utils)

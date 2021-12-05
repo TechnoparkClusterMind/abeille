@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "abeille.grpc.pb.h"
@@ -18,24 +19,29 @@ namespace user {
 class Client {
  public:
   Client() = default;
-  explicit Client(const std::string &host) noexcept : host_(host) {}
+  explicit Client(const std::vector<std::string> &addresses) noexcept : addresses_(addresses) {}
   ~Client() = default;
 
-  void Upload(const std::vector<int> &data);
+  UploadDataResponse UploadData(TaskData *task_data);
+
+  TaskResult GetResult(uint64_t task_id);
 
  private:
-  // connect initializes stub if it's not set yet (is nullptr)
+  void createStub(const std::string &address);
+
   void connect();
 
   bool pingRemote();
 
-  void createStub();
+  UploadDataResponse uploadData(TaskData *task_data);
 
-  void upload(const std::vector<int> &data);
-
-  std::string host_;
-  std::unique_ptr<ClientContext> ctx_ptr_ = nullptr;
   std::unique_ptr<UserService::Stub> stub_ptr_ = nullptr;
+
+  std::vector<uint64_t> task_ids_;
+  std::unordered_map<uint64_t, int> results_;
+
+  size_t address_index_ = 0;
+  std::vector<std::string> addresses_;
 };
 
 }  // namespace user

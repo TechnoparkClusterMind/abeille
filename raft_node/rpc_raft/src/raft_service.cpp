@@ -17,19 +17,17 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-Status RaftServiceImpl::AppendEntry(ServerContext *context,
-                                    const AppendEntryRequest *request,
+Status RaftServiceImpl::AppendEntry(ServerContext *context, const AppendEntryRequest *request,
                                     AppendEntryResponse *response) {
   // FIXME: implement me
   return Status::OK;
 }
 
-Status RaftServiceImpl::RequestVote(ServerContext *context,
-                                    const RequestVoteRequest *request,
+Status RaftServiceImpl::RequestVote(ServerContext *context, const RequestVoteRequest *request,
                                     RequestVoteResponse *response) {
   // FIXME: implement me
   return Status::OK;
 }
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille
