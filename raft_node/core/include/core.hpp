@@ -20,7 +20,6 @@ namespace raft_node {
 // The purpose of main() is to create and run a Core object
 class Core {
 public:
-  Core() = default;
   // Initialize this object, Raft_consensus and Task_manager with config
   // Config must be checked before been passed to init()
   explicit Core(Config &&conf);
