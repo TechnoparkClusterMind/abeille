@@ -5,18 +5,11 @@
 namespace abeille {
 namespace rpc {
 
-Server::Server(const std::vector<std::string> &hosts, const std::vector<grpc::Service *> &services) noexcept
-    : hosts_(hosts), services_(services) {}
-
 Server::Server(Server &&other) noexcept
-    : hosts_(std::move(other.hosts_)),
-      services_(std::move(other.services_)),
-      thread_(std::move(other.thread_)),
-      server_(std::move(other.server_)) {}
+    : services_(std::move(other.services_)), thread_(std::move(other.thread_)), server_(std::move(other.server_)) {}
 
 Server &Server::operator=(Server &&other) noexcept {
   if (this != &other) {
-    hosts_ = std::move(other.hosts_);
     services_ = std::move(other.services_);
     thread_ = std::move(other.thread_);
     server_ = std::move(other.server_);
@@ -48,14 +41,10 @@ void Server::Shutdown() {
 }
 
 void Server::init() {
-  for (const std::string &host : hosts_) {
-    LOG_INFO("starting listening %s", host.c_str());
-    builder_.AddListeningPort(host, grpc::InsecureServerCredentials());
-  }
-
   LOG_INFO("registering services...");
-  for (const auto service : services_) {
-    builder_.RegisterService(service);
+  for (const auto &service : services_) {
+    builder_.AddListeningPort(service.address, grpc::InsecureServerCredentials());
+    builder_.RegisterService(service.address, service.service);
   }
 }
 

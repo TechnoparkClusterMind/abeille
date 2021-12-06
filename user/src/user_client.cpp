@@ -37,20 +37,21 @@ void Client::connect() {
 bool Client::pingRemote() {
   Empty req, resp;
   ClientContext context;
+  context.set_authority(abeille::USER_SERVICE_ADDRESS);
   context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(3));
   bool ok = stub_ptr_->Ping(&context, req, &resp).ok();
   return ok;
 }
 
 UploadDataResponse Client::uploadData(TaskData *task_data) {
+  UploadDataRequest request;
+  UploadDataResponse response;
+  request.set_allocated_task_data(task_data);
+
   while (true) {
     ClientContext context;
+    context.set_authority(abeille::USER_SERVICE_ADDRESS);
     context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(5));
-
-    UploadDataRequest request;
-    request.set_allocated_task_data(task_data);
-
-    UploadDataResponse response;
 
     Status status = stub_ptr_->UploadData(&context, request, &response);
     if (!status.ok()) {
@@ -72,16 +73,15 @@ UploadDataResponse Client::uploadData(TaskData *task_data) {
 
         address_index_ = (address_index_ + 1) % addresses_.size();
         LOG_ERROR("Trying server [%s]...", addresses_[address_index_].c_str());
-
-        UploadData(task_data);
       } else {
         address_index_ = std::distance(addresses_.begin(), it);
         LOG_INFO("Redirected to the leader [%s]...", addresses_[address_index_].c_str());
-        UploadData(task_data);
       }
-    } else {
-      return response;
+      UploadData(task_data);
     }
+
+    LOG_DEBUG("successfully uploaded data, returning response...");
+    return response;
   }
 }
 

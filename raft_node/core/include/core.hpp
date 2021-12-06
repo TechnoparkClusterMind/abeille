@@ -27,7 +27,7 @@ class Core {
   Core() = default;
   // Initialize this object, RaftConsensus and TaskManager with config
   // Config must be checked before been passed to init()
-  explicit Core(Config &&conf) noexcept;
+  explicit Core(Config &&config) noexcept;
 
   Core(Core &&other) noexcept;
 
@@ -62,9 +62,7 @@ class Core {
   std::shared_ptr<RaftPool> raft_pool_ = nullptr;
 
   std::unique_ptr<grpc::Service> raft_service_ = nullptr;
-
   std::unique_ptr<grpc::Service> user_service_ = nullptr;
-
   std::unique_ptr<grpc::Service> worker_service_ = nullptr;
 
   // Listens for inbound RPCs from raft nodes and pass them to the services

@@ -25,8 +25,7 @@ Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataReque
                                    UploadDataResponse *response) {
   LOG_TRACE();
   Task task;
-  // TODO: can we avoid this allocation?
-  TaskData *task_data = new TaskData(request->task_data());
+  auto task_data = new TaskData(request->task_data());
   task.set_allocated_task_data(task_data);
   task.set_id(last_task_id_);
 

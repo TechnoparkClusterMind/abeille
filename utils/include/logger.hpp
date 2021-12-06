@@ -14,7 +14,7 @@ static constexpr const LOG_LEVEL LOG_LEVEL_ = LOG_LEVEL_INFO;
 
 std::string timestamp();
 
-void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *format, ...);
+void LOG_(LOG_LEVEL log_level, const char *file, const char *func, unsigned int line, const char *format, ...);
 
 // Colors for printing
 static constexpr const char *COLOR_ERROR = "\x1B[1m\x1B[31m";  // Bold Red
@@ -30,7 +30,7 @@ static constexpr const char *LOG_LEVEL_COLOR[] = {COLOR_ERROR, COLOR_WARN, COLOR
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define LOG(log_level, format, ...) LOG_(log_level, __FILENAME__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG(log_level, format, ...) LOG_(log_level, __FILENAME__, __FUNCTION__, __LINE__, format, ##__VA_ARGS__)
 
 #define LOG_ERROR(format, ...) LOG(LOG_LEVEL_ERROR, format, ##__VA_ARGS__)
 
