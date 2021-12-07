@@ -27,7 +27,7 @@ std::string timestamp() {
   return result;
 }
 
-void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *format, ...) {
+void LOG_(LOG_LEVEL log_level, const char *file, const char *func, unsigned int line, const char *format, ...) {
   if (log_level > LOG_LEVEL_) {
     return;
   }
@@ -40,11 +40,19 @@ void LOG_(LOG_LEVEL log_level, const char *file, const char *func, const char *f
 
   // construct output before printing for thread safety
   std::stringstream stream;
+
   stream << LOG_LEVEL_COLOR[log_level] << timestamp() << '[' << LOG_LEVEL_PREFIX[log_level] << ']';
-  stream << '[' << file << ':' << func << ']';
+
+  if (log_level >= LOG_LEVEL_TRACE) {
+    stream << '[' << file << ':' << func << ':' << line << ']';
+  } else {
+    stream << '[' << file << ':' << func << ']';
+  }
+
   if (log_level != LOG_LEVEL_TRACE) {
     stream << ": " << message;
   }
+
   stream << RESET_FONT << std::endl;
 
   std::cout << stream.str();

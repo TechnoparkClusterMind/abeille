@@ -11,6 +11,8 @@
 #include "user_service.hpp"
 #include "worker_service.hpp"
 
+using abeille::rpc::ServiceInfo;
+
 namespace abeille {
 namespace raft_node {
 
@@ -24,8 +26,24 @@ Core::Core(Config &&conf) noexcept
       user_service_(new UserServiceImpl(task_mgr_)),
       worker_service_(new WorkerServiceImpl()) {
 
+  std::vector<ServiceInfo> services = {{config_.GetRaftAddress(), raft_service_.get()},
+                                       {config_.GetUserAddress(), user_service_.get()},
+                                       {config_.GetWorkerAddress(), worker_service_.get()}};
+
+  raft_server_ = std::make_unique<abeille::rpc::Server>(services);
+
 }
 
+Core::Core(Core &&other) noexcept
+    : raft_(std::move(other.raft_)),
+      task_mgr_(std::move(other.task_mgr_)),
+      raft_pool_(std::move(other.raft_pool_)),
+      raft_service_(std::move(other.raft_service_)),
+      user_service_(std::move(other.user_service_)),
+      worker_service_(std::move(other.worker_service_)),
+      raft_server_(std::move(other.raft_server_)) {}
+
+// TODO: Test for EXPECT_DEATH
 Core::Status Core::Run() noexcept {
   LOG_INFO("Launching top-level objects");
 

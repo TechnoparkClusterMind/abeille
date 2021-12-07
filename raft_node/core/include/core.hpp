@@ -11,9 +11,12 @@
 #include "errors.hpp"
 #include "raft_consensus.hpp"
 #include "raft_pool.hpp"
+#include "raft_service.hpp"
 #include "server.hpp"
 #include "task_manager.hpp"
 #include "worker_pool.hpp"
+#include "user_service.hpp"
+#include "worker_service.hpp"
 
 using abeille::rpc::Server;
 
@@ -23,6 +26,9 @@ namespace raft_node {
 // forward declaration
 class TaskManager;
 class RaftPool;
+class RaftServiceImpl;
+class UserServiceImpl;
+class WorkerServiceImpl;
 
 // FIXME: refactor to singleton
 // Holds the Abeille raft server's daemon's top-level objects
@@ -96,6 +102,8 @@ class Core {
   bool shutdown_ = false;
 
   friend class RaftConsensus;
+  friend class Peer;
+  friend class Worker;
   friend class TaskManager;
 };
 

@@ -23,15 +23,14 @@ class WorkerServiceImpl final : public WorkerService::Service {
  public:
   using ConnectStream = grpc::ServerReaderWriter<ConnectResponse, WorkerStatus>;
 
+  Status AssignTask(const AssignTaskRequest *request, AssignTaskResponse *response);
+
+  Status SendTask(const SendTaskRequest *request, SendTaskResponse *response);
+
+  Status GetWorkerResult(const GetWorkerResultRequest *request, GetWorkerResultResponse *response);
+
  private:
   Status Connect(ServerContext *context, ConnectStream *stream) override;
-
-  Status AssignTask(ServerContext *context, const AssignTaskRequest *request, AssignTaskResponse *response) override;
-
-  Status SendTask(ServerContext *context, const SendTaskRequest *request, SendTaskResponse *response) override;
-
-  Status GetWorkerResult(ServerContext *context, const GetWorkerResultRequest *request,
-                         GetWorkerResultResponse *response) override;
 
   bool IsLeader() const noexcept { return id_ == leader_id_; }
 

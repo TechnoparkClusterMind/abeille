@@ -18,11 +18,15 @@ namespace rpc {
 
 static constexpr const auto SHUTDOWN_TIMEOUT = std::chrono::seconds(5);
 
+struct ServiceInfo {
+  std::string address;
+  grpc::Service *service;
+};
+
 class Server {
  public:
   Server() = default;
-  Server(const std::vector<std::string> &hosts,
-         const std::vector<grpc::Service> &services) noexcept;
+  Server(std::vector<ServiceInfo> services) noexcept : services_(services) {}
 
   Server(Server &&other) noexcept;
   Server &operator=(Server &&other) noexcept;
@@ -36,8 +40,8 @@ class Server {
   void launch_and_wait();
   inline bool is_ready() const noexcept { return ready; }
 
-  std::vector<std::string> hosts_;
-  std::vector<grpc::Service> services_;
+ private:
+  std::vector<ServiceInfo> services_;
 
   grpc::ServerBuilder builder_;
   std::unique_ptr<std::thread> thread_ = nullptr;

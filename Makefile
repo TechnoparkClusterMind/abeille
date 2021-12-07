@@ -26,10 +26,6 @@ abeille-client: proto
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
 	make ${MAKE_FLAGS} -C ${BUILD_DIR} abeille-client
 
-build-debug:
-	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
-	make ${MAKE_FLAGS} -C ${BUILD_DIR} all
-
 test:
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
 	scan-build make ${CMAKE_TEST_FLAGS} -C ${BUILD_DIR} all test

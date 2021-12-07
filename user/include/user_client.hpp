@@ -22,6 +22,15 @@ class Client {
   explicit Client(const std::vector<std::string> &addresses) noexcept : addresses_(addresses) {}
   ~Client() = default;
 
+  Client &operator=(Client &&other) noexcept {
+    stub_ptr_ = std::move(other.stub_ptr_);
+    task_ids_ = other.task_ids_;
+    results_ = other.results_;
+    address_index_ = other.address_index_;
+    addresses_ = other.addresses_;
+    return *this;
+  }
+
   UploadDataResponse UploadData(TaskData *task_data);
 
   TaskResult GetResult(uint64_t task_id);
