@@ -30,8 +30,6 @@ class Client {
 
   void Shutdown();
 
-  error ProcessTaskData(const TaskData &task_data);
-
  private:
   void createStub();
 
@@ -40,6 +38,8 @@ class Client {
   void keepAlive();
 
   bool handshake();
+
+  void processData(const TaskData &task_data);
 
  private:
   bool shutdown_ = false;

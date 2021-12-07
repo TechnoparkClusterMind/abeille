@@ -5,8 +5,10 @@
 
 #include "constants.hpp"
 #include "convert.hpp"
+#include "data_processor.hpp"
 #include "logger.hpp"
 
+using abeille::user::ProcessData;
 using grpc::ClientContext;
 using grpc::Status;
 
@@ -88,7 +90,7 @@ void Client::keepAlive() {
       if (!response.has_task_data()) {
         LOG_ERROR("got asked to process null data");
       } else {
-        ProcessTaskData(response.task_data());
+        std::thread(&Client::processData, this, response.task_data()).detach();
       }
     }
 
@@ -126,21 +128,12 @@ bool Client::handshake() {
   return connect_stream_->Write(request);
 }
 
-// TODO: think of how to abstract this away
-error Client::ProcessTaskData(const TaskData &task_data) {
-  LOG_INFO("processing the task data...");
-
-  int sum = 0;
-  for (int elem : task_data.data()) {
-    sum += elem;
-  }
-
+void Client::processData(const TaskData &task_data) {
+  LOG_INFO("processing data...");
   task_result_ = new TaskResult();
-  task_result_->set_result(sum);
-
+  ProcessData(task_data, task_result_);
+  LOG_INFO("finished processing data");
   status_ = NodeStatus::COMPLETED;
-
-  return error();
 }
 
 }  // namespace worker
