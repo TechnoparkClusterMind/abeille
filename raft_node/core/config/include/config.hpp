@@ -10,6 +10,7 @@ class Config {
   std::vector<std::string> workers_;
   std::string user_address_;
   std::string raft_address_;
+  std::string worker_address_;
   uint64_t id_;
 
 public:
@@ -27,6 +28,7 @@ public:
   uint64_t GetId() const noexcept { return id_; }
   std::string GetUserAddress() const noexcept { return user_address_; }
   std::string GetRaftAddress() const noexcept { return raft_address_; }
+  std::string GetWorkerAddress() const noexcept { return worker_address_; }
 
   ~Config() = default;
 };

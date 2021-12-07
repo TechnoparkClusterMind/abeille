@@ -43,7 +43,7 @@ class RaftConsensus {
   // start timer and peer threads
   void Run();
 
-  void Shutdown();
+  void Shutdown() noexcept;
 
  private:  // Methods
   // Initiate RPCs if needed
@@ -104,7 +104,7 @@ class RaftConsensus {
   uint64_t voted_for_ = 0;
 
   // is raft exiting
-  bool exiting_ = false;
+  bool shutdown_ = false;
 
   Core *core_ = nullptr;
 

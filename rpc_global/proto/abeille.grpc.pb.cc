@@ -268,3 +268,182 @@ RaftService::Service::~Service() {
 }
 
 
+static const char* WorkerService_method_names[] = {
+  "/WorkerService/Connect",
+  "/WorkerService/AssignTask",
+  "/WorkerService/SendTask",
+  "/WorkerService/GetWorkerResult",
+};
+
+std::unique_ptr< WorkerService::Stub> WorkerService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< WorkerService::Stub> stub(new WorkerService::Stub(channel, options));
+  return stub;
+}
+
+WorkerService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
+  : channel_(channel), rpcmethod_Connect_(WorkerService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
+  , rpcmethod_AssignTask_(WorkerService_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SendTask_(WorkerService_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_GetWorkerResult_(WorkerService_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  {}
+
+::grpc::ClientReaderWriter< ::WorkerStatus, ::ConnectResponse>* WorkerService::Stub::ConnectRaw(::grpc::ClientContext* context) {
+  return ::grpc::internal::ClientReaderWriterFactory< ::WorkerStatus, ::ConnectResponse>::Create(channel_.get(), rpcmethod_Connect_, context);
+}
+
+void WorkerService::Stub::async::Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerStatus,::ConnectResponse>* reactor) {
+  ::grpc::internal::ClientCallbackReaderWriterFactory< ::WorkerStatus,::ConnectResponse>::Create(stub_->channel_.get(), stub_->rpcmethod_Connect_, context, reactor);
+}
+
+::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>* WorkerService::Stub::AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::WorkerStatus, ::ConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, true, tag);
+}
+
+::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>* WorkerService::Stub::PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::WorkerStatus, ::ConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, false, nullptr);
+}
+
+::grpc::Status WorkerService::Stub::AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::AssignTaskRequest, ::AssignTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_AssignTask_, context, request, response);
+}
+
+void WorkerService::Stub::async::AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::AssignTaskRequest, ::AssignTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_AssignTask_, context, request, response, std::move(f));
+}
+
+void WorkerService::Stub::async::AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_AssignTask_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* WorkerService::Stub::PrepareAsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::AssignTaskResponse, ::AssignTaskRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_AssignTask_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* WorkerService::Stub::AsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncAssignTaskRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status WorkerService::Stub::SendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::SendTaskResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::SendTaskRequest, ::SendTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_SendTask_, context, request, response);
+}
+
+void WorkerService::Stub::async::SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::SendTaskRequest, ::SendTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_SendTask_, context, request, response, std::move(f));
+}
+
+void WorkerService::Stub::async::SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_SendTask_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::SendTaskResponse>* WorkerService::Stub::PrepareAsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::SendTaskResponse, ::SendTaskRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_SendTask_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::SendTaskResponse>* WorkerService::Stub::AsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSendTaskRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status WorkerService::Stub::GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::GetWorkerResultResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::GetWorkerResultRequest, ::GetWorkerResultResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetWorkerResult_, context, request, response);
+}
+
+void WorkerService::Stub::async::GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::GetWorkerResultRequest, ::GetWorkerResultResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetWorkerResult_, context, request, response, std::move(f));
+}
+
+void WorkerService::Stub::async::GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetWorkerResult_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>* WorkerService::Stub::PrepareAsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::GetWorkerResultResponse, ::GetWorkerResultRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetWorkerResult_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>* WorkerService::Stub::AsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncGetWorkerResultRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+WorkerService::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      WorkerService_method_names[0],
+      ::grpc::internal::RpcMethod::BIDI_STREAMING,
+      new ::grpc::internal::BidiStreamingHandler< WorkerService::Service, ::WorkerStatus, ::ConnectResponse>(
+          [](WorkerService::Service* service,
+             ::grpc::ServerContext* ctx,
+             ::grpc::ServerReaderWriter<::ConnectResponse,
+             ::WorkerStatus>* stream) {
+               return service->Connect(ctx, stream);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      WorkerService_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< WorkerService::Service, ::AssignTaskRequest, ::AssignTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](WorkerService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::AssignTaskRequest* req,
+             ::AssignTaskResponse* resp) {
+               return service->AssignTask(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      WorkerService_method_names[2],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< WorkerService::Service, ::SendTaskRequest, ::SendTaskResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](WorkerService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::SendTaskRequest* req,
+             ::SendTaskResponse* resp) {
+               return service->SendTask(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      WorkerService_method_names[3],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< WorkerService::Service, ::GetWorkerResultRequest, ::GetWorkerResultResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](WorkerService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::GetWorkerResultRequest* req,
+             ::GetWorkerResultResponse* resp) {
+               return service->GetWorkerResult(ctx, req, resp);
+             }, this)));
+}
+
+WorkerService::Service::~Service() {
+}
+
+::grpc::Status WorkerService::Service::Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* stream) {
+  (void) context;
+  (void) stream;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status WorkerService::Service::AssignTask(::grpc::ServerContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status WorkerService::Service::SendTask(::grpc::ServerContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status WorkerService::Service::GetWorkerResult(::grpc::ServerContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+

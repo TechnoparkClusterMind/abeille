@@ -11,19 +11,20 @@ using grpc::ClientContext;
 using grpc::Status;
 
 namespace abeille {
+namespace user {
 
-UploadDataResponse user::Client::UploadData(TaskData *task_data) {
+UploadDataResponse Client::UploadData(TaskData *task_data) {
   createStub(addresses_[address_index_]);
   connect();
   return uploadData(task_data);
 }
 
-void user::Client::createStub(const std::string &address) {
+void Client::createStub(const std::string &address) {
   auto channel = grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
   stub_ptr_ = UserService::NewStub(channel);
 }
 
-void user::Client::connect() {
+void Client::connect() {
   while (true) {
     if (pingRemote()) {
       break;
@@ -33,23 +34,24 @@ void user::Client::connect() {
   }
 }
 
-bool user::Client::pingRemote() {
+bool Client::pingRemote() {
   Empty req, resp;
   ClientContext context;
+  context.set_authority(abeille::USER_SERVICE_ADDRESS);
   context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(3));
   bool ok = stub_ptr_->Ping(&context, req, &resp).ok();
   return ok;
 }
 
-UploadDataResponse user::Client::uploadData(TaskData *task_data) {
+UploadDataResponse Client::uploadData(TaskData *task_data) {
+  UploadDataRequest request;
+  UploadDataResponse response;
+  request.set_allocated_task_data(task_data);
+
   while (true) {
     ClientContext context;
+    context.set_authority(abeille::USER_SERVICE_ADDRESS);
     context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(5));
-
-    UploadDataRequest request;
-    request.set_allocated_task_data(task_data);
-
-    UploadDataResponse response;
 
     Status status = stub_ptr_->UploadData(&context, request, &response);
     if (!status.ok()) {
@@ -71,17 +73,17 @@ UploadDataResponse user::Client::uploadData(TaskData *task_data) {
 
         address_index_ = (address_index_ + 1) % addresses_.size();
         LOG_ERROR("Trying server [%s]...", addresses_[address_index_].c_str());
-
-        UploadData(task_data);
       } else {
         address_index_ = std::distance(addresses_.begin(), it);
         LOG_INFO("Redirected to the leader [%s]...", addresses_[address_index_].c_str());
-        UploadData(task_data);
       }
-    } else {
-      return response;
+      UploadData(task_data);
     }
+
+    LOG_DEBUG("successfully uploaded data, returning response...");
+    return response;
   }
 }
 
+}  // namespace user
 }  // namespace abeille

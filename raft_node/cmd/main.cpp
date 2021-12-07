@@ -19,7 +19,6 @@ std::unique_ptr<Core> core_ptr = nullptr;
 void signal_handler(int signal) { shutdown = true; }
 
 void listen_shutdown() {
-  LOG_DEBUG("Listening shutdown...");
   while (true) {
     if (shutdown) {
       if (core_ptr) {
@@ -50,8 +49,6 @@ int main(int argc, char *argv[]) {
 
   auto shutdown_thread = std::thread(&listen_shutdown);
   shutdown_thread.join();
-
-  LOG_DEBUG("Exiting...");
 
   return 0;
 }

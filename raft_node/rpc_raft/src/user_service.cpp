@@ -19,29 +19,21 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-bool UserServiceImpl::IsLeader() const noexcept {
-  return true;
-  // return id_ == leader_id_;
-}
-
 Status UserServiceImpl::Ping(ServerContext *context, const Empty *request, Empty *response) { return Status::OK; }
 
 Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataRequest *request,
                                    UploadDataResponse *response) {
   LOG_TRACE();
-  Task task;
-  // TODO: can we avoid this allocation?
-  TaskData *task_data = new TaskData(request->task_data());
-  task.set_allocated_task_data(task_data);
-  task.set_id(last_task_id_);
+  // Task task;
+  auto task_data = new TaskData(request->task_data());
+  // task.set_allocated_task_data(task_data);
 
   // FIXME: implement, send task to RaftPool
   // ...
 
   if (IsLeader()) {
     response->set_success(true);
-    response->set_task_id(task.id());
-    ++last_task_id_;
+    task_mgr_->UploadData(task_data, response);
   } else {
     response->set_success(false);
     response->set_leader_id(leader_id_);

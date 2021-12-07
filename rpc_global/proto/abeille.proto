@@ -24,8 +24,8 @@ message GetResultResponse { TaskResult task_result = 1; }
 
 service UserService {
   rpc Ping(Empty) returns (Empty);
-  rpc UploadData(UploadDataRequest) returns (UploadDataResponse);
-  rpc GetResult(GetResultRequest) returns (GetResultResponse);
+  rpc UploadData(UploadDataRequest) returns (UploadDataResponse) {}
+  rpc GetResult(GetResultRequest) returns (GetResultResponse) {}
 }
 
 // ----------------------------- Raft Entry ----------------------------- //
@@ -110,3 +110,56 @@ message RequestVoteResponse {
   uint64 term = 1;       // current term for candidate to update itself
   bool vote_granted = 2; // true if candidate recieved vote
 }
+
+// ----------------------------- Worker Service ----------------------------- //
+
+enum NodeStatus {
+  IDLE = 0;
+  BUSY = 1;
+  COMPLETED = 2;
+}
+
+message ConnectResponse {
+  Task task = 1;
+  uint64 leader_id = 2;
+}
+
+message WorkerStatus {
+  NodeStatus status = 1;
+  uint64 task_id = 2;
+  TaskResult task_result = 3;
+}
+
+message AssignTaskRequest {
+  uint64 task_id = 1;
+}
+
+message AssignTaskResponse {
+  bool success = 1;
+  uint64 worker_id = 2;
+}
+
+message SendTaskRequest {
+  Task task = 1;
+}
+
+message SendTaskResponse {
+  bool success = 1;
+}
+
+message GetWorkerResultRequest {
+  uint64 worker_id = 1;
+  uint64 task_id = 2;
+}
+
+message GetWorkerResultResponse {
+  TaskResult task_result = 2;
+}
+
+service WorkerService {
+  rpc Connect(stream WorkerStatus) returns (stream ConnectResponse) {}
+  rpc AssignTask(AssignTaskRequest) returns (AssignTaskResponse) {}
+  rpc SendTask(SendTaskRequest) returns (SendTaskResponse) {}
+  rpc GetWorkerResult(GetWorkerResultRequest) returns (GetWorkerResultResponse) {}
+}
+

@@ -6,11 +6,11 @@ MAKE_FLAGS=-j$(shell nproc)
 
 PROTO_SRC_DIR:=rpc_global/proto
 
-build: clean proto
+debug:
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
 	make ${MAKE_FLAGS} -C ${BUILD_DIR} all
 
-debug:
+build: clean proto
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
 	make ${MAKE_FLAGS} -C ${BUILD_DIR} all
 
@@ -25,10 +25,6 @@ abeille-worker: proto
 abeille-client: proto
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
 	make ${MAKE_FLAGS} -C ${BUILD_DIR} abeille-client
-
-build-debug:
-	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
-	make ${MAKE_FLAGS} -C ${BUILD_DIR} all
 
 test:
 	cmake -B ${BUILD_DIR} ${CMAKE_DEBUG_FLAGS}
