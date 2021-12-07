@@ -19,7 +19,8 @@ namespace user {
 class Client {
  public:
   Client() = default;
-  explicit Client(const std::vector<std::string> &addresses) noexcept : addresses_(addresses) {}
+  explicit Client(const std::vector<std::string> &addresses) noexcept
+      : addresses_(addresses) {}
   ~Client() = default;
 
   Client &operator=(Client &&other) noexcept {

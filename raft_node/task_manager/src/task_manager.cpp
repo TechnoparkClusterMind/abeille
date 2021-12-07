@@ -5,7 +5,8 @@
 namespace abeille {
 namespace raft_node {
 
-error TaskManager::UploadData(TaskData *task_data, UploadDataResponse *response) {
+error TaskManager::UploadData(TaskData *task_data,
+                              UploadDataResponse *response) {
   // TODO: add raft logic - send entries
 
   auto task = new Task();
@@ -28,7 +29,8 @@ error TaskManager::UploadData(TaskData *task_data, UploadDataResponse *response)
 
     auto send_task_response = std::make_unique<SendTaskResponse>();
 
-    core_->worker_service_->SendTask(send_task_request.get(), send_task_response.get());
+    core_->worker_service_->SendTask(send_task_request.get(),
+                                     send_task_response.get());
   }
 
   response->set_task_id(last_task_id_);

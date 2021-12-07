@@ -9,7 +9,8 @@ class error {
 
   error() = default;
   explicit error(Code code) noexcept : code_(code) {}
-  error(const std::string& message, Code code = Code::FAILURE) noexcept : code_(code), message_(message) {}
+  error(const std::string& message, Code code = Code::FAILURE) noexcept
+      : code_(code), message_(message) {}
   ~error() = default;
 
   Code code() const noexcept { return code_; }

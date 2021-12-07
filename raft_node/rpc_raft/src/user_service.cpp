@@ -19,9 +19,13 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-Status UserServiceImpl::Ping(ServerContext *context, const Empty *request, Empty *response) { return Status::OK; }
+Status UserServiceImpl::Ping(ServerContext *context, const Empty *request,
+                             Empty *response) {
+  return Status::OK;
+}
 
-Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataRequest *request,
+Status UserServiceImpl::UploadData(ServerContext *context,
+                                   const UploadDataRequest *request,
                                    UploadDataResponse *response) {
   LOG_TRACE();
   auto task_data = new TaskData(request->task_data());
@@ -37,7 +41,8 @@ Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataReque
   return Status::OK;
 }
 
-Status UserServiceImpl::GetResult(ServerContext *context, const GetResultRequest *request,
+Status UserServiceImpl::GetResult(ServerContext *context,
+                                  const GetResultRequest *request,
                                   GetResultResponse *response) {
   LOG_DEBUG("request for [%u]", request->task_id());
   TaskResult *task_result = new TaskResult();

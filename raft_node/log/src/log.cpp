@@ -12,7 +12,7 @@ size_t Log::Purge(Index index) noexcept {
   return count;
 }
 
-void Log::Append(const Entry &entry) noexcept { log_.push_back(entry); }
+void Log::Append(const Entry& entry) noexcept { log_.push_back(entry); }
 
 Term Log::LastTerm() const noexcept {
   if (log_.empty()) {
@@ -34,5 +34,5 @@ bool Log::Check(Index index, Term term) const noexcept {
 
 Entry* Log::GetEntry(Index index) { return &log_[index]; }
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille

@@ -18,14 +18,18 @@ class TaskManager;
 class UserServiceImpl final : public UserService::Service {
  public:
   UserServiceImpl() = default;
-  explicit UserServiceImpl(std::shared_ptr<TaskManager> task_mgr) : task_mgr_(task_mgr){};
+  explicit UserServiceImpl(std::shared_ptr<TaskManager> task_mgr)
+      : task_mgr_(task_mgr){};
 
  private:
-  Status Ping(ServerContext *context, const Empty *request, Empty *response) override;
+  Status Ping(ServerContext *context, const Empty *request,
+              Empty *response) override;
 
-  Status UploadData(ServerContext *context, const UploadDataRequest *request, UploadDataResponse *response) override;
+  Status UploadData(ServerContext *context, const UploadDataRequest *request,
+                    UploadDataResponse *response) override;
 
-  Status GetResult(ServerContext *context, const GetResultRequest *request, GetResultResponse *response) override;
+  Status GetResult(ServerContext *context, const GetResultRequest *request,
+                   GetResultResponse *response) override;
 
   bool IsLeader() const noexcept { return id_ == leader_id_; }
 

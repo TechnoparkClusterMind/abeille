@@ -17,7 +17,8 @@ namespace abeille {
 namespace raft_node {
 
 // Initializing all main objects of the raft_node
-Core::Core(Config &&config) noexcept : server_id_(config.GetId()), config_(std::move(config)) {
+Core::Core(Config &&config) noexcept
+    : server_id_(config.GetId()), config_(std::move(config)) {
   raft_ = std::make_shared<RaftConsensus>(this);
   task_mgr_ = std::make_shared<TaskManager>(this);
   raft_pool_ = std::make_shared<RaftPool>(raft_);
@@ -26,9 +27,10 @@ Core::Core(Config &&config) noexcept : server_id_(config.GetId()), config_(std::
   user_service_ = std::make_unique<UserServiceImpl>(task_mgr_);
   worker_service_ = std::make_unique<WorkerServiceImpl>();
 
-  std::vector<ServiceInfo> services = {{config_.GetRaftAddress(), raft_service_.get()},
-                                       {config_.GetUserAddress(), user_service_.get()},
-                                       {config_.GetWorkerAddress(), worker_service_.get()}};
+  std::vector<ServiceInfo> services = {
+      {config_.GetRaftAddress(), raft_service_.get()},
+      {config_.GetUserAddress(), user_service_.get()},
+      {config_.GetWorkerAddress(), worker_service_.get()}};
 
   raft_server_ = std::make_unique<abeille::rpc::Server>(services);
 }

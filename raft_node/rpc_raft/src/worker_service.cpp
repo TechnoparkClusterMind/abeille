@@ -8,7 +8,8 @@
 namespace abeille {
 namespace raft_node {
 
-Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream) {
+Status WorkerServiceImpl::Connect(ServerContext *context,
+                                  ConnectStream *stream) {
   std::string address = ExtractAddress(context->peer());
   uint64_t worker_id = address2uint(address);
   LOG_INFO("connection request from [%s]", address.c_str());
@@ -37,7 +38,8 @@ Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream)
 
     // check if the worker has completed processing a data
     if (request.status() == NodeStatus::COMPLETED) {
-      LOG_DEBUG("[%s] has finished [%llu] task with result", address.c_str(), request.task_id());
+      LOG_DEBUG("[%s] has finished [%llu] task with result", address.c_str(),
+                request.task_id());
     }
 
     ConnectResponse response;
@@ -61,7 +63,8 @@ Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream)
       break;
     }
 
-    LOG_DEBUG("[%s] is [%s]", address.c_str(), NodeStatus_Name(request.status()).c_str());
+    LOG_DEBUG("[%s] is [%s]", address.c_str(),
+              NodeStatus_Name(request.status()).c_str());
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
   }
@@ -71,7 +74,8 @@ Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream)
   return Status::OK;
 }
 
-Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request, AssignTaskResponse *response) {
+Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request,
+                                     AssignTaskResponse *response) {
   LOG_INFO("assigning task [%llu]", request->task_id());
   uint64_t worker_id = 0;
   for (auto it = workers_.begin(); it != workers_.end(); ++it) {
@@ -95,7 +99,8 @@ Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request, AssignTas
   return Status::OK;
 }
 
-Status WorkerServiceImpl::SendTask(const SendTaskRequest *request, SendTaskResponse *response) {
+Status WorkerServiceImpl::SendTask(const SendTaskRequest *request,
+                                   SendTaskResponse *response) {
   uint64_t worker_id = request->task().assignee();
   auto state = workers_.find(worker_id);
   if (state == workers_.end()) {
@@ -105,7 +110,8 @@ Status WorkerServiceImpl::SendTask(const SendTaskRequest *request, SendTaskRespo
 
   if (state->second.task.id() == request->task().id()) {
     worker_command_ = WorkerCommand::PROCESS;
-    LOG_INFO("successfully sent [%llu] task to [%llu]", request->task().id(), worker_id);
+    LOG_INFO("successfully sent [%llu] task to [%llu]", request->task().id(),
+             worker_id);
     state->second.task = request->task();
   } else {
     LOG_ERROR("task is sent to a wrong worker");
@@ -114,7 +120,8 @@ Status WorkerServiceImpl::SendTask(const SendTaskRequest *request, SendTaskRespo
   return Status::OK;
 }
 
-Status WorkerServiceImpl::GetWorkerResult(const GetWorkerResultRequest *request, GetWorkerResultResponse *response) {
+Status WorkerServiceImpl::GetWorkerResult(const GetWorkerResultRequest *request,
+                                          GetWorkerResultResponse *response) {
   uint64_t worker_id = request->worker_id();
   auto state = workers_.find(worker_id);
   if (state == workers_.end()) {

@@ -25,7 +25,8 @@ class Peer {
   using timePoint = std::chrono::steady_clock::time_point;
 
   // grpc stub is initialized with channel
-  explicit Peer(std::shared_ptr<grpc::Channel> channel, std::shared_ptr<RaftConsensus> raft, uint64_t id);
+  explicit Peer(std::shared_ptr<grpc::Channel> channel,
+                std::shared_ptr<RaftConsensus> raft, uint64_t id);
 
   // destructor
   ~Peer();

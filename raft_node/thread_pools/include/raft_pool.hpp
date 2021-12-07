@@ -17,7 +17,7 @@ class RaftConsensus;
 class Peer;
 
 class RaftPool {
-public:
+ public:
   // Init all peers with raft_consensus
   explicit RaftPool(std::shared_ptr<RaftConsensus> raft) : raft_(raft) {}
   ~RaftPool() = default;
@@ -32,12 +32,12 @@ public:
   // Appends Entry to all peers
   void AppendAll(const Entry &entry){};
 
-private:
+ private:
   std::unordered_map<uint64_t, Peer *> peers_;
   std::shared_ptr<RaftConsensus> raft_;
 };
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille
 
-#endif // ABEILLE_RAFT_RAFT_POOL_H_
+#endif  // ABEILLE_RAFT_RAFT_POOL_H_

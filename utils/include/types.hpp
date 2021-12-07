@@ -8,6 +8,6 @@ namespace abeille {
 using Index = uint64_t;
 using Term = uint64_t;
 
-} // namespace abeille
+}  // namespace abeille
 
 #endif  // ABEILLE_RAFT_COMMON_H_

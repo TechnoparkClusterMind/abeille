@@ -13,7 +13,9 @@ namespace abeille {
 namespace raft_node {
 
 RaftConsensus::RaftConsensus(Core *core) noexcept
-    : id_(core->config_.GetId()), core_(core), num_peers_threads_(&core_->num_peers_threads_) {}
+    : id_(core->config_.GetId()),
+      core_(core),
+      num_peers_threads_(&core_->num_peers_threads_) {}
 
 RaftConsensus::~RaftConsensus() {
   if (timer_thread_.joinable()) {
@@ -38,7 +40,8 @@ void RaftConsensus::timerThreadMain() {
       LOG_INFO("New election was started");
       startNewElection();
     }
-    core_->state_changed_.wait_until(lock_guard, start_new_election_at_, [this] { return shutdown_; });
+    core_->state_changed_.wait_until(lock_guard, start_new_election_at_,
+                                     [this] { return shutdown_; });
   }
 }
 
@@ -46,7 +49,8 @@ void RaftConsensus::Shutdown() noexcept { shutdown_ = true; }
 
 void RaftConsensus::resetElectionTimer() {
   int64_t rand_duration =
-      rand() % election_timeout_.time_since_epoch().count() + election_timeout_.time_since_epoch().count();
+      rand() % election_timeout_.time_since_epoch().count() +
+      election_timeout_.time_since_epoch().count();
   std::chrono::milliseconds duration(rand_duration);
   start_new_election_at_ = Clock::now() + duration;
   core_->state_changed_.notify_all();
@@ -61,9 +65,12 @@ void RaftConsensus::becomeLeader() {
 
 void RaftConsensus::startNewElection() {
   if (leader_id_ > 0) {
-    LOG_INFO("Starting election in term %lu (haven't heard from leader %lu lately", current_term_ + 1, leader_id_);
+    LOG_INFO(
+        "Starting election in term %lu (haven't heard from leader %lu lately",
+        current_term_ + 1, leader_id_);
   } else if (state_ == State::CANDIDATE) {
-    LOG_INFO("Starting election in term %lu (previous term %lu timed out)", current_term_ + 1, current_term_);
+    LOG_INFO("Starting election in term %lu (previous term %lu timed out)",
+             current_term_ + 1, current_term_);
   } else {
     LOG_INFO("Starting election in term %lu", current_term_ + 1);
   }
@@ -85,7 +92,8 @@ void RaftConsensus::appendEntry(Peer &peer) {
   request.set_prev_log_term(log_->GetEntry(peer.next_index_ - 1)->term());
   request.set_leader_commit(commit_index);
 
-  if (log_->LastIndex() >= peer.next_index_) request.set_allocated_entry(log_->GetEntry(peer.next_index_));
+  if (log_->LastIndex() >= peer.next_index_)
+    request.set_allocated_entry(log_->GetEntry(peer.next_index_));
 
   AppendEntryResponse response;
   grpc::ClientContext context;
@@ -117,7 +125,9 @@ void RaftConsensus::requestVote(Peer &peer) {
     return;
   }
 
-  if (current_term_ != request.term() || state_ != State::CANDIDATE || peer.exiting_) return;
+  if (current_term_ != request.term() || state_ != State::CANDIDATE ||
+      peer.exiting_)
+    return;
 
   if (response.term() > current_term_)
     stepDown(response.term());
@@ -153,7 +163,8 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
         break;
 
       case State::LEADER:
-        if (log_->LastIndex() >= peer->next_index_ || peer->next_heartbeat_time_ <= Clock::now())
+        if (log_->LastIndex() >= peer->next_index_ ||
+            peer->next_heartbeat_time_ <= Clock::now())
           appendEntry(*peer);
         else
           wait_until = peer->next_heartbeat_time_;
@@ -166,9 +177,11 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
 // TODO: implement:
 
-void RaftConsensus::HandleAppendEntries(const AppendEntryRequest *msg, AppendEntryResponse *resp) {}
+void RaftConsensus::HandleAppendEntries(const AppendEntryRequest *msg,
+                                        AppendEntryResponse *resp) {}
 
-void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg, RequestVoteResponse *resp) {}
+void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg,
+                                      RequestVoteResponse *resp) {}
 
 }  // namespace raft_node
 }  // namespace abeille

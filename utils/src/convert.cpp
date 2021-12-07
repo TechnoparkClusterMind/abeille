@@ -24,15 +24,19 @@ uint64_t address2uint(const std::string &address) {
 }
 
 std::string uint2address(uint64_t n) {
-  return std::to_string(((n >> 40) & 0xFF)) + "." + std::to_string(((n >> 32) & 0xFF)) + "." +
-         std::to_string(((n >> 24) & 0xFF)) + "." + std::to_string(((n >> 16) & 0xFF)) + ":" +
-         std::to_string(n & 0xFFFF);
+  return std::to_string(((n >> 40) & 0xFF)) + "." +
+         std::to_string(((n >> 32) & 0xFF)) + "." +
+         std::to_string(((n >> 24) & 0xFF)) + "." +
+         std::to_string(((n >> 16) & 0xFF)) + ":" + std::to_string(n & 0xFFFF);
 }
 
-std::string ExtractAddress(const std::string &str) { return str.substr(str.find(':') + 1); }
+std::string ExtractAddress(const std::string &str) {
+  return str.substr(str.find(':') + 1);
+}
 
 std::vector<std::string> Split(const std::string &str, char ch) {
-  // here we do not ever increase the value of 'left' because of possible overflow
+  // here we do not ever increase the value of 'left' because of possible
+  // overflow
 
   auto left = str.find_first_not_of(ch);
   auto right = str.find_first_of(ch, left);

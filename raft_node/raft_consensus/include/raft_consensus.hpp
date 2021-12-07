@@ -35,10 +35,12 @@ class RaftConsensus {
   ~RaftConsensus();
 
   // process an append_entries RPC from another server
-  void HandleAppendEntries(const AppendEntryRequest *msg, AppendEntryResponse *resp);
+  void HandleAppendEntries(const AppendEntryRequest *msg,
+                           AppendEntryResponse *resp);
 
   // process a request_vote RPC from another server
-  void HandleRequestVote(const RequestVoteRequest *msg, RequestVoteResponse *resp);
+  void HandleRequestVote(const RequestVoteRequest *msg,
+                         RequestVoteResponse *resp);
 
   // start timer and peer threads
   void Run();
@@ -82,7 +84,8 @@ class RaftConsensus {
   TimePoint election_timeout_ = TimePoint(std::chrono::milliseconds(500));
 
   // when the next heartbeat should be sent
-  TimePoint heartbeat_period_ = TimePoint(std::chrono::milliseconds(election_timeout_.time_since_epoch().count() / 2));
+  TimePoint heartbeat_period_ = TimePoint(std::chrono::milliseconds(
+      election_timeout_.time_since_epoch().count() / 2));
 
   // the time at which timerThreadMain() should start a new election
   TimePoint start_new_election_at_ = TimePoint::max();

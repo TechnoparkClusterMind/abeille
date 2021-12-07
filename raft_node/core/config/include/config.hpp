@@ -13,7 +13,7 @@ class Config {
   std::string worker_address_;
   uint64_t id_;
 
-public:
+ public:
   Config() = default;
   Config(Config &&conf) = default;
   void SetId(uint64_t id) noexcept { id_ = id; }
@@ -33,6 +33,6 @@ public:
   ~Config() = default;
 };
 
-} // namespace abeille
+}  // namespace abeille
 
-#endif // ABEILLE_CONFIG_H
+#endif  // ABEILLE_CONFIG_H

@@ -34,7 +34,8 @@ void Client::Shutdown() {
 }
 
 void Client::createStub() {
-  auto channel = grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
+  auto channel =
+      grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
   stub_ptr_ = WorkerService::NewStub(channel);
 }
 
@@ -66,7 +67,8 @@ void Client::keepAlive() {
   // keep the connection alive: respond to beats from the server
   ConnectResponse response;
   while (connect_stream_->Read(&response) && !shutdown_) {
-    LOG_DEBUG("command is [%s]", WorkerCommand_Name(response.command()).c_str());
+    LOG_DEBUG("command is [%s]",
+              WorkerCommand_Name(response.command()).c_str());
     if (response.command() == WorkerCommand::REDIRECT) {
       connected_ = false;
       leader_id_ = response.leader_id();
@@ -93,7 +95,8 @@ void Client::keepAlive() {
     WorkerStatus request;
     request.set_status(status_);
 
-    // if we have completed processing the data, switch the status and send the result
+    // if we have completed processing the data, switch the status and send the
+    // result
     if (status_ == NodeStatus::COMPLETED) {
       status_ = NodeStatus::IDLE;
       request.set_task_id(task_id_);

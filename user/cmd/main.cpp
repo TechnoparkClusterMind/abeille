@@ -56,7 +56,9 @@ void RunCLI() {
 
   const CLI::handlers_helper helper = {
       {"exit", "gracefully terminates the programm"},
-      {"ud <filepath>", "uploads data from the <filepath> to abeille (json format with accordance to the proto file)"},
+      {"ud <filepath>",
+       "uploads data from the <filepath> to abeille (json format with "
+       "accordance to the proto file)"},
   };
 
   CLI cli(handlers, helper);

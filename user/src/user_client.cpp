@@ -20,7 +20,8 @@ UploadDataResponse Client::UploadData(TaskData *task_data) {
 }
 
 void Client::createStub(const std::string &address) {
-  auto channel = grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
+  auto channel =
+      grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
   stub_ptr_ = UserService::NewStub(channel);
 }
 
@@ -38,7 +39,8 @@ bool Client::pingRemote() {
   Empty req, resp;
   ClientContext context;
   context.set_authority(abeille::USER_SERVICE_ADDRESS);
-  context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(3));
+  context.set_deadline(std::chrono::system_clock::now() +
+                       std::chrono::seconds(3));
   bool ok = stub_ptr_->Ping(&context, req, &resp).ok();
   return ok;
 }
@@ -51,15 +53,18 @@ UploadDataResponse Client::uploadData(TaskData *task_data) {
   while (true) {
     ClientContext context;
     context.set_authority(abeille::USER_SERVICE_ADDRESS);
-    context.set_deadline(std::chrono::system_clock::now() + std::chrono::seconds(5));
+    context.set_deadline(std::chrono::system_clock::now() +
+                         std::chrono::seconds(5));
 
     Status status = stub_ptr_->UploadData(&context, request, &response);
     if (!status.ok()) {
       if (status.error_code() == grpc::StatusCode::DEADLINE_EXCEEDED) {
         address_index_ = (address_index_ + 1) % addresses_.size();
-        LOG_ERROR("Deadline exceeded. Trying server [%s]...", addresses_[address_index_].c_str());
+        LOG_ERROR("Deadline exceeded. Trying server [%s]...",
+                  addresses_[address_index_].c_str());
       } else {
-        LOG_ERROR("RPC failed: %d: %s", status.error_code(), status.error_message());
+        LOG_ERROR("RPC failed: %d: %s", status.error_code(),
+                  status.error_message());
         LOG_INFO("Retrying...");
       }
       UploadData(task_data);
@@ -75,7 +80,8 @@ UploadDataResponse Client::uploadData(TaskData *task_data) {
         LOG_ERROR("Trying server [%s]...", addresses_[address_index_].c_str());
       } else {
         address_index_ = std::distance(addresses_.begin(), it);
-        LOG_INFO("Redirected to the leader [%s]...", addresses_[address_index_].c_str());
+        LOG_INFO("Redirected to the leader [%s]...",
+                 addresses_[address_index_].c_str());
       }
       UploadData(task_data);
     }

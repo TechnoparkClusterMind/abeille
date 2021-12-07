@@ -6,7 +6,9 @@ namespace abeille {
 namespace rpc {
 
 Server::Server(Server &&other) noexcept
-    : services_(std::move(other.services_)), thread_(std::move(other.thread_)), server_(std::move(other.server_)) {}
+    : services_(std::move(other.services_)),
+      thread_(std::move(other.thread_)),
+      server_(std::move(other.server_)) {}
 
 Server &Server::operator=(Server &&other) noexcept {
   if (this != &other) {
@@ -21,7 +23,8 @@ error Server::Run() {
   init();
 
   LOG_INFO("launching the server...");
-  thread_ = std::make_unique<std::thread>(std::thread(&Server::launch_and_wait, this));
+  thread_ = std::make_unique<std::thread>(
+      std::thread(&Server::launch_and_wait, this));
 
   std::unique_lock<std::mutex> lk(mut);
   cv.wait(lk, [&] { return ready; });
@@ -43,7 +46,8 @@ void Server::Shutdown() {
 void Server::init() {
   LOG_INFO("registering services...");
   for (const auto &service : services_) {
-    builder_.AddListeningPort(service.address, grpc::InsecureServerCredentials());
+    builder_.AddListeningPort(service.address,
+                              grpc::InsecureServerCredentials());
     builder_.RegisterService(service.address, service.service);
   }
 }

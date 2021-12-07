@@ -23,11 +23,13 @@ std::string timestamp() {
   if (tm->tm_mday < 10) D = "0" + D;
   if (tm->tm_mon + 1 < 10) M = "0" + M;
 
-  std::string result = '[' + Y + '-' + M + '-' + D + 'T' + h + ':' + m + ':' + s + ']';
+  std::string result =
+      '[' + Y + '-' + M + '-' + D + 'T' + h + ':' + m + ':' + s + ']';
   return result;
 }
 
-void LOG_(LOG_LEVEL log_level, const char *file, const char *func, unsigned int line, const char *format, ...) {
+void LOG_(LOG_LEVEL log_level, const char *file, const char *func,
+          unsigned int line, const char *format, ...) {
   if (log_level > LOG_LEVEL_) {
     return;
   }
@@ -41,7 +43,8 @@ void LOG_(LOG_LEVEL log_level, const char *file, const char *func, unsigned int 
   // construct output before printing for thread safety
   std::stringstream stream;
 
-  stream << LOG_LEVEL_COLOR[log_level] << timestamp() << '[' << LOG_LEVEL_PREFIX[log_level] << ']';
+  stream << LOG_LEVEL_COLOR[log_level] << timestamp() << '['
+         << LOG_LEVEL_PREFIX[log_level] << ']';
 
   if (log_level >= LOG_LEVEL_TRACE) {
     stream << '[' << file << ':' << func << ':' << line << ']';
