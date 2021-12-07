@@ -13,6 +13,8 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
+class TaskManager;
+
 class UserServiceImpl final : public UserService::Service {
  public:
   UserServiceImpl() = default;
@@ -31,7 +33,6 @@ class UserServiceImpl final : public UserService::Service {
 
   uint64_t id_ = 0;
   uint64_t leader_id_ = 0;
-  uint64_t last_task_id_ = 0;
 };
 
 }  // namespace raft_node

@@ -76,6 +76,8 @@ void Client::keepAlive() {
       Run();
     }
 
+    // FIXME: implement other logic
+
     request.set_status(status_);
     connect_stream_->Write(request);
   }

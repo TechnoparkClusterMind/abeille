@@ -46,7 +46,7 @@ std::string UploadData(CLI::args_type args) {
   auto response = user_client.UploadData(task);
 
   std::stringstream output;
-  output << "task id is [" << response.task_id() << "], assigned to[" << uint2address(response.task_id()) << "]";
+  output << "task id is [" << response.task_id() << "]";
 
   return output.str();
 }
@@ -66,7 +66,7 @@ void RunCLI() {
 
   std::string line;
   while (true) {
-    auto quit = linenoise::Readline("abeille> ", line);
+    bool quit = linenoise::Readline("abeille> ", line);
     if (quit) {
       break;
     }

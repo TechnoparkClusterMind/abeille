@@ -12,6 +12,7 @@ Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream)
   std::string address = ExtractAddress(context->peer());
   LOG_INFO("connection request from [%s]", address.c_str());
 
+  // FIXME: implement other logic (with assigning task)
   ConnectResponse response;
   if (!IsLeader()) {
     LOG_INFO("redirecting to the leader...");
@@ -56,8 +57,7 @@ Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream)
   return Status::OK;
 }
 
-Status WorkerServiceImpl::AssignTask(ServerContext *context, const AssignTaskRequest *request,
-                                     AssignTaskResponse *response) {
+Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request, AssignTaskResponse *response) {
   LOG_DEBUG("assigning task [%llu]", request->task_id());
   uint64_t worker_id = 0;
   for (auto it = workers_.begin(); it != workers_.end(); ++it) {
@@ -80,7 +80,7 @@ Status WorkerServiceImpl::AssignTask(ServerContext *context, const AssignTaskReq
   return Status::OK;
 }
 
-Status WorkerServiceImpl::SendTask(ServerContext *context, const SendTaskRequest *request, SendTaskResponse *response) {
+Status WorkerServiceImpl::SendTask(const SendTaskRequest *request, SendTaskResponse *response) {
   uint64_t worker_id = request->task().assignee();
   auto state = workers_.find(worker_id);
   if (state == workers_.end()) {
@@ -98,8 +98,7 @@ Status WorkerServiceImpl::SendTask(ServerContext *context, const SendTaskRequest
   return Status::OK;
 }
 
-Status WorkerServiceImpl::GetWorkerResult(ServerContext *context, const GetWorkerResultRequest *request,
-                                          GetWorkerResultResponse *response) {
+Status WorkerServiceImpl::GetWorkerResult(const GetWorkerResultRequest *request, GetWorkerResultResponse *response) {
   uint64_t worker_id = request->worker_id();
   auto state = workers_.find(worker_id);
   if (state == workers_.end()) {
