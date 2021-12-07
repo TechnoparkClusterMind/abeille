@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "abeille.pb.h"
+#include "node.hpp"
 #include "raft_consensus.hpp"
 #include "raft_service.hpp"
 
@@ -53,7 +54,6 @@ class Peer {
   bool have_vote_;
 
   timePoint next_heartbeat_time_;
-
   uint64_t next_index_;
 
   friend class RaftConsensus;

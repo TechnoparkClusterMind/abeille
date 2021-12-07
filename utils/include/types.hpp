@@ -7,6 +7,7 @@ namespace abeille {
 
 using Index = uint64_t;
 using Term = uint64_t;
+using ServerId = uint64_t;
 
 } // namespace abeille
 

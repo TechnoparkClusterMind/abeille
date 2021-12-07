@@ -1,27 +1,32 @@
 #ifndef ABEILLE_CONFIG_H
 #define ABEILLE_CONFIG_H
+
 #include <string>
 #include <vector>
+#include <fstream>
+
+#include "types.hpp"
 
 namespace abeille {
 
 class Config {
-  std::vector<std::string> peers_;
-  std::vector<std::string> workers_;
-  std::string user_address_;
-  std::string raft_address_;
-  std::string worker_address_;
-  uint64_t id_;
+ public:
+  typedef std::vector<std::string> Container;
 
-public:
   Config() = default;
   Config(Config &&conf) = default;
-  void SetId(uint64_t id) noexcept { id_ = id; }
-  void SetPeers(std::vector<std::string> &&peers) noexcept;
-  void SetWorkers(std::vector<std::string> &&workers) noexcept;
+  Config &operator=(const Config &) = default;
+  Config &operator=(Confgi &&) = default;
+  ~Config() = default;
+
+  void SetId(ServerId id) noexcept { id_ = id; }
+  void SetPeers(Container &&peers) noexcept;
+  void SetWorkers(Container &&workers) noexcept;
   void SetUserAddress(std::string &&address) noexcept;
   void SetRaftAddress(std::string &&address) noexcept;
+  void SetWorkerAddress(std::string &&address) noexcept;
 
+  void parse(std::ifstream& file);
   // FIXME: will be deleted
   void init() noexcept;
 
@@ -29,10 +34,18 @@ public:
   std::string GetUserAddress() const noexcept { return user_address_; }
   std::string GetRaftAddress() const noexcept { return raft_address_; }
   std::string GetWorkerAddress() const noexcept { return worker_address_; }
+  const Container &GetPeers() const noexcept { return peers_; }
+  const Container &GetWorkers() const noexcept { return workers_; }
 
-  ~Config() = default;
+ private:
+  std::vector<std::string> peers_;
+  std::vector<std::string> workers_;
+  std::string user_address_;
+  std::string raft_address_;
+  std::string worker_address_;
+  uint64_t id_;
 };
 
-} // namespace abeille
+}  // namespace abeille
 
-#endif // ABEILLE_CONFIG_H
+#endif  // ABEILLE_CONFIG_H

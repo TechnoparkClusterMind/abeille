@@ -5,7 +5,8 @@
 namespace abeille {
 namespace rpc {
 
-Server::Server(const std::vector<std::string> &hosts, const std::vector<grpc::Service *> &services) noexcept
+Server::Server(const std::vector<std::string> &hosts,
+               const std::vector<grpc::Service> &services) noexcept
     : hosts_(hosts), services_(services) {}
 
 Server::Server(Server &&other) noexcept
@@ -28,7 +29,8 @@ error Server::Run() {
   init();
 
   LOG_INFO("launching the server...");
-  thread_ = std::make_unique<std::thread>(std::thread(&Server::launch_and_wait, this));
+  thread_ = std::make_unique<std::thread>(
+      std::thread(&Server::launch_and_wait, this));
 
   std::unique_lock<std::mutex> lk(mut);
   cv.wait(lk, [&] { return ready; });
@@ -54,8 +56,8 @@ void Server::init() {
   }
 
   LOG_INFO("registering services...");
-  for (const auto service : services_) {
-    builder_.RegisterService(service);
+  for (const auto &service : services_) {
+    builder_.RegisterService(service.service);
   }
 }
 
