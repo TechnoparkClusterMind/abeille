@@ -10,55 +10,69 @@ namespace raft_node {
 
 Status WorkerServiceImpl::Connect(ServerContext *context, ConnectStream *stream) {
   std::string address = ExtractAddress(context->peer());
+  uint64_t worker_id = address2uint(address);
   LOG_INFO("connection request from [%s]", address.c_str());
 
-  // FIXME: implement other logic (with assigning task)
-  ConnectResponse response;
-  if (!IsLeader()) {
-    LOG_INFO("redirecting to the leader...");
-    response.set_leader_id(leader_id_);
-    return Status::CANCELLED;
-  }
-
   WorkerStatus request;
-  bool ok = stream->Read(&request);
-  if (!ok) {
-    LOG_ERROR("failed to read from the stream with [%s]", address.c_str());
-    return Status::CANCELLED;
-  }
+  WorkerState &worker = workers_[worker_id];
 
-  uint64_t id = address2uint(address);
-  while (true) {
-    ok = stream->Write(response);
-    if (!ok) {
-      LOG_WARN("connection with [%s] was lost", address.c_str());
+  while (stream->Read(&request)) {
+    // check if we are the leader
+    if (!isLeader()) {
+      LOG_INFO("redirecting [%s] to the leader...", address.c_str());
+
+      ConnectResponse response;
+      response.set_leader_id(leader_id_);
+      response.set_command(WorkerCommand::REDIRECT);
+
+      if (!stream->Write(response)) {
+        LOG_WARN("connection with [%s] was lost", address.c_str());
+      }
+
+      return Status::CANCELLED;
+    }
+
+    // update the status of the worker
+    worker.status = request.status();
+
+    // check if the worker has completed processing a data
+    if (request.status() == NodeStatus::COMPLETED) {
+      LOG_DEBUG("[%s] has finished [%llu] task with result", address.c_str(), request.task_id());
+    }
+
+    ConnectResponse response;
+    response.set_leader_id(leader_id_);
+    response.set_command(worker_command_);
+    response.set_task_id(worker.task.id());
+
+    if (worker_command_ == WorkerCommand::PROCESS) {
+      if (worker.task.has_task_data()) {
+        response.set_command(WorkerCommand::PROCESS);
+
+        auto task_data = new TaskData(worker.task.task_data());
+        response.set_allocated_task_data(task_data);
+      } else {
+        LOG_ERROR("process command, but null task data");
+      }
+    }
+    worker_command_ = WorkerCommand::NONE;
+
+    if (!stream->Write(response)) {
       break;
     }
 
-    ok = stream->Read(&request);
-    if (!ok) {
-      LOG_WARN("connection with [%s] was lost", address.c_str());
-      break;
-    }
-
-    workers_[id].status = request.status();
-    if (request.has_task_result()) {
-      // TODO: move data converison to user-defined utils
-      TaskResult *task_result = new TaskResult();
-      task_result->set_result(request.task_result().result());
-      workers_[id].task.set_allocated_task_result(task_result);
-    }
-
-    LOG_DEBUG("[%s] is [%d]", address.c_str(), request.status());
+    LOG_DEBUG("[%s] is [%s]", address.c_str(), NodeStatus_Name(request.status()).c_str());
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
   }
+
+  LOG_WARN("connection with [%s] was lost", address.c_str());
 
   return Status::OK;
 }
 
 Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request, AssignTaskResponse *response) {
-  LOG_DEBUG("assigning task [%llu]", request->task_id());
+  LOG_INFO("assigning task [%llu]", request->task_id());
   uint64_t worker_id = 0;
   for (auto it = workers_.begin(); it != workers_.end(); ++it) {
     if (it->second.status == NodeStatus::IDLE) {
@@ -72,6 +86,7 @@ Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request, AssignTas
   if (worker_id == 0) {
     response->set_success(false);
   } else {
+    worker_command_ = WorkerCommand::ASSIGN;
     response->set_success(true);
     response->set_worker_id(worker_id);
     LOG_INFO("assigned [%llu] task to [%llu]", request->task_id(), worker_id);
@@ -84,11 +99,12 @@ Status WorkerServiceImpl::SendTask(const SendTaskRequest *request, SendTaskRespo
   uint64_t worker_id = request->task().assignee();
   auto state = workers_.find(worker_id);
   if (state == workers_.end()) {
-    LOG_ERROR("could not find worker with given id [%luu]", worker_id);
+    LOG_ERROR("could not find worker with given id [%llu]", worker_id);
     return Status::CANCELLED;
   }
 
   if (state->second.task.id() == request->task().id()) {
+    worker_command_ = WorkerCommand::PROCESS;
     LOG_INFO("successfully sent [%llu] task to [%llu]", request->task().id(), worker_id);
     state->second.task = request->task();
   } else {

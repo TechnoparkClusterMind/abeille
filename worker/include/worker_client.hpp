@@ -30,6 +30,8 @@ class Client {
 
   void Shutdown();
 
+  error ProcessTaskData(const TaskData &task_data);
+
  private:
   void createStub();
 
@@ -39,23 +41,24 @@ class Client {
 
   bool handshake();
 
-  std::string address_;
-
-  std::unique_ptr<WorkerService::Stub> stub_ptr_ = nullptr;
-
-  std::thread connect_thread_;
-  std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
-  std::unique_ptr<ConnectStream> connect_stream_ = nullptr;
-
+ private:
   bool shutdown_ = false;
   bool connected_ = false;
+  NodeStatus status_ = NodeStatus::IDLE;
+
+  std::string address_;
+  uint64_t leader_id_ = 0;
 
   std::mutex mutex_;
   std::condition_variable cv_;
 
-  NodeStatus status_ = NodeStatus::IDLE;
+  uint64_t task_id_ = 0;
+  TaskResult *task_result_;
 
-  uint64_t leader_id_ = 0;
+  std::thread connect_thread_;
+  std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
+  std::unique_ptr<ConnectStream> connect_stream_ = nullptr;
+  std::unique_ptr<WorkerService::Stub> stub_ptr_ = nullptr;
 };
 
 }  // namespace worker

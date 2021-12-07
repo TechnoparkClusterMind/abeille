@@ -6,15 +6,11 @@ namespace abeille {
 namespace raft_node {
 
 error TaskManager::UploadData(TaskData *task_data, UploadDataResponse *response) {
-  response->set_task_id(last_task_id_);
-  ++last_task_id_;
-
-  Entry entry;
+  // TODO: add raft logic - send entries
 
   auto task = new Task();
   task->set_allocated_task_data(task_data);
-
-  entry.set_allocated_task(task);
+  task->set_id(last_task_id_);
 
   auto request = std::make_unique<AssignTaskRequest>();
   request->set_task_id(response->task_id());
@@ -24,7 +20,19 @@ error TaskManager::UploadData(TaskData *task_data, UploadDataResponse *response)
   auto status = core_->worker_service_->AssignTask(request.get(), resp.get());
   if (!status.ok()) {
     LOG_ERROR("failed to assign the task");
+  } else if (resp->success()) {
+    task->set_assignee(resp->worker_id());
+
+    auto send_task_request = std::make_unique<SendTaskRequest>();
+    send_task_request->set_allocated_task(task);
+
+    auto send_task_response = std::make_unique<SendTaskResponse>();
+
+    core_->worker_service_->SendTask(send_task_request.get(), send_task_response.get());
   }
+
+  response->set_task_id(last_task_id_);
+  ++last_task_id_;
 
   return error();
 }

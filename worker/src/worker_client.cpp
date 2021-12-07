@@ -65,20 +65,41 @@ void Client::connect() {
 void Client::keepAlive() {
   // keep the connection alive: respond to beats from the server
   ConnectResponse response;
-  WorkerStatus request;
   while (connect_stream_->Read(&response) && !shutdown_) {
-    if (response.leader_id() != leader_id_) {
-      leader_id_ = response.leader_id();
-      address_ = uint2address(leader_id_);
-      LOG_INFO("got redirected to the [%s]", address_.c_str());
+    LOG_DEBUG("command is [%s]", WorkerCommand_Name(response.command()).c_str());
+    if (response.command() == WorkerCommand::REDIRECT) {
       connected_ = false;
+      leader_id_ = response.leader_id();
+      address_ = uint2address(response.leader_id());
       connect_stream_->WritesDone();
+      LOG_INFO("got redirected to the [%s]", address_.c_str());
       Run();
+    } else if (response.command() == WorkerCommand::ASSIGN) {
+      if (response.task_id() == 0) {
+        LOG_ERROR("got assigned zero task");
+      } else {
+        LOG_INFO("got assigned [%llu] task", response.task_id());
+        task_id_ = response.task_id();
+        status_ = NodeStatus::BUSY;
+      }
+    } else if (response.command() == WorkerCommand::PROCESS) {
+      if (!response.has_task_data()) {
+        LOG_ERROR("got asked to process null data");
+      } else {
+        ProcessTaskData(response.task_data());
+      }
     }
 
-    // FIXME: implement other logic
-
+    WorkerStatus request;
     request.set_status(status_);
+
+    // if we have completed processing the data, switch the status and send the result
+    if (status_ == NodeStatus::COMPLETED) {
+      status_ = NodeStatus::IDLE;
+      request.set_task_id(task_id_);
+      request.set_allocated_task_result(task_result_);
+    }
+
     connect_stream_->Write(request);
   }
 
@@ -86,7 +107,7 @@ void Client::keepAlive() {
   connect_stream_->WritesDone();
   LOG_INFO("disconnected from the server...");
 
-  // if not shutdown, we need to try to reconnect
+  // if were not shutdown, we need to try to reconnect
   if (!shutdown_) {
     connect();
   }
@@ -100,6 +121,23 @@ bool Client::handshake() {
   connect_stream_ = stub_ptr_->Connect(connect_ctx_.get());
 
   return connect_stream_->Write(request);
+}
+
+// TODO: think of how to abstract this away
+error Client::ProcessTaskData(const TaskData &task_data) {
+  LOG_INFO("processing the task data...");
+
+  int sum = 0;
+  for (int elem : task_data.data()) {
+    sum += elem;
+  }
+
+  task_result_ = new TaskResult();
+  task_result_->set_result(sum);
+
+  status_ = NodeStatus::COMPLETED;
+
+  return error();
 }
 
 }  // namespace worker

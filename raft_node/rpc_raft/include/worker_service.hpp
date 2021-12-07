@@ -32,12 +32,13 @@ class WorkerServiceImpl final : public WorkerService::Service {
  private:
   Status Connect(ServerContext *context, ConnectStream *stream) override;
 
-  bool IsLeader() const noexcept { return id_ == leader_id_; }
+  bool isLeader() const noexcept { return id_ == leader_id_; }
 
   std::unordered_map<uint64_t, WorkerState> workers_;
 
   uint64_t id_ = 0;
   uint64_t leader_id_ = 0;
+  WorkerCommand worker_command_ = WorkerCommand::NONE;
 };
 
 }  // namespace raft_node

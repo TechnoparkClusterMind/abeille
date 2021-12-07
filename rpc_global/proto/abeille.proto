@@ -115,19 +115,28 @@ message RequestVoteResponse {
 
 enum NodeStatus {
   IDLE = 0;
-  BUSY = 1;
-  COMPLETED = 2;
+  BUSY = 2;
+  COMPLETED = 3;
 }
 
-message ConnectResponse {
-  Task task = 1;
-  uint64 leader_id = 2;
+enum WorkerCommand {
+  NONE = 0;
+  ASSIGN = 1;
+  PROCESS = 2;
+  REDIRECT = 3;
 }
 
 message WorkerStatus {
   NodeStatus status = 1;
   uint64 task_id = 2;
   TaskResult task_result = 3;
+}
+
+message ConnectResponse {  
+  WorkerCommand command = 1;
+  uint64 task_id = 2;
+  TaskData task_data = 3;
+  uint64 leader_id = 4;
 }
 
 message AssignTaskRequest {

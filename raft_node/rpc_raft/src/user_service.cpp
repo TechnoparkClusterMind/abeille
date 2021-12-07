@@ -24,12 +24,7 @@ Status UserServiceImpl::Ping(ServerContext *context, const Empty *request, Empty
 Status UserServiceImpl::UploadData(ServerContext *context, const UploadDataRequest *request,
                                    UploadDataResponse *response) {
   LOG_TRACE();
-  // Task task;
   auto task_data = new TaskData(request->task_data());
-  // task.set_allocated_task_data(task_data);
-
-  // FIXME: implement, send task to RaftPool
-  // ...
 
   if (IsLeader()) {
     response->set_success(true);
