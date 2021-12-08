@@ -9,9 +9,9 @@
 #include <thread>
 
 #include "abeille.pb.h"
-#include "node.hpp"
 #include "raft_consensus.hpp"
 #include "raft_service.hpp"
+#include "types.hpp"
 
 namespace abeille {
 namespace raft_node {
@@ -23,16 +23,19 @@ class RaftConsensus;
 // when we are the candidate or the leader
 class Peer {
  public:
-  using timePoint = std::chrono::steady_clock::time_point;
+  using TimePoint = std::chrono::steady_clock::time_point;
 
   // grpc stub is initialized with channel
-  explicit Peer(std::shared_ptr<grpc::Channel> channel, std::shared_ptr<RaftConsensus> raft, uint64_t id);
+  explicit Peer(std::shared_ptr<grpc::Channel> channel,
+                std::shared_ptr<RaftConsensus> raft, uint64_t id);
 
-  // destructor
-  ~Peer();
+  ~Peer() = default;
 
   // Run peer_thread_main from Raft_consensus
   void Run(std::shared_ptr<Peer> self);
+  void Shutdown() { exiting_ = true; }
+  void BeginRequestVote() noexcept;
+  bool HaveVote() const noexcept { return have_vote_; }
 
   // id of the current raft_node
   uint64_t id_;
@@ -48,13 +51,14 @@ class Peer {
   std::thread peer_thread_;
 
   // for peer_thread_main to know when shutdown
-  bool exiting_;
+  bool exiting_ = false;
 
-  bool vote_request_done_;
-  bool have_vote_;
+  bool vote_request_done_ = false;
+  bool have_vote_ = false;
 
-  timePoint next_heartbeat_time_;
-  uint64_t next_index_;
+  TimePoint next_heartbeat_time_ = TimePoint::min();
+  Index next_index_;
+  Index match_index_ = 0;
 
   friend class RaftConsensus;
 };

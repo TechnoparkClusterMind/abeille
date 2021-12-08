@@ -33,7 +33,7 @@ class Log {
   // Exists checks if given index is present in the log
   bool Exists(Index index) const noexcept;
 
-  Entry const& GetEntry(Index index) const noexcept;
+  Entry* GetEntry(Index index) noexcept;
 
   // Check checks if an entry with given term and index is present in the log
   bool Check(Index index, Term term) const noexcept;

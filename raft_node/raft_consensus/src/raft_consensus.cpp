@@ -14,7 +14,10 @@ namespace abeille {
 namespace raft_node {
 
 RaftConsensus::RaftConsensus(Core *core) noexcept
-    : id_(core->config_.GetId()), core_(core), log_(), state_machine_(log_) {}
+    : id_(core->config_.GetId()),
+      core_(core),
+      log_(new Log),
+      state_machine_(new StateMachine(log_)) {}
 
 RaftConsensus::~RaftConsensus() {
   if (!shutdown_) Shutdown();
@@ -24,7 +27,7 @@ RaftConsensus::~RaftConsensus() {
   }
 }
 
-void RaftConsensus::AddPeer() noexcept { ++core_->num_peers_thread; }
+void RaftConsensus::AddPeer() noexcept { ++core_->num_peers_threads_; }
 
 RaftConsensus::Status RaftConsensus::Run() {
   try {
@@ -51,8 +54,7 @@ void RaftConsensus::stepDown(uint64_t new_term) {
   }
 
   // was leader
-  if (start_new_election_at_ == TimePoint::max())
-    resetElectionTimer();
+  if (start_new_election_at_ == TimePoint::max()) resetElectionTimer();
   if (hold_election_for == TimePoint::max())
     hold_election_for = TimePoint::min();
 }
@@ -77,7 +79,7 @@ void RaftConsensus::Shutdown() noexcept {
 }
 
 void RaftConsensus::resetElectionTimer() {
-  int64_t rand_duration =
+  uint64_t rand_duration =
       rand() % election_timeout_.time_since_epoch().count() +
       election_timeout_.time_since_epoch().count();
   std::chrono::milliseconds duration(rand_duration);
@@ -123,8 +125,10 @@ void RaftConsensus::appendEntry(Peer &peer) {
   request.set_prev_log_term(log_->GetEntry(peer.next_index_ - 1)->term());
   request.set_leader_commit(state_machine_->GetCommitIndex());
 
-  if (log_->LastIndex() >= peer.next_index_)
+  if (log_->LastIndex() >= peer.next_index_) {
     request.set_allocated_entry(log_->GetEntry(peer.next_index_));
+    request.release_entry();
+  }
 
   AppendEntryResponse response;
   grpc::ClientContext context;
@@ -137,7 +141,23 @@ void RaftConsensus::appendEntry(Peer &peer) {
 
   if (current_term_ != request.term() || peer.exiting_) return;
 
-  (response.success()) ? ++peer.next_index_ : --peer.next_index_;
+  if (response.term() > current_term_) {
+    LOG_INFO("Recieved AppendEntry response with term %lu. Updating...",
+             response.term());
+    stepDown(response.term());
+
+  } else {
+    peer.next_heartbeat_time_ =
+        Clock::now() + static_cast<std::chrono::milliseconds>(
+                           heartbeat_period_.time_since_epoch().count());
+    raft_state_changed_.notify_all();
+    if (response.success()) {
+      peer.match_index_ = peer.next_index_;
+      peer.next_index_ = peer.match_index_ + 1;
+    } else if (peer.next_index_ > 1) {
+      --peer.next_index_;
+    }
+  }
 }
 
 void RaftConsensus::requestVote(Peer &peer) {
@@ -207,8 +227,8 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 }
 
 void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
-                                        AppendEntryResponse *resp) {
-  LOG_INFO("AppendEntry request was recieved from %lu", resp->leader_id());
+                                      AppendEntryResponse *resp) {
+  LOG_INFO("AppendEntry request was recieved from %lu", msg->leader_id());
   std::lock_guard<std::mutex> lockGuard(mutex_);
 
   // Set response to rejection at first
@@ -231,7 +251,9 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   // To follower state, update term, reset timer
   stepDown(msg->term());
   resetElectionTimer();
-  hold_election_for = Clock::now() + election_timeout_;
+  hold_election_for =
+      Clock::now() + static_cast<std::chrono::milliseconds>(
+                         election_timeout_.time_since_epoch().count());
 
   // Record LeaderId
   if (leader_id_ == 0) {
@@ -245,7 +267,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
     return;
   }
 
-  if (msg->prev_log_index != log_->GetEntry(msg->prev_log_index()).term()) {
+  if (msg->prev_log_index() != log_->GetEntry(msg->prev_log_index())->term()) {
     LOG_INFO("Rejecting AppendEntry... Terms don't agree");
     return;
   }
@@ -258,7 +280,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
     log_->Append(msg->entry());
   }
 
-  if (state_machine_->GetCommitIndex < msg->leader_commit()) {
+  if (state_machine_->GetCommitIndex() < msg->leader_commit()) {
     LOG_INFO("Commiting new entries");
     // Commits all entries to leader's commit idx
     state_machine_->Commit(msg->leader_commit());
@@ -272,7 +294,7 @@ void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg,
 
   bool is_ok = (msg->last_log_term() > log_->LastTerm() ||
                 (msg->last_log_term() == log_->LastTerm() &&
-                 msg->last_log_index() >= log_->LastIndex()));
+                 msg->last_log_entry() >= log_->LastIndex()));
 
   if (hold_election_for > Clock::now()) {
     LOG_INFO("Rejecting RequestVote... Heard from a leader recently\n");

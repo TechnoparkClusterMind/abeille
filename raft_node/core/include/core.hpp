@@ -40,7 +40,6 @@ class Core {
   typedef std::unique_ptr<grpc::Service> ServiceRef;
   typedef std::unique_ptr<RaftPool> RaftThreadPoolRef;
   typedef std::unique_ptr<WorkerPool> WorkerThreadPoolRef;
-  typedef std::unique_ptr<grpc::Service> ServiceRef;
   typedef std::unique_ptr<Server> ServerRef;
   typedef std::atomic<uint64_t> ThreadsNum;
   typedef std::shared_ptr<Core> This;
@@ -63,7 +62,7 @@ class Core {
   //  Shutdown():
   //  * launches Shutdown from all top-level objects
   //  * waits untill all pool thread will be closed
-  Status Run() noexcept;
+  void Run() noexcept;
   void Shutdown() noexcept;
 
   // Non-copyable object
@@ -102,6 +101,7 @@ class Core {
   bool shutdown_ = false;
 
   friend class RaftConsensus;
+  friend class RaftPool;
   friend class Peer;
   friend class Worker;
   friend class TaskManager;

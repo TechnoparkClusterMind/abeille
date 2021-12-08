@@ -26,12 +26,14 @@ class RaftConsensus {
   enum class State { FOLLOWER, CANDIDATE, LEADER };
 
   typedef std::shared_ptr<Log> LogRef;
-  typedef std::shared_ptr<Core> CoreRef;
+  // FIXME: refactor Core*
+  // typedef std::shared_ptr<Core> CoreRef;
+  typedef Core* CoreRef;
   typedef std::unique_ptr<StateMachine> StateMachineRef;
   typedef error Status;
 
   typedef std::chrono::steady_clock::time_point TimePoint;
-  typedef std::chrono::milliseconds TimeDuration;
+  // typedef std::chrono::milliseconds TimeDuration;
   typedef std::chrono::steady_clock Clock;
 
 
@@ -79,9 +81,6 @@ class RaftConsensus {
   std::condition_variable raft_state_changed_;
   std::mutex mutex_;
 
-  // in order to get the current time
-  Clock clock_;
-
   TimePoint election_timeout_ = TimePoint(std::chrono::milliseconds(500));
 
   // when the next heartbeat should be sent
@@ -92,11 +91,11 @@ class RaftConsensus {
   TimePoint start_new_election_at_ = TimePoint::max();
 
   // don't respond to request votes until
-  TimePoint hold_election_for = clock_::now() + election_timeout_;
+  TimePoint hold_election_for = TimePoint::min();
 
-  LogRef log_;
-  std::unique_ptr<StateMachine> state_machine_;
   CoreRef core_ = nullptr;
+  LogRef log_;
+  StateMachineRef state_machine_;
 
   // this thread executes timer_thread_main
   // it begins new eleciton if needed
@@ -112,7 +111,7 @@ class RaftConsensus {
   // the latest term this server has seen
   Term current_term_ = 0;
 
-
+  friend class RaftPool;
   friend class Peer;
 };
 

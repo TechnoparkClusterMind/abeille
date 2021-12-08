@@ -34,24 +34,19 @@ Core::Core(Config &&conf) noexcept
 
 }
 
-Core::Core(Core &&other) noexcept
-    : raft_(std::move(other.raft_)),
-      task_mgr_(std::move(other.task_mgr_)),
-      raft_pool_(std::move(other.raft_pool_)),
-      raft_service_(std::move(other.raft_service_)),
-      user_service_(std::move(other.user_service_)),
-      worker_service_(std::move(other.worker_service_)),
-      raft_server_(std::move(other.raft_server_)) {}
-
 // TODO: Test for EXPECT_DEATH
-Core::Status Core::Run() noexcept {
+void Core::Run() noexcept {
   LOG_INFO("Launching top-level objects");
 
+  // Commented ones are not implemented yet
   std::vector<Status> status(5);
   status[0] = raft_->Run();
-  status[1] = task_mgr_->Run();
-  status[2] = raft_pool_->Run();
-  status[3] = worker_pool_->Run();
+  status[1] = Status();
+  // status[1] = task_mgr_->Run();
+   status[2] = raft_pool_->Run();
+  raft_pool_->Run();
+  status[3] = Status();
+  // status[3] = worker_pool_->Run();
   status[4] = raft_server_->Run();
 
   if (!std::all_of(status.cbegin(), status.cend(),

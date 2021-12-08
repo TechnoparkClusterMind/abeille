@@ -7,9 +7,10 @@
 
 #include "abeille.pb.h"
 #include "core.hpp"
+#include "errors.hpp"
 #include "peer.hpp"
-#include "local_node.hpp"
 #include "raft_consensus.hpp"
+#include "types.hpp"
 
 namespace abeille {
 namespace raft_node {
@@ -22,23 +23,21 @@ class RaftPool {
 public:
   typedef std::shared_ptr<Peer> PeerRef;
   typedef std::shared_ptr<RaftConsensus> RaftRef;
+  typedef error Status;
 
   // Init all peers with raft_consensus
   explicit RaftPool(RaftRef raft);
   ~RaftPool() = default;
 
   // Launches peer_thread_main from raft_consensus for all peers
-  void Run();
+  Status Run();
   void Shutdown();
-
-  // FIXME: impelement !!!:
-  void BeginRequestVote(){};
-  bool MajorityVotes() { return true; };
-  // Appends Entry to all peers
-  void AppendAll(const Entry &entry){};
+  void BeginRequestVote();
+  bool MajorityVotes();
+  void AppendAll(const Entry &entry);
 
 private:
-  std::unordered_map<uint64_t, PeerRef> peers_;
+  std::unordered_map<ServerId, PeerRef> peers_;
   RaftRef raft_;
 };
 
