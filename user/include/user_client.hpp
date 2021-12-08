@@ -28,15 +28,17 @@ class Client : public UserClient {
  public:
   Client(const std::string &address) noexcept : UserClient(address) {}
 
-  void CommandsHandler(const ConnResp *resp) override;
+  void CommandHandler(const ConnResp *resp) override;
+
+  void StatusHandler(ConnReq *req) override;
 
   void UploadData(TaskData *task_data);
 
  private:
-  void handleCommandNone(const ConnResp *response);
-  void handleCommandRedirect(const ConnResp *response);
-  void handleCommandRecieveResult(const ConnResp *response);
-  void handleCommandUnrecognized(const ConnResp *response);
+  void handleCommandRedirect(const ConnResp *resp);
+  void handleCommandRecieveResult(const ConnResp *resp);
+
+  void handleStatusUploadData(ConnReq *req);
 
  private:
   std::vector<uint64_t> task_ids_;

@@ -590,37 +590,10 @@ class WorkerService final {
     std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
-    virtual ::grpc::Status AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>> AsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>>(AsyncAssignTaskRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>> PrepareAsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>>(PrepareAsyncAssignTaskRaw(context, request, cq));
-    }
-    virtual ::grpc::Status SendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::SendTaskResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>> AsyncSendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>>(AsyncSendTaskRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>> PrepareAsyncSendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>>(PrepareAsyncSendTaskRaw(context, request, cq));
-    }
-    virtual ::grpc::Status GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::GetWorkerResultResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>> AsyncGetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>>(AsyncGetWorkerResultRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>> PrepareAsyncGetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>>(PrepareAsyncGetWorkerResultRaw(context, request, cq));
-    }
     class async_interface {
      public:
       virtual ~async_interface() {}
       virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) = 0;
-      virtual void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
@@ -629,12 +602,6 @@ class WorkerService final {
     virtual ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
     virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>* AsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>* PrepareAsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>* AsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>* PrepareAsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>* AsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetWorkerResultResponse>* PrepareAsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -648,37 +615,10 @@ class WorkerService final {
     std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
-    ::grpc::Status AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>> AsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>>(AsyncAssignTaskRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>> PrepareAsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>>(PrepareAsyncAssignTaskRaw(context, request, cq));
-    }
-    ::grpc::Status SendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::SendTaskResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>> AsyncSendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>>(AsyncSendTaskRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>> PrepareAsyncSendTask(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>>(PrepareAsyncSendTaskRaw(context, request, cq));
-    }
-    ::grpc::Status GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::GetWorkerResultResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>> AsyncGetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>>(AsyncGetWorkerResultRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>> PrepareAsyncGetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>>(PrepareAsyncGetWorkerResultRaw(context, request, cq));
-    }
     class async final :
       public StubInterface::async_interface {
      public:
       void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) override;
-      void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, std::function<void(::grpc::Status)>) override;
-      void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, std::function<void(::grpc::Status)>) override;
-      void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, std::function<void(::grpc::Status)>) override;
-      void GetWorkerResult(::grpc::ClientContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -693,16 +633,7 @@ class WorkerService final {
     ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
     ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* AsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* PrepareAsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>* AsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>* PrepareAsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>* AsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::GetWorkerResultResponse>* PrepareAsyncGetWorkerResultRaw(::grpc::ClientContext* context, const ::GetWorkerResultRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Connect_;
-    const ::grpc::internal::RpcMethod rpcmethod_AssignTask_;
-    const ::grpc::internal::RpcMethod rpcmethod_SendTask_;
-    const ::grpc::internal::RpcMethod rpcmethod_GetWorkerResult_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -711,9 +642,6 @@ class WorkerService final {
     Service();
     virtual ~Service();
     virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* stream);
-    virtual ::grpc::Status AssignTask(::grpc::ServerContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response);
-    virtual ::grpc::Status SendTask(::grpc::ServerContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response);
-    virtual ::grpc::Status GetWorkerResult(::grpc::ServerContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_Connect : public BaseClass {
@@ -735,67 +663,7 @@ class WorkerService final {
       ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
-  template <class BaseClass>
-  class WithAsyncMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_AssignTask() {
-      ::grpc::Service::MarkMethodAsync(1);
-    }
-    ~WithAsyncMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestAssignTask(::grpc::ServerContext* context, ::AssignTaskRequest* request, ::grpc::ServerAsyncResponseWriter< ::AssignTaskResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithAsyncMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_SendTask() {
-      ::grpc::Service::MarkMethodAsync(2);
-    }
-    ~WithAsyncMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestSendTask(::grpc::ServerContext* context, ::SendTaskRequest* request, ::grpc::ServerAsyncResponseWriter< ::SendTaskResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithAsyncMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodAsync(3);
-    }
-    ~WithAsyncMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestGetWorkerResult(::grpc::ServerContext* context, ::GetWorkerResultRequest* request, ::grpc::ServerAsyncResponseWriter< ::GetWorkerResultResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  typedef WithAsyncMethod_Connect<WithAsyncMethod_AssignTask<WithAsyncMethod_SendTask<WithAsyncMethod_GetWorkerResult<Service > > > > AsyncService;
+  typedef WithAsyncMethod_Connect<Service > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_Connect : public BaseClass {
    private:
@@ -819,88 +687,7 @@ class WorkerService final {
       ::grpc::CallbackServerContext* /*context*/)
       { return nullptr; }
   };
-  template <class BaseClass>
-  class WithCallbackMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_AssignTask() {
-      ::grpc::Service::MarkMethodCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::AssignTaskRequest, ::AssignTaskResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response) { return this->AssignTask(context, request, response); }));}
-    void SetMessageAllocatorFor_AssignTask(
-        ::grpc::MessageAllocator< ::AssignTaskRequest, ::AssignTaskResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::AssignTaskRequest, ::AssignTaskResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~WithCallbackMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* AssignTask(
-      ::grpc::CallbackServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithCallbackMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_SendTask() {
-      ::grpc::Service::MarkMethodCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::SendTaskRequest, ::SendTaskResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response) { return this->SendTask(context, request, response); }));}
-    void SetMessageAllocatorFor_SendTask(
-        ::grpc::MessageAllocator< ::SendTaskRequest, ::SendTaskResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::SendTaskRequest, ::SendTaskResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~WithCallbackMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* SendTask(
-      ::grpc::CallbackServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithCallbackMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::GetWorkerResultRequest, ::GetWorkerResultResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response) { return this->GetWorkerResult(context, request, response); }));}
-    void SetMessageAllocatorFor_GetWorkerResult(
-        ::grpc::MessageAllocator< ::GetWorkerResultRequest, ::GetWorkerResultResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::GetWorkerResultRequest, ::GetWorkerResultResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~WithCallbackMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* GetWorkerResult(
-      ::grpc::CallbackServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/)  { return nullptr; }
-  };
-  typedef WithCallbackMethod_Connect<WithCallbackMethod_AssignTask<WithCallbackMethod_SendTask<WithCallbackMethod_GetWorkerResult<Service > > > > CallbackService;
+  typedef WithCallbackMethod_Connect<Service > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Connect : public BaseClass {
@@ -915,57 +702,6 @@ class WorkerService final {
     }
     // disable synchronous version of this method
     ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_AssignTask() {
-      ::grpc::Service::MarkMethodGeneric(1);
-    }
-    ~WithGenericMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_SendTask() {
-      ::grpc::Service::MarkMethodGeneric(2);
-    }
-    ~WithGenericMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodGeneric(3);
-    }
-    ~WithGenericMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -991,66 +727,6 @@ class WorkerService final {
     }
   };
   template <class BaseClass>
-  class WithRawMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_AssignTask() {
-      ::grpc::Service::MarkMethodRaw(1);
-    }
-    ~WithRawMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestAssignTask(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_SendTask() {
-      ::grpc::Service::MarkMethodRaw(2);
-    }
-    ~WithRawMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestSendTask(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodRaw(3);
-    }
-    ~WithRawMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestGetWorkerResult(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
   class WithRawCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -1073,156 +749,9 @@ class WorkerService final {
       ::grpc::CallbackServerContext* /*context*/)
       { return nullptr; }
   };
-  template <class BaseClass>
-  class WithRawCallbackMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_AssignTask() {
-      ::grpc::Service::MarkMethodRawCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->AssignTask(context, request, response); }));
-    }
-    ~WithRawCallbackMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* AssignTask(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithRawCallbackMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_SendTask() {
-      ::grpc::Service::MarkMethodRawCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SendTask(context, request, response); }));
-    }
-    ~WithRawCallbackMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* SendTask(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithRawCallbackMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodRawCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetWorkerResult(context, request, response); }));
-    }
-    ~WithRawCallbackMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* GetWorkerResult(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_AssignTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_AssignTask() {
-      ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::AssignTaskRequest, ::AssignTaskResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::AssignTaskRequest, ::AssignTaskResponse>* streamer) {
-                       return this->StreamedAssignTask(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_AssignTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status AssignTask(::grpc::ServerContext* /*context*/, const ::AssignTaskRequest* /*request*/, ::AssignTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedAssignTask(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::AssignTaskRequest,::AssignTaskResponse>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_SendTask : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_SendTask() {
-      ::grpc::Service::MarkMethodStreamed(2,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::SendTaskRequest, ::SendTaskResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::SendTaskRequest, ::SendTaskResponse>* streamer) {
-                       return this->StreamedSendTask(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_SendTask() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status SendTask(::grpc::ServerContext* /*context*/, const ::SendTaskRequest* /*request*/, ::SendTaskResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedSendTask(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SendTaskRequest,::SendTaskResponse>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_GetWorkerResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_GetWorkerResult() {
-      ::grpc::Service::MarkMethodStreamed(3,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::GetWorkerResultRequest, ::GetWorkerResultResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::GetWorkerResultRequest, ::GetWorkerResultResponse>* streamer) {
-                       return this->StreamedGetWorkerResult(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_GetWorkerResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status GetWorkerResult(::grpc::ServerContext* /*context*/, const ::GetWorkerResultRequest* /*request*/, ::GetWorkerResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedGetWorkerResult(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::GetWorkerResultRequest,::GetWorkerResultResponse>* server_unary_streamer) = 0;
-  };
-  typedef WithStreamedUnaryMethod_AssignTask<WithStreamedUnaryMethod_SendTask<WithStreamedUnaryMethod_GetWorkerResult<Service > > > StreamedUnaryService;
+  typedef Service StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_AssignTask<WithStreamedUnaryMethod_SendTask<WithStreamedUnaryMethod_GetWorkerResult<Service > > > StreamedService;
+  typedef Service StreamedService;
 };
 
 

@@ -29,16 +29,17 @@ class Client : public WorkerClient {
  public:
   Client(const std::string &address) noexcept : WorkerClient(address) {}
 
-  void CommandsHandler(const ConnResp *resp) override;
+  void CommandHandler(const ConnResp *resp) override;
+
+  void StatusHandler(ConnReq *req) override;
 
  private:
-  void handleCommandNone(const ConnResp *response);
-  void handleCommandAssign(const ConnResp *response);
   void handleCommandProcess(const ConnResp *response);
   void handleCommandRedirect(const ConnResp *response);
-  void handleCommandUnrecognized(const ConnResp *response);
 
   void processData(const TaskData &task_data);
+
+  void handleStatusCompleted(ConnReq *req);
 
  private:
   uint64_t task_id_ = 0;

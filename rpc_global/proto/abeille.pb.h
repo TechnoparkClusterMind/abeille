@@ -288,9 +288,8 @@ inline bool WorkerStatus_Parse(
 }
 enum WorkerCommand : int {
   WORKER_COMMAND_NONE = 0,
-  WORKER_COMMAND_ASSIGN = 1,
-  WORKER_COMMAND_PROCESS = 2,
-  WORKER_COMMAND_REDIRECT = 3,
+  WORKER_COMMAND_PROCESS = 1,
+  WORKER_COMMAND_REDIRECT = 2,
   WorkerCommand_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   WorkerCommand_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };

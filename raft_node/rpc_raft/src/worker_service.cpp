@@ -46,15 +46,13 @@ Status WorkerServiceImpl::Connect(ServerContext *context,
     response.set_leader_id(leader_id_);
     response.set_command(worker.command);
 
-    if (worker.command == WORKER_COMMAND_ASSIGN) {
-      response.set_task_id(worker.task->id());
-    }
-
     if (worker.command == WORKER_COMMAND_PROCESS) {
       LOG_TRACE();
       if (worker.task && worker.task->has_task_data()) {
         response.set_task_id(worker.task->id());
-        response.set_allocated_task_data(worker.task->mutable_task_data());
+        // TODO: get rid of reallocation
+        auto task_data = new TaskData(worker.task->task_data());
+        response.set_allocated_task_data(task_data);
       } else {
         LOG_ERROR("process command, but null task data");
       }
@@ -65,8 +63,8 @@ Status WorkerServiceImpl::Connect(ServerContext *context,
       break;
     }
 
-    LOG_DEBUG("[%s] is [%s]", address.c_str(),
-              WorkerStatus_Name(request.status()).c_str());
+    // LOG_DEBUG("[%s] is [%s]", address.c_str(),
+    //           WorkerStatus_Name(request.status()).c_str());
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
   }
@@ -88,8 +86,6 @@ Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request,
   for (; it != workers_.end(); ++it) {
     if (it->second.status == WORKER_STATUS_IDLE) {
       it->second.status = WORKER_STATUS_BUSY;
-      it->second.task = new Task();
-      it->second.task->set_id(request->task_id());
       break;
     }
   }
@@ -97,7 +93,6 @@ Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request,
   if (it == workers_.end()) {
     response->set_success(false);
   } else {
-    it->second.command = WORKER_COMMAND_ASSIGN;
     response->set_success(true);
     response->set_worker_id(it->first);
     LOG_INFO("assigned [%llu] task to [%s]", request->task_id(),
@@ -117,16 +112,11 @@ Status WorkerServiceImpl::SendTask(SendTaskRequest *request,
     return Status::CANCELLED;
   }
 
-  if (it->second.task->id() != request->task().id()) {
-    LOG_ERROR("task is sent to a wrong worker");
-    return Status::CANCELLED;
-  }
-
   if (request->has_task()) {
     LOG_INFO("successfully sent [%llu] task to [%s]", request->task().id(),
              uint2address(worker_id).c_str());
     it->second.command = WORKER_COMMAND_PROCESS;
-    it->second.task = new Task(request->task());
+    it->second.task = std::make_unique<Task>(request->task());
   } else {
     LOG_ERROR("send task, but null task");
   }

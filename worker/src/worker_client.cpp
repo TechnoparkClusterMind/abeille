@@ -8,42 +8,22 @@
 #include "logger.hpp"
 #include "user/include/data_processor.hpp"
 
-using abeille::user::ProcessData;
 using grpc::ClientContext;
 using grpc::Status;
 
 namespace abeille {
 namespace worker {
 
-void Client::CommandsHandler(const WorkerConnectResponse *resp) {
+void Client::CommandHandler(const WorkerConnectResponse *resp) {
   switch (resp->command()) {
-    case WORKER_COMMAND_NONE:
-      handleCommandNone(resp);
-      break;
     case WORKER_COMMAND_REDIRECT:
       handleCommandRedirect(resp);
-      break;
-    case WORKER_COMMAND_ASSIGN:
-      handleCommandAssign(resp);
       break;
     case WORKER_COMMAND_PROCESS:
       handleCommandProcess(resp);
       break;
     default:
-      handleCommandUnrecognized(resp);
       break;
-  }
-}
-
-void Client::handleCommandNone(const WorkerConnectResponse *response) {}
-
-void Client::handleCommandAssign(const WorkerConnectResponse *response) {
-  if (response->task_id() == 0) {
-    LOG_ERROR("got assigned zero task");
-  } else {
-    LOG_INFO("got assigned [%llu] task", response->task_id());
-    task_id_ = response->task_id();
-    status_ = WORKER_STATUS_BUSY;
   }
 }
 
@@ -66,13 +46,26 @@ void Client::handleCommandRedirect(const WorkerConnectResponse *response) {
 void Client::processData(const TaskData &task_data) {
   LOG_INFO("processing data...");
   task_result_ = new TaskResult();
-  ProcessData(task_data, task_result_);
+  abeille::user::ProcessData(task_data, task_result_);
   LOG_INFO("finished processing data");
   status_ = WORKER_STATUS_COMPLETED;
 }
 
-void Client::handleCommandUnrecognized(const WorkerConnectResponse *response) {
-  LOG_ERROR("unrecognized user command");
+void Client::StatusHandler(ConnReq *req) {
+  req->set_status(status_);
+  switch (status_) {
+    case WORKER_STATUS_COMPLETED:
+      handleStatusCompleted(req);
+      break;
+    default:
+      break;
+  }
+}
+
+void Client::handleStatusCompleted(ConnReq *req) {
+  status_ = WORKER_STATUS_IDLE;
+  req->set_task_id(task_id_);
+  req->set_allocated_task_result(task_result_);
 }
 
 }  // namespace worker

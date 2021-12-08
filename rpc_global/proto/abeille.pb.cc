@@ -655,26 +655,21 @@ const char descriptor_table_protodef_abeille_2eproto[] PROTOBUF_SECTION_VARIABLE
   "RESULT\020\002*2\n\nTaskStatus\022\t\n\005TO_DO\020\000\022\017\n\013IN_"
   "PROGRESS\020\002\022\010\n\004DONE\020\001*[\n\014WorkerStatus\022\026\n\022"
   "WORKER_STATUS_IDLE\020\000\022\026\n\022WORKER_STATUS_BU"
-  "SY\020\002\022\033\n\027WORKER_STATUS_COMPLETED\020\003*|\n\rWor"
-  "kerCommand\022\027\n\023WORKER_COMMAND_NONE\020\000\022\031\n\025W"
-  "ORKER_COMMAND_ASSIGN\020\001\022\032\n\026WORKER_COMMAND"
-  "_PROCESS\020\002\022\033\n\027WORKER_COMMAND_REDIRECT\020\0032"
-  "I\n\013UserService\022:\n\007Connect\022\023.UserConnectR"
-  "equest\032\024.UserConnectResponse\"\000(\0010\0012\205\001\n\013R"
-  "aftService\022:\n\013AppendEntry\022\023.AppendEntryR"
-  "equest\032\024.AppendEntryResponse\"\000\022:\n\013Reques"
-  "tVote\022\023.RequestVoteRequest\032\024.RequestVote"
-  "Response\"\0002\203\002\n\rWorkerService\022>\n\007Connect\022"
-  "\025.WorkerConnectRequest\032\026.WorkerConnectRe"
-  "sponse\"\000(\0010\001\0227\n\nAssignTask\022\022.AssignTaskR"
-  "equest\032\023.AssignTaskResponse\"\000\0221\n\010SendTas"
-  "k\022\020.SendTaskRequest\032\021.SendTaskResponse\"\000"
-  "\022F\n\017GetWorkerResult\022\027.GetWorkerResultReq"
-  "uest\032\030.GetWorkerResultResponse\"\000b\006proto3"
+  "SY\020\002\022\033\n\027WORKER_STATUS_COMPLETED\020\003*a\n\rWor"
+  "kerCommand\022\027\n\023WORKER_COMMAND_NONE\020\000\022\032\n\026W"
+  "ORKER_COMMAND_PROCESS\020\001\022\033\n\027WORKER_COMMAN"
+  "D_REDIRECT\020\0022I\n\013UserService\022:\n\007Connect\022\023"
+  ".UserConnectRequest\032\024.UserConnectRespons"
+  "e\"\000(\0010\0012\205\001\n\013RaftService\022:\n\013AppendEntry\022\023"
+  ".AppendEntryRequest\032\024.AppendEntryRespons"
+  "e\"\000\022:\n\013RequestVote\022\023.RequestVoteRequest\032"
+  "\024.RequestVoteResponse\"\0002O\n\rWorkerService"
+  "\022>\n\007Connect\022\025.WorkerConnectRequest\032\026.Wor"
+  "kerConnectResponse\"\000(\0010\001b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_abeille_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_abeille_2eproto = {
-  false, false, 2800, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
+  false, false, 2592, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
   &descriptor_table_abeille_2eproto_once, nullptr, 0, 25,
   schemas, file_default_instances, TableStruct_abeille_2eproto::offsets,
   file_level_metadata_abeille_2eproto, file_level_enum_descriptors_abeille_2eproto, file_level_service_descriptors_abeille_2eproto,
@@ -776,7 +771,6 @@ bool WorkerCommand_IsValid(int value) {
     case 0:
     case 1:
     case 2:
-    case 3:
       return true;
     default:
       return false;

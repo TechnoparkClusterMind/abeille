@@ -55,8 +55,8 @@ Status UserServiceImpl::Connect(ServerContext *context, ConnectStream *stream) {
       break;
     }
 
-    LOG_DEBUG("[%s] is [%s]", address.c_str(),
-              UserStatus_Name(request.status()).c_str());
+    // LOG_DEBUG("[%s] is [%s]", address.c_str(),
+    //           UserStatus_Name(request.status()).c_str());
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
   }

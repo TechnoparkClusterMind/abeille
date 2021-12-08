@@ -143,9 +143,8 @@ message WorkerConnectRequest {
 
 enum WorkerCommand {
   WORKER_COMMAND_NONE = 0;
-  WORKER_COMMAND_ASSIGN = 1;
-  WORKER_COMMAND_PROCESS = 2;
-  WORKER_COMMAND_REDIRECT = 3;
+  WORKER_COMMAND_PROCESS = 1;
+  WORKER_COMMAND_REDIRECT = 2;
 }
 
 message WorkerConnectResponse {  
@@ -184,8 +183,5 @@ message GetWorkerResultResponse {
 
 service WorkerService {
   rpc Connect(stream WorkerConnectRequest) returns (stream WorkerConnectResponse) {}
-  rpc AssignTask(AssignTaskRequest) returns (AssignTaskResponse) {}
-  rpc SendTask(SendTaskRequest) returns (SendTaskResponse) {}
-  rpc GetWorkerResult(GetWorkerResultRequest) returns (GetWorkerResultResponse) {}
 }
 
