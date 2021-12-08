@@ -6,12 +6,12 @@
 #include <vector>
 
 #include "cli.hpp"
-#include "commands.hpp"
 #include "constants.hpp"
 #include "convert.hpp"
 #include "linenoise.hpp"
 #include "logger.hpp"
-#include "user_client.hpp"
+#include "user/include/commands.hpp"
+#include "user/include/user_client.hpp"
 
 using abeille::cli::CLI;
 using abeille::user::Client;

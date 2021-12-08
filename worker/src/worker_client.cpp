@@ -5,8 +5,8 @@
 
 #include "constants.hpp"
 #include "convert.hpp"
-#include "data_processor.hpp"
 #include "logger.hpp"
+#include "user/include/data_processor.hpp"
 
 using abeille::user::ProcessData;
 using grpc::ClientContext;
