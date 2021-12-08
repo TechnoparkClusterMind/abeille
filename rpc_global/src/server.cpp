@@ -39,7 +39,7 @@ error Server::Run() {
 
 void Server::Shutdown() {
   LOG_INFO("shutting down...");
-  server_->Shutdown(std::chrono::system_clock::now() + SHUTDOWN_TIMEOUT);
+  server_->Shutdown(std::chrono::system_clock::now());
   thread_->join();
 }
 
