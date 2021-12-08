@@ -348,7 +348,23 @@ struct GetWorkerResultResponseDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT GetWorkerResultResponseDefaultTypeInternal _GetWorkerResultResponse_default_instance_;
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_abeille_2eproto[25];
+constexpr RaftConfig::RaftConfig(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : peers_()
+  , workers_()
+  , user_address_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , raft_address_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , worker_address_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
+struct RaftConfigDefaultTypeInternal {
+  constexpr RaftConfigDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~RaftConfigDefaultTypeInternal() {}
+  union {
+    RaftConfig _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RaftConfigDefaultTypeInternal _RaftConfig_default_instance_;
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_abeille_2eproto[26];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_abeille_2eproto[3];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_abeille_2eproto = nullptr;
 
@@ -528,6 +544,16 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_abeille_2eproto::offsets[] PRO
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::GetWorkerResultResponse, task_result_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, user_address_),
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, raft_address_),
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, worker_address_),
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, peers_),
+  PROTOBUF_FIELD_OFFSET(::RaftConfig, workers_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::Empty)},
@@ -555,6 +581,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 156, -1, sizeof(::SendTaskResponse)},
   { 162, -1, sizeof(::GetWorkerResultRequest)},
   { 169, -1, sizeof(::GetWorkerResultResponse)},
+  { 175, -1, sizeof(::RaftConfig)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -583,6 +610,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SendTaskResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_GetWorkerResultRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_GetWorkerResultResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_RaftConfig_default_instance_),
 };
 
 const char descriptor_table_protodef_abeille_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -627,28 +655,31 @@ const char descriptor_table_protodef_abeille_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\001(\010\"<\n\026GetWorkerResultRequest\022\021\n\tworker_"
   "id\030\001 \001(\004\022\017\n\007task_id\030\002 \001(\004\";\n\027GetWorkerRe"
   "sultResponse\022 \n\013task_result\030\002 \001(\0132\013.Task"
-  "Result*2\n\nTaskStatus\022\t\n\005TO_DO\020\000\022\017\n\013IN_PR"
-  "OGRESS\020\002\022\010\n\004DONE\020\001*/\n\nNodeStatus\022\010\n\004IDLE"
-  "\020\000\022\010\n\004BUSY\020\001\022\r\n\tCOMPLETED\020\0022\224\001\n\013UserServ"
-  "ice\022\026\n\004Ping\022\006.Empty\032\006.Empty\0227\n\nUploadDat"
-  "a\022\022.UploadDataRequest\032\023.UploadDataRespon"
-  "se\"\000\0224\n\tGetResult\022\021.GetResultRequest\032\022.G"
-  "etResultResponse\"\0002\205\001\n\013RaftService\022:\n\013Ap"
-  "pendEntry\022\023.AppendEntryRequest\032\024.AppendE"
-  "ntryResponse\"\000\022:\n\013RequestVote\022\023.RequestV"
-  "oteRequest\032\024.RequestVoteResponse\"\0002\365\001\n\rW"
-  "orkerService\0220\n\007Connect\022\r.WorkerStatus\032\020"
-  ".ConnectResponse\"\000(\0010\001\0227\n\nAssignTask\022\022.A"
-  "ssignTaskRequest\032\023.AssignTaskResponse\"\000\022"
-  "1\n\010SendTask\022\020.SendTaskRequest\032\021.SendTask"
-  "Response\"\000\022F\n\017GetWorkerResult\022\027.GetWorke"
-  "rResultRequest\032\030.GetWorkerResultResponse"
-  "\"\000b\006proto3"
+  "Result\"p\n\nRaftConfig\022\024\n\014user_address\030\001 \001"
+  "(\t\022\024\n\014raft_address\030\002 \001(\t\022\026\n\016worker_addre"
+  "ss\030\003 \001(\t\022\r\n\005peers\030\004 \003(\t\022\017\n\007workers\030\005 \003(\t"
+  "*2\n\nTaskStatus\022\t\n\005TO_DO\020\000\022\017\n\013IN_PROGRESS"
+  "\020\002\022\010\n\004DONE\020\001*/\n\nNodeStatus\022\010\n\004IDLE\020\000\022\010\n\004"
+  "BUSY\020\001\022\r\n\tCOMPLETED\020\0022\224\001\n\013UserService\022\026\n"
+  "\004Ping\022\006.Empty\032\006.Empty\0227\n\nUploadData\022\022.Up"
+  "loadDataRequest\032\023.UploadDataResponse\"\000\0224"
+  "\n\tGetResult\022\021.GetResultRequest\032\022.GetResu"
+  "ltResponse\"\0002\205\001\n\013RaftService\022:\n\013AppendEn"
+  "try\022\023.AppendEntryRequest\032\024.AppendEntryRe"
+  "sponse\"\000\022:\n\013RequestVote\022\023.RequestVoteReq"
+  "uest\032\024.RequestVoteResponse\"\0002\365\001\n\rWorkerS"
+  "ervice\0220\n\007Connect\022\r.WorkerStatus\032\020.Conne"
+  "ctResponse\"\000(\0010\001\0227\n\nAssignTask\022\022.AssignT"
+  "askRequest\032\023.AssignTaskResponse\"\000\0221\n\010Sen"
+  "dTask\022\020.SendTaskRequest\032\021.SendTaskRespon"
+  "se\"\000\022F\n\017GetWorkerResult\022\027.GetWorkerResul"
+  "tRequest\032\030.GetWorkerResultResponse\"\000b\006pr"
+  "oto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_abeille_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_abeille_2eproto = {
-  false, false, 2290, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
-  &descriptor_table_abeille_2eproto_once, nullptr, 0, 25,
+  false, false, 2404, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
+  &descriptor_table_abeille_2eproto_once, nullptr, 0, 26,
   schemas, file_default_instances, TableStruct_abeille_2eproto::offsets,
   file_level_metadata_abeille_2eproto, file_level_enum_descriptors_abeille_2eproto, file_level_service_descriptors_abeille_2eproto,
 };
@@ -6285,6 +6316,364 @@ void GetWorkerResultResponse::InternalSwap(GetWorkerResultResponse* other) {
       file_level_metadata_abeille_2eproto[24]);
 }
 
+// ===================================================================
+
+class RaftConfig::_Internal {
+ public:
+};
+
+RaftConfig::RaftConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  peers_(arena),
+  workers_(arena) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:RaftConfig)
+}
+RaftConfig::RaftConfig(const RaftConfig& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      peers_(from.peers_),
+      workers_(from.workers_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  user_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_user_address().empty()) {
+    user_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_user_address(), 
+      GetArenaForAllocation());
+  }
+  raft_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_raft_address().empty()) {
+    raft_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_raft_address(), 
+      GetArenaForAllocation());
+  }
+  worker_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_worker_address().empty()) {
+    worker_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_worker_address(), 
+      GetArenaForAllocation());
+  }
+  // @@protoc_insertion_point(copy_constructor:RaftConfig)
+}
+
+inline void RaftConfig::SharedCtor() {
+user_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+raft_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+worker_address_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+RaftConfig::~RaftConfig() {
+  // @@protoc_insertion_point(destructor:RaftConfig)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void RaftConfig::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  user_address_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  raft_address_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  worker_address_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void RaftConfig::ArenaDtor(void* object) {
+  RaftConfig* _this = reinterpret_cast< RaftConfig* >(object);
+  (void)_this;
+}
+void RaftConfig::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void RaftConfig::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void RaftConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:RaftConfig)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  peers_.Clear();
+  workers_.Clear();
+  user_address_.ClearToEmpty();
+  raft_address_.ClearToEmpty();
+  worker_address_.ClearToEmpty();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* RaftConfig::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // string user_address = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          auto str = _internal_mutable_user_address();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RaftConfig.user_address"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string raft_address = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          auto str = _internal_mutable_raft_address();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RaftConfig.raft_address"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string worker_address = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          auto str = _internal_mutable_worker_address();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RaftConfig.worker_address"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated string peers = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_peers();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RaftConfig.peers"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+        } else goto handle_unusual;
+        continue;
+      // repeated string workers = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_workers();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RaftConfig.workers"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* RaftConfig::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:RaftConfig)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string user_address = 1;
+  if (!this->_internal_user_address().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_user_address().data(), static_cast<int>(this->_internal_user_address().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RaftConfig.user_address");
+    target = stream->WriteStringMaybeAliased(
+        1, this->_internal_user_address(), target);
+  }
+
+  // string raft_address = 2;
+  if (!this->_internal_raft_address().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_raft_address().data(), static_cast<int>(this->_internal_raft_address().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RaftConfig.raft_address");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_raft_address(), target);
+  }
+
+  // string worker_address = 3;
+  if (!this->_internal_worker_address().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_worker_address().data(), static_cast<int>(this->_internal_worker_address().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RaftConfig.worker_address");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_worker_address(), target);
+  }
+
+  // repeated string peers = 4;
+  for (int i = 0, n = this->_internal_peers_size(); i < n; i++) {
+    const auto& s = this->_internal_peers(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RaftConfig.peers");
+    target = stream->WriteString(4, s, target);
+  }
+
+  // repeated string workers = 5;
+  for (int i = 0, n = this->_internal_workers_size(); i < n; i++) {
+    const auto& s = this->_internal_workers(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RaftConfig.workers");
+    target = stream->WriteString(5, s, target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:RaftConfig)
+  return target;
+}
+
+size_t RaftConfig::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:RaftConfig)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated string peers = 4;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(peers_.size());
+  for (int i = 0, n = peers_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      peers_.Get(i));
+  }
+
+  // repeated string workers = 5;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(workers_.size());
+  for (int i = 0, n = workers_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      workers_.Get(i));
+  }
+
+  // string user_address = 1;
+  if (!this->_internal_user_address().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_user_address());
+  }
+
+  // string raft_address = 2;
+  if (!this->_internal_raft_address().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_raft_address());
+  }
+
+  // string worker_address = 3;
+  if (!this->_internal_worker_address().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_worker_address());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftConfig::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    RaftConfig::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftConfig::GetClassData() const { return &_class_data_; }
+
+void RaftConfig::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<RaftConfig *>(to)->MergeFrom(
+      static_cast<const RaftConfig &>(from));
+}
+
+
+void RaftConfig::MergeFrom(const RaftConfig& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:RaftConfig)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  peers_.MergeFrom(from.peers_);
+  workers_.MergeFrom(from.workers_);
+  if (!from._internal_user_address().empty()) {
+    _internal_set_user_address(from._internal_user_address());
+  }
+  if (!from._internal_raft_address().empty()) {
+    _internal_set_raft_address(from._internal_raft_address());
+  }
+  if (!from._internal_worker_address().empty()) {
+    _internal_set_worker_address(from._internal_worker_address());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void RaftConfig::CopyFrom(const RaftConfig& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:RaftConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RaftConfig::IsInitialized() const {
+  return true;
+}
+
+void RaftConfig::InternalSwap(RaftConfig* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  peers_.InternalSwap(&other->peers_);
+  workers_.InternalSwap(&other->workers_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &user_address_, GetArenaForAllocation(),
+      &other->user_address_, other->GetArenaForAllocation()
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &raft_address_, GetArenaForAllocation(),
+      &other->raft_address_, other->GetArenaForAllocation()
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &worker_address_, GetArenaForAllocation(),
+      &other->worker_address_, other->GetArenaForAllocation()
+  );
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata RaftConfig::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_abeille_2eproto_getter, &descriptor_table_abeille_2eproto_once,
+      file_level_metadata_abeille_2eproto[25]);
+}
+
 // @@protoc_insertion_point(namespace_scope)
 PROTOBUF_NAMESPACE_OPEN
 template<> PROTOBUF_NOINLINE ::Empty* Arena::CreateMaybeMessage< ::Empty >(Arena* arena) {
@@ -6361,6 +6750,9 @@ template<> PROTOBUF_NOINLINE ::GetWorkerResultRequest* Arena::CreateMaybeMessage
 }
 template<> PROTOBUF_NOINLINE ::GetWorkerResultResponse* Arena::CreateMaybeMessage< ::GetWorkerResultResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::GetWorkerResultResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::RaftConfig* Arena::CreateMaybeMessage< ::RaftConfig >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::RaftConfig >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

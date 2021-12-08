@@ -161,6 +161,7 @@ void RaftConsensus::appendEntry(Peer &peer) {
 }
 
 void RaftConsensus::requestVote(Peer &peer) {
+  LOG_INFO("Sending requestVote to %lu", peer.id_);
   RequestVoteRequest request;
   request.set_term(current_term_);
   request.set_candidate_id(id_);
@@ -195,7 +196,7 @@ void RaftConsensus::requestVote(Peer &peer) {
 }
 
 void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
-  LOG_INFO("Peer thread for server %lu", peer->id_);
+  LOG_INFO("Peer thread for server %lu was started", peer->id_);
   std::unique_lock<std::mutex> lock_guard(core_->mutex);
   TimePoint wait_until = TimePoint::min();
 

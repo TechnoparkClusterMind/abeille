@@ -1,5 +1,4 @@
-# Raft_node compiling  (Core of this node is here too)
-
+add_subdirectory(config)
 add_subdirectory(core)
 add_subdirectory(rpc_raft)
 add_subdirectory(log)
@@ -10,3 +9,7 @@ add_subdirectory(task_manager)
 
 add_executable(abeille-raft cmd/main.cpp)
 target_link_libraries(abeille-raft core config)
+
+add_custom_command(TARGET abeille-raft POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/raft_node/example $<TARGET_FILE_DIR:abeille-raft>/example)

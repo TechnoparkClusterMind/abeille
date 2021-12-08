@@ -44,7 +44,6 @@ void Core::Run() noexcept {
   status[1] = Status();
   // status[1] = task_mgr_->Run();
    status[2] = raft_pool_->Run();
-  raft_pool_->Run();
   status[3] = Status();
   // status[3] = worker_pool_->Run();
   status[4] = raft_server_->Run();

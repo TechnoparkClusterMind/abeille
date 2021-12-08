@@ -47,7 +47,7 @@ struct TableStruct_abeille_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[25]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[26]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -99,6 +99,9 @@ extern GetWorkerResultResponseDefaultTypeInternal _GetWorkerResultResponse_defau
 class MoveRequest;
 struct MoveRequestDefaultTypeInternal;
 extern MoveRequestDefaultTypeInternal _MoveRequest_default_instance_;
+class RaftConfig;
+struct RaftConfigDefaultTypeInternal;
+extern RaftConfigDefaultTypeInternal _RaftConfig_default_instance_;
 class RequestVoteRequest;
 struct RequestVoteRequestDefaultTypeInternal;
 extern RequestVoteRequestDefaultTypeInternal _RequestVoteRequest_default_instance_;
@@ -145,6 +148,7 @@ template<> ::GetResultResponse* Arena::CreateMaybeMessage<::GetResultResponse>(A
 template<> ::GetWorkerResultRequest* Arena::CreateMaybeMessage<::GetWorkerResultRequest>(Arena*);
 template<> ::GetWorkerResultResponse* Arena::CreateMaybeMessage<::GetWorkerResultResponse>(Arena*);
 template<> ::MoveRequest* Arena::CreateMaybeMessage<::MoveRequest>(Arena*);
+template<> ::RaftConfig* Arena::CreateMaybeMessage<::RaftConfig>(Arena*);
 template<> ::RequestVoteRequest* Arena::CreateMaybeMessage<::RequestVoteRequest>(Arena*);
 template<> ::RequestVoteResponse* Arena::CreateMaybeMessage<::RequestVoteResponse>(Arena*);
 template<> ::SendTaskRequest* Arena::CreateMaybeMessage<::SendTaskRequest>(Arena*);
@@ -4155,6 +4159,234 @@ class GetWorkerResultResponse final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
 };
+// -------------------------------------------------------------------
+
+class RaftConfig final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:RaftConfig) */ {
+ public:
+  inline RaftConfig() : RaftConfig(nullptr) {}
+  ~RaftConfig() override;
+  explicit constexpr RaftConfig(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  RaftConfig(const RaftConfig& from);
+  RaftConfig(RaftConfig&& from) noexcept
+    : RaftConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline RaftConfig& operator=(const RaftConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline RaftConfig& operator=(RaftConfig&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const RaftConfig& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const RaftConfig* internal_default_instance() {
+    return reinterpret_cast<const RaftConfig*>(
+               &_RaftConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    25;
+
+  friend void swap(RaftConfig& a, RaftConfig& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(RaftConfig* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(RaftConfig* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RaftConfig* New() const final {
+    return new RaftConfig();
+  }
+
+  RaftConfig* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<RaftConfig>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const RaftConfig& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const RaftConfig& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RaftConfig* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "RaftConfig";
+  }
+  protected:
+  explicit RaftConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPeersFieldNumber = 4,
+    kWorkersFieldNumber = 5,
+    kUserAddressFieldNumber = 1,
+    kRaftAddressFieldNumber = 2,
+    kWorkerAddressFieldNumber = 3,
+  };
+  // repeated string peers = 4;
+  int peers_size() const;
+  private:
+  int _internal_peers_size() const;
+  public:
+  void clear_peers();
+  const std::string& peers(int index) const;
+  std::string* mutable_peers(int index);
+  void set_peers(int index, const std::string& value);
+  void set_peers(int index, std::string&& value);
+  void set_peers(int index, const char* value);
+  void set_peers(int index, const char* value, size_t size);
+  std::string* add_peers();
+  void add_peers(const std::string& value);
+  void add_peers(std::string&& value);
+  void add_peers(const char* value);
+  void add_peers(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& peers() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_peers();
+  private:
+  const std::string& _internal_peers(int index) const;
+  std::string* _internal_add_peers();
+  public:
+
+  // repeated string workers = 5;
+  int workers_size() const;
+  private:
+  int _internal_workers_size() const;
+  public:
+  void clear_workers();
+  const std::string& workers(int index) const;
+  std::string* mutable_workers(int index);
+  void set_workers(int index, const std::string& value);
+  void set_workers(int index, std::string&& value);
+  void set_workers(int index, const char* value);
+  void set_workers(int index, const char* value, size_t size);
+  std::string* add_workers();
+  void add_workers(const std::string& value);
+  void add_workers(std::string&& value);
+  void add_workers(const char* value);
+  void add_workers(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& workers() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_workers();
+  private:
+  const std::string& _internal_workers(int index) const;
+  std::string* _internal_add_workers();
+  public:
+
+  // string user_address = 1;
+  void clear_user_address();
+  const std::string& user_address() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_user_address(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_user_address();
+  PROTOBUF_MUST_USE_RESULT std::string* release_user_address();
+  void set_allocated_user_address(std::string* user_address);
+  private:
+  const std::string& _internal_user_address() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_address(const std::string& value);
+  std::string* _internal_mutable_user_address();
+  public:
+
+  // string raft_address = 2;
+  void clear_raft_address();
+  const std::string& raft_address() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_raft_address(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_raft_address();
+  PROTOBUF_MUST_USE_RESULT std::string* release_raft_address();
+  void set_allocated_raft_address(std::string* raft_address);
+  private:
+  const std::string& _internal_raft_address() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_raft_address(const std::string& value);
+  std::string* _internal_mutable_raft_address();
+  public:
+
+  // string worker_address = 3;
+  void clear_worker_address();
+  const std::string& worker_address() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_worker_address(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_worker_address();
+  PROTOBUF_MUST_USE_RESULT std::string* release_worker_address();
+  void set_allocated_worker_address(std::string* worker_address);
+  private:
+  const std::string& _internal_worker_address() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_worker_address(const std::string& value);
+  std::string* _internal_mutable_worker_address();
+  public:
+
+  // @@protoc_insertion_point(class_scope:RaftConfig)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> peers_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> workers_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_address_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr raft_address_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr worker_address_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_abeille_2eproto;
+};
 // ===================================================================
 
 
@@ -6269,9 +6501,303 @@ inline void GetWorkerResultResponse::set_allocated_task_result(::TaskResult* tas
   // @@protoc_insertion_point(field_set_allocated:GetWorkerResultResponse.task_result)
 }
 
+// -------------------------------------------------------------------
+
+// RaftConfig
+
+// string user_address = 1;
+inline void RaftConfig::clear_user_address() {
+  user_address_.ClearToEmpty();
+}
+inline const std::string& RaftConfig::user_address() const {
+  // @@protoc_insertion_point(field_get:RaftConfig.user_address)
+  return _internal_user_address();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RaftConfig::set_user_address(ArgT0&& arg0, ArgT... args) {
+ 
+ user_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:RaftConfig.user_address)
+}
+inline std::string* RaftConfig::mutable_user_address() {
+  std::string* _s = _internal_mutable_user_address();
+  // @@protoc_insertion_point(field_mutable:RaftConfig.user_address)
+  return _s;
+}
+inline const std::string& RaftConfig::_internal_user_address() const {
+  return user_address_.Get();
+}
+inline void RaftConfig::_internal_set_user_address(const std::string& value) {
+  
+  user_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::_internal_mutable_user_address() {
+  
+  return user_address_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::release_user_address() {
+  // @@protoc_insertion_point(field_release:RaftConfig.user_address)
+  return user_address_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void RaftConfig::set_allocated_user_address(std::string* user_address) {
+  if (user_address != nullptr) {
+    
+  } else {
+    
+  }
+  user_address_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), user_address,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:RaftConfig.user_address)
+}
+
+// string raft_address = 2;
+inline void RaftConfig::clear_raft_address() {
+  raft_address_.ClearToEmpty();
+}
+inline const std::string& RaftConfig::raft_address() const {
+  // @@protoc_insertion_point(field_get:RaftConfig.raft_address)
+  return _internal_raft_address();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RaftConfig::set_raft_address(ArgT0&& arg0, ArgT... args) {
+ 
+ raft_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:RaftConfig.raft_address)
+}
+inline std::string* RaftConfig::mutable_raft_address() {
+  std::string* _s = _internal_mutable_raft_address();
+  // @@protoc_insertion_point(field_mutable:RaftConfig.raft_address)
+  return _s;
+}
+inline const std::string& RaftConfig::_internal_raft_address() const {
+  return raft_address_.Get();
+}
+inline void RaftConfig::_internal_set_raft_address(const std::string& value) {
+  
+  raft_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::_internal_mutable_raft_address() {
+  
+  return raft_address_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::release_raft_address() {
+  // @@protoc_insertion_point(field_release:RaftConfig.raft_address)
+  return raft_address_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void RaftConfig::set_allocated_raft_address(std::string* raft_address) {
+  if (raft_address != nullptr) {
+    
+  } else {
+    
+  }
+  raft_address_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), raft_address,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:RaftConfig.raft_address)
+}
+
+// string worker_address = 3;
+inline void RaftConfig::clear_worker_address() {
+  worker_address_.ClearToEmpty();
+}
+inline const std::string& RaftConfig::worker_address() const {
+  // @@protoc_insertion_point(field_get:RaftConfig.worker_address)
+  return _internal_worker_address();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RaftConfig::set_worker_address(ArgT0&& arg0, ArgT... args) {
+ 
+ worker_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:RaftConfig.worker_address)
+}
+inline std::string* RaftConfig::mutable_worker_address() {
+  std::string* _s = _internal_mutable_worker_address();
+  // @@protoc_insertion_point(field_mutable:RaftConfig.worker_address)
+  return _s;
+}
+inline const std::string& RaftConfig::_internal_worker_address() const {
+  return worker_address_.Get();
+}
+inline void RaftConfig::_internal_set_worker_address(const std::string& value) {
+  
+  worker_address_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::_internal_mutable_worker_address() {
+  
+  return worker_address_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* RaftConfig::release_worker_address() {
+  // @@protoc_insertion_point(field_release:RaftConfig.worker_address)
+  return worker_address_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void RaftConfig::set_allocated_worker_address(std::string* worker_address) {
+  if (worker_address != nullptr) {
+    
+  } else {
+    
+  }
+  worker_address_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), worker_address,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:RaftConfig.worker_address)
+}
+
+// repeated string peers = 4;
+inline int RaftConfig::_internal_peers_size() const {
+  return peers_.size();
+}
+inline int RaftConfig::peers_size() const {
+  return _internal_peers_size();
+}
+inline void RaftConfig::clear_peers() {
+  peers_.Clear();
+}
+inline std::string* RaftConfig::add_peers() {
+  std::string* _s = _internal_add_peers();
+  // @@protoc_insertion_point(field_add_mutable:RaftConfig.peers)
+  return _s;
+}
+inline const std::string& RaftConfig::_internal_peers(int index) const {
+  return peers_.Get(index);
+}
+inline const std::string& RaftConfig::peers(int index) const {
+  // @@protoc_insertion_point(field_get:RaftConfig.peers)
+  return _internal_peers(index);
+}
+inline std::string* RaftConfig::mutable_peers(int index) {
+  // @@protoc_insertion_point(field_mutable:RaftConfig.peers)
+  return peers_.Mutable(index);
+}
+inline void RaftConfig::set_peers(int index, const std::string& value) {
+  peers_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:RaftConfig.peers)
+}
+inline void RaftConfig::set_peers(int index, std::string&& value) {
+  peers_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:RaftConfig.peers)
+}
+inline void RaftConfig::set_peers(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  peers_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:RaftConfig.peers)
+}
+inline void RaftConfig::set_peers(int index, const char* value, size_t size) {
+  peers_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RaftConfig.peers)
+}
+inline std::string* RaftConfig::_internal_add_peers() {
+  return peers_.Add();
+}
+inline void RaftConfig::add_peers(const std::string& value) {
+  peers_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:RaftConfig.peers)
+}
+inline void RaftConfig::add_peers(std::string&& value) {
+  peers_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:RaftConfig.peers)
+}
+inline void RaftConfig::add_peers(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  peers_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:RaftConfig.peers)
+}
+inline void RaftConfig::add_peers(const char* value, size_t size) {
+  peers_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:RaftConfig.peers)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+RaftConfig::peers() const {
+  // @@protoc_insertion_point(field_list:RaftConfig.peers)
+  return peers_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+RaftConfig::mutable_peers() {
+  // @@protoc_insertion_point(field_mutable_list:RaftConfig.peers)
+  return &peers_;
+}
+
+// repeated string workers = 5;
+inline int RaftConfig::_internal_workers_size() const {
+  return workers_.size();
+}
+inline int RaftConfig::workers_size() const {
+  return _internal_workers_size();
+}
+inline void RaftConfig::clear_workers() {
+  workers_.Clear();
+}
+inline std::string* RaftConfig::add_workers() {
+  std::string* _s = _internal_add_workers();
+  // @@protoc_insertion_point(field_add_mutable:RaftConfig.workers)
+  return _s;
+}
+inline const std::string& RaftConfig::_internal_workers(int index) const {
+  return workers_.Get(index);
+}
+inline const std::string& RaftConfig::workers(int index) const {
+  // @@protoc_insertion_point(field_get:RaftConfig.workers)
+  return _internal_workers(index);
+}
+inline std::string* RaftConfig::mutable_workers(int index) {
+  // @@protoc_insertion_point(field_mutable:RaftConfig.workers)
+  return workers_.Mutable(index);
+}
+inline void RaftConfig::set_workers(int index, const std::string& value) {
+  workers_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:RaftConfig.workers)
+}
+inline void RaftConfig::set_workers(int index, std::string&& value) {
+  workers_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:RaftConfig.workers)
+}
+inline void RaftConfig::set_workers(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  workers_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:RaftConfig.workers)
+}
+inline void RaftConfig::set_workers(int index, const char* value, size_t size) {
+  workers_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RaftConfig.workers)
+}
+inline std::string* RaftConfig::_internal_add_workers() {
+  return workers_.Add();
+}
+inline void RaftConfig::add_workers(const std::string& value) {
+  workers_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:RaftConfig.workers)
+}
+inline void RaftConfig::add_workers(std::string&& value) {
+  workers_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:RaftConfig.workers)
+}
+inline void RaftConfig::add_workers(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  workers_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:RaftConfig.workers)
+}
+inline void RaftConfig::add_workers(const char* value, size_t size) {
+  workers_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:RaftConfig.workers)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+RaftConfig::workers() const {
+  // @@protoc_insertion_point(field_list:RaftConfig.workers)
+  return workers_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+RaftConfig::mutable_workers() {
+  // @@protoc_insertion_point(field_mutable_list:RaftConfig.workers)
+  return &workers_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
