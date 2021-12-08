@@ -116,7 +116,7 @@ Status WorkerServiceImpl::SendTask(SendTaskRequest *request,
     LOG_INFO("successfully sent [%llu] task to [%s]", request->task().id(),
              uint2address(worker_id).c_str());
     it->second.command = WORKER_COMMAND_PROCESS;
-    it->second.task = std::make_unique<Task>(request->task());
+    it->second.task = request->mutable_task();
   } else {
     LOG_ERROR("send task, but null task");
   }

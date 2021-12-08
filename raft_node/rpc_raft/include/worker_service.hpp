@@ -15,7 +15,7 @@ namespace abeille {
 namespace raft_node {
 
 struct WorkerWrapper {
-  std::unique_ptr<Task> task;
+  Task *task;
   WorkerStatus status = WORKER_STATUS_IDLE;
   WorkerCommand command = WORKER_COMMAND_NONE;
 };
