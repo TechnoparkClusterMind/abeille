@@ -82,13 +82,8 @@ class RaftConsensus {
   TimeDuration ELECTION_TIMEOUT_ = (std::chrono::milliseconds(500));
 
   // when the next heartbeat should be sent
-<<<<<<< HEAD
   TimeDuration HEARTBEAT_PERIOD_ =
       std::chrono::milliseconds(ELECTION_TIMEOUT_.count() / 2);
-=======
-  TimePoint heartbeat_period_ = TimePoint(std::chrono::milliseconds(
-      election_timeout_.time_since_epoch().count() / 2));
->>>>>>> develop-senago
 
   // the time at which timerThreadMain() should start a new election
   TimePoint start_new_election_at_ = TimePoint::max();

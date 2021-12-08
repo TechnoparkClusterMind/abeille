@@ -1,5 +1,7 @@
 #include "task_manager.hpp"
 
+#include <memory>
+
 #include "logger.hpp"
 
 namespace abeille {
@@ -18,8 +20,11 @@ error TaskManager::UploadData(TaskData *task_data,
 
   // auto resp = std::make_unique<AssignTaskResponse>();
 
-  // auto status = core_->worker_service_->AssignTask(request.get(),
-  // resp.get()); if (!status.ok()) {
+  // auto casted = static_cast<WorkerServiceImpl
+  // *>(core_->worker_service_.get());
+
+  // auto status = casted->AssignTask(request.get(), resp.get());
+  // if (!status.ok()) {
   //   LOG_ERROR("failed to assign the task");
   // } else if (resp->success()) {
   //   LOG_DEBUG("successfully assigned the task");
@@ -31,8 +36,7 @@ error TaskManager::UploadData(TaskData *task_data,
   //   auto send_task_response = std::make_unique<SendTaskResponse>();
 
   //   LOG_DEBUG("send the task...");
-  //   core_->worker_service_->SendTask(send_task_request.get(),
-  //                                    send_task_response.get());
+  //   casted->SendTask(send_task_request.get(), send_task_response.get());
   // } else {
   //   LOG_WARN("failed to assign the task (probably all workers are busy)");
   // }
