@@ -14,7 +14,7 @@ error TaskManager::UploadData(TaskData *task_data,
   task->set_id(last_task_id_);
 
   auto request = std::make_unique<AssignTaskRequest>();
-  request->set_task_id(response->task_id());
+  request->set_task_id(last_task_id_);
 
   auto resp = std::make_unique<AssignTaskResponse>();
 
@@ -22,6 +22,7 @@ error TaskManager::UploadData(TaskData *task_data,
   if (!status.ok()) {
     LOG_ERROR("failed to assign the task");
   } else if (resp->success()) {
+    LOG_DEBUG("successfully assigned the task");
     task->set_assignee(resp->worker_id());
 
     auto send_task_request = std::make_unique<SendTaskRequest>();
@@ -29,8 +30,11 @@ error TaskManager::UploadData(TaskData *task_data,
 
     auto send_task_response = std::make_unique<SendTaskResponse>();
 
+    LOG_DEBUG("send the task...");
     core_->worker_service_->SendTask(send_task_request.get(),
                                      send_task_response.get());
+  } else {
+    LOG_WARN("failed to assign the task (probably all workers are busy)");
   }
 
   response->set_task_id(last_task_id_);

@@ -14,19 +14,21 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-struct WorkerState {
-  Task task;
-  NodeStatus status = NodeStatus::IDLE;
+struct WorkerWrapper {
+  Task *task;
+  WorkerStatus status = WORKER_STATUS_IDLE;
+  WorkerCommand command = WORKER_COMMAND_NONE;
 };
 
 class WorkerServiceImpl final : public WorkerService::Service {
  public:
-  using ConnectStream = grpc::ServerReaderWriter<ConnectResponse, WorkerStatus>;
+  using ConnectStream =
+      grpc::ServerReaderWriter<WorkerConnectResponse, WorkerConnectRequest>;
 
   Status AssignTask(const AssignTaskRequest *request,
                     AssignTaskResponse *response);
 
-  Status SendTask(const SendTaskRequest *request, SendTaskResponse *response);
+  Status SendTask(SendTaskRequest *request, SendTaskResponse *response);
 
   Status GetWorkerResult(const GetWorkerResultRequest *request,
                          GetWorkerResultResponse *response);
@@ -36,11 +38,10 @@ class WorkerServiceImpl final : public WorkerService::Service {
 
   bool isLeader() const noexcept { return id_ == leader_id_; }
 
-  std::unordered_map<uint64_t, WorkerState> workers_;
+  std::unordered_map<uint64_t, WorkerWrapper> workers_;
 
   uint64_t id_ = 0;
   uint64_t leader_id_ = 0;
-  WorkerCommand worker_command_ = WorkerCommand::NONE;
 };
 
 }  // namespace raft_node

@@ -17,10 +17,10 @@ struct Wrapper {
   Wrapper() noexcept;
   CLI::handlers_map handlers;
   CLI::handlers_helper helper;
-};
 
-// FIXME: make a way to pass here all addresses to raft nodes
-static Client user_client({abeille::USER_SERVICE_ADDRESS});
+  // FIXME: make a way to pass here all addresses to raft nodes
+  inline static Client user_client = Client({abeille::USER_SERVICE_ADDRESS});
+};
 
 std::string Exit(CLI::args_type);
 

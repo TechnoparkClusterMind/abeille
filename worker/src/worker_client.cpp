@@ -67,26 +67,30 @@ void Client::connect() {
 // TODO: refactor it
 void Client::keepAlive() {
   // keep the connection alive: respond to beats from the server
-  ConnectResponse response;
+  WorkerConnectResponse response;
   while (connect_stream_->Read(&response) && !shutdown_) {
     LOG_DEBUG("command is [%s]",
               WorkerCommand_Name(response.command()).c_str());
-    if (response.command() == WorkerCommand::REDIRECT) {
+    if (response.command() == WORKER_COMMAND_REDIRECT) {
       connected_ = false;
       leader_id_ = response.leader_id();
       address_ = uint2address(response.leader_id());
       connect_stream_->WritesDone();
       LOG_INFO("got redirected to the [%s]", address_.c_str());
       Run();
-    } else if (response.command() == WorkerCommand::ASSIGN) {
+    }
+
+    if (response.command() == WORKER_COMMAND_ASSIGN) {
       if (response.task_id() == 0) {
         LOG_ERROR("got assigned zero task");
       } else {
         LOG_INFO("got assigned [%llu] task", response.task_id());
         task_id_ = response.task_id();
-        status_ = NodeStatus::BUSY;
+        status_ = WORKER_STATUS_BUSY;
       }
-    } else if (response.command() == WorkerCommand::PROCESS) {
+    }
+
+    if (response.command() == WORKER_COMMAND_PROCESS) {
       if (!response.has_task_data()) {
         LOG_ERROR("got asked to process null data");
       } else {
@@ -94,13 +98,13 @@ void Client::keepAlive() {
       }
     }
 
-    WorkerStatus request;
+    WorkerConnectRequest request;
     request.set_status(status_);
 
     // if we have completed processing the data, switch the status and send the
     // result
-    if (status_ == NodeStatus::COMPLETED) {
-      status_ = NodeStatus::IDLE;
+    if (status_ == WORKER_STATUS_COMPLETED) {
+      status_ = WORKER_STATUS_IDLE;
       request.set_task_id(task_id_);
       request.set_allocated_task_result(task_result_);
     }
@@ -119,7 +123,7 @@ void Client::keepAlive() {
 }
 
 bool Client::handshake() {
-  WorkerStatus request;
+  WorkerConnectRequest request;
   request.set_status(status_);
 
   connect_ctx_ = std::make_unique<ClientContext>();
@@ -133,7 +137,7 @@ void Client::processData(const TaskData &task_data) {
   task_result_ = new TaskResult();
   ProcessData(task_data, task_result_);
   LOG_INFO("finished processing data");
-  status_ = NodeStatus::COMPLETED;
+  status_ = WORKER_STATUS_COMPLETED;
 }
 
 }  // namespace worker

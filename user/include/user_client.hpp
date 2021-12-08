@@ -3,12 +3,15 @@
 
 #include <grpcpp/grpcpp.h>
 
+#include <condition_variable>
 #include <memory>
+#include <queue>
 #include <thread>
 #include <unordered_map>
 #include <vector>
 
 #include "abeille.grpc.pb.h"
+#include "errors.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -18,9 +21,11 @@ namespace user {
 
 class Client {
  public:
+  using ConnectStream =
+      grpc::ClientReaderWriter<UserConnectRequest, UserConnectResponse>;
+
   Client() = default;
-  explicit Client(const std::vector<std::string> &addresses) noexcept
-      : addresses_(addresses) {}
+  explicit Client(const std::vector<std::string> &addresses) noexcept;
   ~Client() = default;
 
   Client &operator=(Client &&other) noexcept {
@@ -32,26 +37,45 @@ class Client {
     return *this;
   }
 
-  UploadDataResponse UploadData(TaskData *task_data);
+  error Run();
+
+  void Shutdown();
+
+  void UploadData(TaskData *task_data);
 
   TaskResult GetResult(uint64_t task_id);
 
  private:
-  void createStub(const std::string &address);
+  void createStub();
 
   void connect();
 
-  bool pingRemote();
+  void keepAlive();
 
-  UploadDataResponse uploadData(TaskData *task_data);
+  bool handshake();
 
-  std::unique_ptr<UserService::Stub> stub_ptr_ = nullptr;
+ private:
+  bool shutdown_ = false;
+  bool connected_ = false;
+  UserStatus status_ = USER_STATUS_NONE;
 
-  std::vector<uint64_t> task_ids_;
-  std::unordered_map<uint64_t, int> results_;
+  uint64_t leader_id_ = 0;
+  std::string address_;
 
   size_t address_index_ = 0;
   std::vector<std::string> addresses_;
+
+  std::mutex mutex_;
+  std::condition_variable cv_;
+
+  std::vector<uint64_t> task_ids_;
+  std::unordered_map<uint64_t, int> results_;
+  std::queue<TaskData *> task_datas_;
+
+  std::thread connect_thread_;
+  std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
+  std::unique_ptr<ConnectStream> connect_stream_ = nullptr;
+  std::unique_ptr<UserService::Stub> stub_ptr_ = nullptr;
 };
 
 }  // namespace user

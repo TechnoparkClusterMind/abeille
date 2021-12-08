@@ -16,6 +16,7 @@ Wrapper::Wrapper() noexcept {
              "uploads data from the <filepath> to abeille (json format with "
              "accordance to the proto file)"},
             {"status", "prints current status of all tasks"}};
+  user_client.Run();
 }
 
 std::string Exit(CLI::args_type) { throw std::exception(); }
@@ -41,10 +42,11 @@ std::string UploadData(CLI::args_type args) {
     return status.message().ToString();
   }
 
-  auto response = user_client.UploadData(task);
+  // auto response = Wrapper::user_client.UploadData(task);
+  Wrapper::user_client.UploadData(task);
 
   std::stringstream output;
-  output << "task id is [" << response.task_id() << "]";
+  // output << "task id is [" << response.task_id() << "]";
 
   return output.str();
 }

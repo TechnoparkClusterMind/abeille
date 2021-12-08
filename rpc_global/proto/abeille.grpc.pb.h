@@ -33,81 +33,44 @@ class UserService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status Ping(::grpc::ClientContext* context, const ::Empty& request, ::Empty* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>> AsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>>(AsyncPingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>> PrepareAsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Empty>>(PrepareAsyncPingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    virtual ::grpc::Status UploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::UploadDataResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>> AsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>>(AsyncUploadDataRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>> PrepareAsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>>(PrepareAsyncUploadDataRaw(context, request, cq));
-    }
-    virtual ::grpc::Status GetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::GetResultResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>> AsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>>(AsyncGetResultRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>> PrepareAsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>>(PrepareAsyncGetResultRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::Empty>* AsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::Empty>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>* AsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UploadDataResponse>* PrepareAsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>* AsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::GetResultResponse>* PrepareAsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    ::grpc::Status Ping(::grpc::ClientContext* context, const ::Empty& request, ::Empty* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>> AsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>>(AsyncPingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>> PrepareAsyncPing(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Empty>>(PrepareAsyncPingRaw(context, request, cq));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    ::grpc::Status UploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::UploadDataResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>> AsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>>(AsyncUploadDataRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>> PrepareAsyncUploadData(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>>(PrepareAsyncUploadDataRaw(context, request, cq));
-    }
-    ::grpc::Status GetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::GetResultResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetResultResponse>> AsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetResultResponse>>(AsyncGetResultRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetResultResponse>> PrepareAsyncGetResult(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::GetResultResponse>>(PrepareAsyncGetResultRaw(context, request, cq));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     class async final :
       public StubInterface::async_interface {
      public:
-      void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)>) override;
-      void Ping(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, std::function<void(::grpc::Status)>) override;
-      void UploadData(::grpc::ClientContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, std::function<void(::grpc::Status)>) override;
-      void GetResult(::grpc::ClientContext* context, const ::GetResultRequest* request, ::GetResultResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -119,15 +82,10 @@ class UserService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::Empty>* AsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::Empty>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>* AsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::UploadDataResponse>* PrepareAsyncUploadDataRaw(::grpc::ClientContext* context, const ::UploadDataRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::GetResultResponse>* AsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::GetResultResponse>* PrepareAsyncGetResultRaw(::grpc::ClientContext* context, const ::GetResultRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_Ping_;
-    const ::grpc::internal::RpcMethod rpcmethod_UploadData_;
-    const ::grpc::internal::RpcMethod rpcmethod_GetResult_;
+    ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
+    ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_Connect_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -135,415 +93,117 @@ class UserService final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status Ping(::grpc::ServerContext* context, const ::Empty* request, ::Empty* response);
-    virtual ::grpc::Status UploadData(::grpc::ServerContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response);
-    virtual ::grpc::Status GetResult(::grpc::ServerContext* context, const ::GetResultRequest* request, ::GetResultResponse* response);
+    virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream);
   };
   template <class BaseClass>
-  class WithAsyncMethod_Ping : public BaseClass {
+  class WithAsyncMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_Ping() {
+    WithAsyncMethod_Connect() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_Ping() override {
+    ~WithAsyncMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestPing(::grpc::ServerContext* context, ::Empty* request, ::grpc::ServerAsyncResponseWriter< ::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
+  typedef WithAsyncMethod_Connect<Service > AsyncService;
   template <class BaseClass>
-  class WithAsyncMethod_UploadData : public BaseClass {
+  class WithCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_UploadData() {
-      ::grpc::Service::MarkMethodAsync(1);
-    }
-    ~WithAsyncMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestUploadData(::grpc::ServerContext* context, ::UploadDataRequest* request, ::grpc::ServerAsyncResponseWriter< ::UploadDataResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithAsyncMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_GetResult() {
-      ::grpc::Service::MarkMethodAsync(2);
-    }
-    ~WithAsyncMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestGetResult(::grpc::ServerContext* context, ::GetResultRequest* request, ::grpc::ServerAsyncResponseWriter< ::GetResultResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  typedef WithAsyncMethod_Ping<WithAsyncMethod_UploadData<WithAsyncMethod_GetResult<Service > > > AsyncService;
-  template <class BaseClass>
-  class WithCallbackMethod_Ping : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_Ping() {
+    WithCallbackMethod_Connect() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>(
+          new ::grpc::internal::CallbackBidiHandler< ::UserConnectRequest, ::UserConnectResponse>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::Empty* request, ::Empty* response) { return this->Ping(context, request, response); }));}
-    void SetMessageAllocatorFor_Ping(
-        ::grpc::MessageAllocator< ::Empty, ::Empty>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>*>(handler)
-              ->SetMessageAllocator(allocator);
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
-    ~WithCallbackMethod_Ping() override {
+    ~WithCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Ping(
-      ::grpc::CallbackServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerBidiReactor< ::UserConnectRequest, ::UserConnectResponse>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
-  template <class BaseClass>
-  class WithCallbackMethod_UploadData : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_UploadData() {
-      ::grpc::Service::MarkMethodCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::UploadDataRequest, ::UploadDataResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::UploadDataRequest* request, ::UploadDataResponse* response) { return this->UploadData(context, request, response); }));}
-    void SetMessageAllocatorFor_UploadData(
-        ::grpc::MessageAllocator< ::UploadDataRequest, ::UploadDataResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::UploadDataRequest, ::UploadDataResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~WithCallbackMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* UploadData(
-      ::grpc::CallbackServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithCallbackMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_GetResult() {
-      ::grpc::Service::MarkMethodCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::GetResultRequest, ::GetResultResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::GetResultRequest* request, ::GetResultResponse* response) { return this->GetResult(context, request, response); }));}
-    void SetMessageAllocatorFor_GetResult(
-        ::grpc::MessageAllocator< ::GetResultRequest, ::GetResultResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::GetResultRequest, ::GetResultResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~WithCallbackMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* GetResult(
-      ::grpc::CallbackServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/)  { return nullptr; }
-  };
-  typedef WithCallbackMethod_Ping<WithCallbackMethod_UploadData<WithCallbackMethod_GetResult<Service > > > CallbackService;
+  typedef WithCallbackMethod_Connect<Service > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
-  class WithGenericMethod_Ping : public BaseClass {
+  class WithGenericMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_Ping() {
+    WithGenericMethod_Connect() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_Ping() override {
+    ~WithGenericMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   template <class BaseClass>
-  class WithGenericMethod_UploadData : public BaseClass {
+  class WithRawMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_UploadData() {
-      ::grpc::Service::MarkMethodGeneric(1);
-    }
-    ~WithGenericMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_GetResult() {
-      ::grpc::Service::MarkMethodGeneric(2);
-    }
-    ~WithGenericMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_Ping : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_Ping() {
+    WithRawMethod_Connect() {
       ::grpc::Service::MarkMethodRaw(0);
     }
-    ~WithRawMethod_Ping() override {
+    ~WithRawMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestPing(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
-  class WithRawMethod_UploadData : public BaseClass {
+  class WithRawCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawMethod_UploadData() {
-      ::grpc::Service::MarkMethodRaw(1);
-    }
-    ~WithRawMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestUploadData(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_GetResult() {
-      ::grpc::Service::MarkMethodRaw(2);
-    }
-    ~WithRawMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestGetResult(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawCallbackMethod_Ping : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_Ping() {
+    WithRawCallbackMethod_Connect() {
       ::grpc::Service::MarkMethodRawCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackBidiHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->Ping(context, request, response); }));
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
-    ~WithRawCallbackMethod_Ping() override {
+    ~WithRawCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Ping(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerBidiReactor< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
-  template <class BaseClass>
-  class WithRawCallbackMethod_UploadData : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_UploadData() {
-      ::grpc::Service::MarkMethodRawCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->UploadData(context, request, response); }));
-    }
-    ~WithRawCallbackMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* UploadData(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithRawCallbackMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_GetResult() {
-      ::grpc::Service::MarkMethodRawCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetResult(context, request, response); }));
-    }
-    ~WithRawCallbackMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerUnaryReactor* GetResult(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_Ping : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_Ping() {
-      ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::Empty, ::Empty>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::Empty, ::Empty>* streamer) {
-                       return this->StreamedPing(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_Ping() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::Empty* /*request*/, ::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedPing(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::Empty,::Empty>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_UploadData : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_UploadData() {
-      ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::UploadDataRequest, ::UploadDataResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::UploadDataRequest, ::UploadDataResponse>* streamer) {
-                       return this->StreamedUploadData(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_UploadData() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status UploadData(::grpc::ServerContext* /*context*/, const ::UploadDataRequest* /*request*/, ::UploadDataResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedUploadData(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::UploadDataRequest,::UploadDataResponse>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_GetResult : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_GetResult() {
-      ::grpc::Service::MarkMethodStreamed(2,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::GetResultRequest, ::GetResultResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::GetResultRequest, ::GetResultResponse>* streamer) {
-                       return this->StreamedGetResult(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_GetResult() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status GetResult(::grpc::ServerContext* /*context*/, const ::GetResultRequest* /*request*/, ::GetResultResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedGetResult(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::GetResultRequest,::GetResultResponse>* server_unary_streamer) = 0;
-  };
-  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_UploadData<WithStreamedUnaryMethod_GetResult<Service > > > StreamedUnaryService;
+  typedef Service StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_Ping<WithStreamedUnaryMethod_UploadData<WithStreamedUnaryMethod_GetResult<Service > > > StreamedService;
+  typedef Service StreamedService;
 };
 
 // ----------------------------- Raft Service ----------------------------- //
@@ -921,14 +581,14 @@ class WorkerService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>> Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>>(ConnectRaw(context));
+    std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>>(AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     virtual ::grpc::Status AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>> AsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
@@ -954,7 +614,7 @@ class WorkerService final {
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerStatus,::ConnectResponse>* reactor) = 0;
+      virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) = 0;
       virtual void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -966,9 +626,9 @@ class WorkerService final {
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerStatus, ::ConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>* AsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::AssignTaskResponse>* PrepareAsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SendTaskResponse>* AsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -979,14 +639,14 @@ class WorkerService final {
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerStatus, ::ConnectResponse>> Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerStatus, ::ConnectResponse>>(ConnectRaw(context));
+    std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>>(AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     ::grpc::Status AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::AssignTaskResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>> AsyncAssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) {
@@ -1012,7 +672,7 @@ class WorkerService final {
     class async final :
       public StubInterface::async_interface {
      public:
-      void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerStatus,::ConnectResponse>* reactor) override;
+      void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) override;
       void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, std::function<void(::grpc::Status)>) override;
       void AssignTask(::grpc::ClientContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void SendTask(::grpc::ClientContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response, std::function<void(::grpc::Status)>) override;
@@ -1030,9 +690,9 @@ class WorkerService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientReaderWriter< ::WorkerStatus, ::ConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
-    ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
-    ::grpc::ClientAsyncReaderWriter< ::WorkerStatus, ::ConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
+    ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* AsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::AssignTaskResponse>* PrepareAsyncAssignTaskRaw(::grpc::ClientContext* context, const ::AssignTaskRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SendTaskResponse>* AsyncSendTaskRaw(::grpc::ClientContext* context, const ::SendTaskRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -1050,7 +710,7 @@ class WorkerService final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* stream);
+    virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* stream);
     virtual ::grpc::Status AssignTask(::grpc::ServerContext* context, const ::AssignTaskRequest* request, ::AssignTaskResponse* response);
     virtual ::grpc::Status SendTask(::grpc::ServerContext* context, const ::SendTaskRequest* request, ::SendTaskResponse* response);
     virtual ::grpc::Status GetWorkerResult(::grpc::ServerContext* context, const ::GetWorkerResultRequest* request, ::GetWorkerResultResponse* response);
@@ -1067,11 +727,11 @@ class WorkerService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* /*stream*/)  override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::ConnectResponse, ::WorkerStatus>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
@@ -1143,7 +803,7 @@ class WorkerService final {
    public:
     WithCallbackMethod_Connect() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackBidiHandler< ::WorkerStatus, ::ConnectResponse>(
+          new ::grpc::internal::CallbackBidiHandler< ::WorkerConnectRequest, ::WorkerConnectResponse>(
             [this](
                    ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
@@ -1151,11 +811,11 @@ class WorkerService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* /*stream*/)  override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerBidiReactor< ::WorkerStatus, ::ConnectResponse>* Connect(
+    virtual ::grpc::ServerBidiReactor< ::WorkerConnectRequest, ::WorkerConnectResponse>* Connect(
       ::grpc::CallbackServerContext* /*context*/)
       { return nullptr; }
   };
@@ -1254,7 +914,7 @@ class WorkerService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* /*stream*/)  override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -1322,7 +982,7 @@ class WorkerService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* /*stream*/)  override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -1405,7 +1065,7 @@ class WorkerService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::ConnectResponse, ::WorkerStatus>* /*stream*/)  override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }

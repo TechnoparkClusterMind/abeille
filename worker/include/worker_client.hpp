@@ -20,7 +20,8 @@ namespace worker {
 
 class Client {
  public:
-  using ConnectStream = grpc::ClientReaderWriter<WorkerStatus, ConnectResponse>;
+  using ConnectStream =
+      grpc::ClientReaderWriter<WorkerConnectRequest, WorkerConnectResponse>;
 
   Client() = default;
   explicit Client(const std::string address) noexcept : address_(address) {}
@@ -44,7 +45,7 @@ class Client {
  private:
   bool shutdown_ = false;
   bool connected_ = false;
-  NodeStatus status_ = NodeStatus::IDLE;
+  WorkerStatus status_ = WORKER_STATUS_IDLE;
 
   std::string address_;
   uint64_t leader_id_ = 0;
