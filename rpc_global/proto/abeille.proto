@@ -10,22 +10,38 @@ message TaskResult { int32 result = 1; }
 
 // ----------------------------- User Service ----------------------------- //
 
+enum UserStatus {
+  USER_STATUS_NONE = 0;
+  USER_STATUS_UPLOAD_DATA = 1;
+}
+
+message UserConnectRequest {
+  UserStatus status = 1;
+  TaskData task_data = 2;
+}
+
 message UploadDataRequest { TaskData task_data = 1; }
 
 message UploadDataResponse {
   bool success = 1;
   uint64 task_id = 2;
-  uint64 leader_id = 3;
 }
 
-message GetResultRequest { uint64 task_id = 1; }
+enum UserCommand {
+  USER_COMMAND_NONE = 0;
+  USER_COMMAND_REDIRECT = 1;
+  USER_COMMAND_RECIEVE_RESULT = 2;
+}
 
-message GetResultResponse { TaskResult task_result = 1; }
+message UserConnectResponse {
+  UserCommand command = 1;
+  uint64 leader_id = 2;
+  TaskResult task_result = 3;
+  UploadDataResponse upload_data_response = 4;
+}
 
 service UserService {
-  rpc Ping(Empty) returns (Empty);
-  rpc UploadData(UploadDataRequest) returns (UploadDataResponse) {}
-  rpc GetResult(GetResultRequest) returns (GetResultResponse) {}
+  rpc Connect(stream UserConnectRequest) returns (stream UserConnectResponse) {}
 }
 
 // ----------------------------- Raft Entry ----------------------------- //
@@ -113,21 +129,30 @@ message RequestVoteResponse {
 
 // ----------------------------- Worker Service ----------------------------- //
 
-enum NodeStatus {
-  IDLE = 0;
-  BUSY = 1;
-  COMPLETED = 2;
+enum WorkerStatus {
+  WORKER_STATUS_IDLE = 0;
+  WORKER_STATUS_BUSY = 2;
+  WORKER_STATUS_COMPLETED = 3;
 }
 
-message ConnectResponse {
-  Task task = 1;
-  uint64 leader_id = 2;
-}
-
-message WorkerStatus {
-  NodeStatus status = 1;
+message WorkerConnectRequest {
+  WorkerStatus status = 1;
   uint64 task_id = 2;
   TaskResult task_result = 3;
+}
+
+enum WorkerCommand {
+  WORKER_COMMAND_NONE = 0;
+  WORKER_COMMAND_PROCESS = 1;
+  WORKER_COMMAND_REDIRECT = 2;
+}
+
+message WorkerConnectResponse {  
+  WorkerCommand command = 1;
+  uint64 task_id = 2;
+  uint64 leader_id = 3;
+  TaskData task_data = 4;
+  TaskResult task_result = 5;
 }
 
 message AssignTaskRequest {
@@ -157,10 +182,7 @@ message GetWorkerResultResponse {
 }
 
 service WorkerService {
-  rpc Connect(stream WorkerStatus) returns (stream ConnectResponse) {}
-  rpc AssignTask(AssignTaskRequest) returns (AssignTaskResponse) {}
-  rpc SendTask(SendTaskRequest) returns (SendTaskResponse) {}
-  rpc GetWorkerResult(GetWorkerResultRequest) returns (GetWorkerResultResponse) {}
+  rpc Connect(stream WorkerConnectRequest) returns (stream WorkerConnectResponse) {}
 }
 
 // ----------------------------- Raft Config ----------------------------- //

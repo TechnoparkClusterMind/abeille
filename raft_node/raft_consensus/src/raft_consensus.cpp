@@ -70,11 +70,16 @@ void RaftConsensus::timerThreadMain() {
   std::unique_lock<std::mutex> lock_guard(mutex_);
   resetElectionTimer();
   while (!shutdown_) {
-    if (Clock::now() >= start_new_election_at_ ) {
+    if (Clock::now() >= start_new_election_at_) {
       LOG_INFO("New election was started");
       startNewElection();
     }
+<<<<<<< HEAD
     raft_state_changed_.wait_until(lock_guard, start_new_election_at_);
+=======
+    core_->state_changed_.wait_until(lock_guard, start_new_election_at_,
+                                     [this] { return shutdown_; });
+>>>>>>> develop-senago
   }
 }
 
@@ -84,9 +89,14 @@ void RaftConsensus::Shutdown() noexcept {
 }
 
 void RaftConsensus::resetElectionTimer() {
+<<<<<<< HEAD
   uint64_t rand_duration =
-      rand() % ELECTION_TIMEOUT_.count() +
-      ELECTION_TIMEOUT_.count();
+      rand() % ELECTION_TIMEOUT_.count() + ELECTION_TIMEOUT_.count();
+=======
+  int64_t rand_duration =
+      rand() % election_timeout_.time_since_epoch().count() +
+      election_timeout_.time_since_epoch().count();
+>>>>>>> develop-senago
   std::chrono::milliseconds duration(rand_duration);
   start_new_election_at_ = Clock::now() + duration;
   raft_state_changed_.notify_all();
@@ -133,12 +143,17 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   request.set_prev_log_term(log_->LastTerm());
   request.set_leader_commit(state_machine_->GetCommitIndex());
 
+<<<<<<< HEAD
   uint8_t entries_num = 0;
   if (log_->LastIndex() >= peer.next_index_) {
     request.set_allocated_entry(log_->GetEntry(peer.next_index_));
     request.release_entry();
     entries_num = 1;
   }
+=======
+  if (log_->LastIndex() >= peer.next_index_)
+    request.set_allocated_entry(log_->GetEntry(peer.next_index_));
+>>>>>>> develop-senago
 
   AppendEntryResponse response;
   grpc::ClientContext context;
@@ -152,8 +167,7 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   }
   */
 
-  if (current_term_ != request.term() || peer.exiting_)
-    return;
+  if (current_term_ != request.term() || peer.exiting_) return;
 
   if (response.term() > current_term_) {
     LOG_INFO("Recieved AppendEntry response with term %lu. Updating...",
@@ -234,9 +248,15 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
       case State::LEADER:
         if (log_->LastIndex() >= peer->next_index_ ||
+<<<<<<< HEAD
             peer->next_heartbeat_time_ <= now) {
           appendEntry(lock_guard, *peer);
         } else
+=======
+            peer->next_heartbeat_time_ <= Clock::now())
+          appendEntry(*peer);
+        else
+>>>>>>> develop-senago
           wait_until = peer->next_heartbeat_time_;
         break;
     }
@@ -253,6 +273,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   LOG_INFO("AppendEntry request was recieved from %lu", msg->leader_id());
   std::lock_guard<std::mutex> lockGuard(mutex_);
 
+<<<<<<< HEAD
   // Set response to rejection at first
   // Will be changed
   resp->set_term(current_term_);
@@ -338,6 +359,13 @@ void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg,
   resp->set_term(current_term_);
   resp->set_vote_granted(voted_for_ == msg->candidate_id());
 }
+=======
+  void RaftConsensus::HandleAppendEntries(const AppendEntryRequest *msg,
+                                          AppendEntryResponse *resp) {}
+
+  void RaftConsensus::HandleRequestVote(const RequestVoteRequest *msg,
+                                        RequestVoteResponse *resp) {}
+>>>>>>> develop-senago
 
 }  // namespace raft_node
 }  // namespace abeille

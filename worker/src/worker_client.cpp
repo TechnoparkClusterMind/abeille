@@ -6,6 +6,7 @@
 #include "constants.hpp"
 #include "convert.hpp"
 #include "logger.hpp"
+#include "user/include/data_processor.hpp"
 
 using grpc::ClientContext;
 using grpc::Status;
@@ -13,93 +14,58 @@ using grpc::Status;
 namespace abeille {
 namespace worker {
 
-error Client::Run() {
-  createStub();
-
-  LOG_INFO("connecting to the server...");
-  connect_thread_ = std::thread(&Client::connect, this);
-
-  std::unique_lock<std::mutex> lk(mutex_);
-  cv_.wait(lk, [&] { return connected_ || shutdown_; });
-
-  return error();
-}
-
-void Client::Shutdown() {
-  LOG_INFO("shutting down...");
-  shutdown_ = true;
-  if (connect_thread_.joinable()) {
-    connect_thread_.join();
+void Client::CommandHandler(const WorkerConnectResponse *resp) {
+  switch (resp->command()) {
+    case WORKER_COMMAND_REDIRECT:
+      handleCommandRedirect(resp);
+      break;
+    case WORKER_COMMAND_PROCESS:
+      handleCommandProcess(resp);
+      break;
+    default:
+      break;
   }
 }
 
-void Client::createStub() {
-  auto channel = grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
-  stub_ptr_ = WorkerService::NewStub(channel);
+void Client::handleCommandProcess(const WorkerConnectResponse *response) {
+  if (!response->has_task_data()) {
+    LOG_ERROR("got asked to process null data");
+  } else {
+    std::thread(&Client::processData, this, response->task_data()).detach();
+  }
 }
 
-void Client::connect() {
-  {
-    // try to connect to the server; last stream and context are preserved
-    std::lock_guard<std::mutex> lk(mutex_);
-    while (!handshake() && !shutdown_) {
-      LOG_ERROR("failed to connect to the server, retrying...");
-      std::this_thread::sleep_for(std::chrono::seconds(3));
-    }
-
-    // if exited because of shutdown, notify and return to successfully shutdown
-    if (shutdown_) {
-      cv_.notify_one();
-      return;
-    }
-
-    LOG_INFO("successfully connected to the server");
-    connected_ = true;
-  }
-  cv_.notify_one();
-
-  keepAlive();
-}
-
-// TODO: refactor it
-void Client::keepAlive() {
-  // keep the connection alive: respond to beats from the server
-  ConnectResponse response;
-  WorkerStatus request;
-  while (connect_stream_->Read(&response) && !shutdown_) {
-    if (response.leader_id() != leader_id_) {
-      leader_id_ = response.leader_id();
-      address_ = uint2address(leader_id_);
-      LOG_INFO("got redirected to the [%s]", address_.c_str());
-      connected_ = false;
-      connect_stream_->WritesDone();
-      Run();
-    }
-
-    // FIXME: implement other logic
-
-    request.set_status(status_);
-    connect_stream_->Write(request);
-  }
-
+void Client::handleCommandRedirect(const WorkerConnectResponse *response) {
   connected_ = false;
-  connect_stream_->WritesDone();
-  LOG_INFO("disconnected from the server...");
+  leader_id_ = response->leader_id();
+  address_ = uint2address(response->leader_id());
+  LOG_INFO("got redirected to the [%s]", address_.c_str());
+  connect();
+}
 
-  // if not shutdown, we need to try to reconnect
-  if (!shutdown_) {
-    connect();
+void Client::processData(const TaskData &task_data) {
+  LOG_INFO("processing data...");
+  task_result_ = new TaskResult();
+  abeille::user::ProcessData(task_data, task_result_);
+  LOG_INFO("finished processing data");
+  status_ = WORKER_STATUS_COMPLETED;
+}
+
+void Client::StatusHandler(ConnReq *req) {
+  req->set_status(status_);
+  switch (status_) {
+    case WORKER_STATUS_COMPLETED:
+      handleStatusCompleted(req);
+      break;
+    default:
+      break;
   }
 }
 
-bool Client::handshake() {
-  WorkerStatus request;
-  request.set_status(status_);
-
-  connect_ctx_ = std::make_unique<ClientContext>();
-  connect_stream_ = stub_ptr_->Connect(connect_ctx_.get());
-
-  return connect_stream_->Write(request);
+void Client::handleStatusCompleted(ConnReq *req) {
+  status_ = WORKER_STATUS_IDLE;
+  req->set_task_id(task_id_);
+  req->set_allocated_task_result(task_result_);
 }
 
 }  // namespace worker

@@ -11,9 +11,10 @@ namespace raft_node {
 
 Peer::Peer(std::shared_ptr<grpc::Channel> channel,
            std::shared_ptr<RaftConsensus> raft, uint64_t id)
-  : id_(id),
-    stub_(RaftService::NewStub(channel)), raft_(raft),
-    next_index_(raft_->log_->LastIndex() + 1){}
+    : id_(id),
+      stub_(RaftService::NewStub(channel)),
+      raft_(raft),
+      next_index_(raft_->log_->LastIndex() + 1) {}
 
 void Peer::Run(std::shared_ptr<Peer> self) {
   LOG_INFO("Starting peer thread for server %lu", id_);

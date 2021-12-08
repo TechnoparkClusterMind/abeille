@@ -10,52 +10,42 @@
 #include <vector>
 
 #include "abeille.grpc.pb.h"
+#include "client.hpp"
 #include "errors.hpp"
+#include "logger.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;
+using namespace std::placeholders;
 
 namespace abeille {
 namespace worker {
 
-class Client {
+using ConnReq = WorkerConnectRequest;
+using ConnResp = WorkerConnectResponse;
+using WorkerClient = abeille::rpc::Client<ConnReq, ConnResp, WorkerService>;
+
+class Client : public WorkerClient {
  public:
-  using ConnectStream = grpc::ClientReaderWriter<WorkerStatus, ConnectResponse>;
+  Client(const std::string &address) noexcept : WorkerClient(address) {}
 
-  Client() = default;
-  explicit Client(const std::string address) noexcept : address_(address) {}
-  ~Client() = default;
+  void CommandHandler(const ConnResp *resp) override;
 
-  error Run();
-
-  void Shutdown();
+  void StatusHandler(ConnReq *req) override;
 
  private:
-  void createStub();
+  void handleCommandProcess(const ConnResp *response);
+  void handleCommandRedirect(const ConnResp *response);
 
-  void connect();
+  void processData(const TaskData &task_data);
 
-  void keepAlive();
+  void handleStatusCompleted(ConnReq *req);
 
-  bool handshake();
-
-  std::string address_;
-
-  std::unique_ptr<WorkerService::Stub> stub_ptr_ = nullptr;
-
-  std::thread connect_thread_;
-  std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
-  std::unique_ptr<ConnectStream> connect_stream_ = nullptr;
-
-  bool shutdown_ = false;
-  bool connected_ = false;
-
-  std::mutex mutex_;
-  std::condition_variable cv_;
-
-  NodeStatus status_ = NodeStatus::IDLE;
-
+ private:
+  uint64_t task_id_ = 0;
   uint64_t leader_id_ = 0;
+  TaskResult *task_result_ = nullptr;
+  WorkerStatus status_ = WORKER_STATUS_IDLE;
 };
 
 }  // namespace worker

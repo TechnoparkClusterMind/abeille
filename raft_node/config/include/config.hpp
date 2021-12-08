@@ -1,9 +1,9 @@
 #ifndef ABEILLE_CONFIG_H
 #define ABEILLE_CONFIG_H
 
+#include <fstream>
 #include <string>
 #include <vector>
-#include <fstream>
 
 #include "types.hpp"
 
@@ -20,7 +20,7 @@ class Config {
   ~Config() = default;
 
   bool is_ok() const noexcept;
-  void parse(std::ifstream& file);
+  void parse(std::ifstream &file);
 
   uint64_t GetId() const noexcept { return id_; }
   std::string GetUserAddress() const noexcept { return user_address_; }

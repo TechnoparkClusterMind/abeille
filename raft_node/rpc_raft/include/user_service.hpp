@@ -2,6 +2,7 @@
 #define ABEILLE_RPC_USER_SERVICE_H
 
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 #include "abeille.grpc.pb.h"
@@ -17,22 +18,24 @@ class TaskManager;
 
 class UserServiceImpl final : public UserService::Service {
  public:
+  using ConnectStream =
+      grpc::ServerReaderWriter<UserConnectResponse, UserConnectRequest>;
+
   UserServiceImpl() = default;
-  explicit UserServiceImpl(std::shared_ptr<TaskManager> task_mgr) : task_mgr_(task_mgr){};
+  explicit UserServiceImpl(std::shared_ptr<TaskManager> task_mgr)
+      : task_mgr_(task_mgr){};
 
  private:
-  Status Ping(ServerContext *context, const Empty *request, Empty *response) override;
+  Status Connect(ServerContext *context, ConnectStream *stream) override;
 
-  Status UploadData(ServerContext *context, const UploadDataRequest *request, UploadDataResponse *response) override;
-
-  Status GetResult(ServerContext *context, const GetResultRequest *request, GetResultResponse *response) override;
-
-  bool IsLeader() const noexcept { return id_ == leader_id_; }
+  bool isLeader() const noexcept { return id_ == leader_id_; }
 
   std::shared_ptr<TaskManager> task_mgr_;
 
   uint64_t id_ = 0;
   uint64_t leader_id_ = 0;
+
+  std::unordered_set<uint64_t> users_;
 };
 
 }  // namespace raft_node

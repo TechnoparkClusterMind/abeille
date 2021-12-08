@@ -32,7 +32,7 @@ class TaskManager {
   std::thread scheduler_thread_;
   std::queue<Entry> queued_entries_;
   std::unique_ptr<std::thread> scheduler_thread_ptr_;
-  uint64_t last_task_id_ = 0;
+  uint64_t last_task_id_ = 1;
   Core *core_;
 };
 

@@ -23,8 +23,10 @@ class RaftServiceImpl final : public RaftService::Service {
  public:
   explicit RaftServiceImpl(std::shared_ptr<RaftConsensus> raft) : raft_(raft){};
 
-  Status AppendEntry(ServerContext *context, const AppendEntryRequest *request, AppendEntryResponse *response) override;
-  Status RequestVote(ServerContext *context, const RequestVoteRequest *request, RequestVoteResponse *response) override;
+  Status AppendEntry(ServerContext *context, const AppendEntryRequest *request,
+                     AppendEntryResponse *response) override;
+  Status RequestVote(ServerContext *context, const RequestVoteRequest *request,
+                     RequestVoteResponse *response) override;
 };
 
 }  // namespace raft_node

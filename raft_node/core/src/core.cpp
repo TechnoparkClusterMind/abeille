@@ -25,13 +25,12 @@ Core::Core(Config &&conf) noexcept
       raft_service_(new RaftServiceImpl(raft_)),
       user_service_(new UserServiceImpl(task_mgr_)),
       worker_service_(new WorkerServiceImpl()) {
-
-  std::vector<ServiceInfo> services = {{config_.GetRaftAddress(), raft_service_.get()},
-                                       {config_.GetUserAddress(), user_service_.get()},
-                                       {config_.GetWorkerAddress(), worker_service_.get()}};
+  std::vector<ServiceInfo> services = {
+      {config_.GetRaftAddress(), raft_service_.get()},
+      {config_.GetUserAddress(), user_service_.get()},
+      {config_.GetWorkerAddress(), worker_service_.get()}};
 
   raft_server_ = std::make_unique<abeille::rpc::Server>(services);
-
 }
 
 // TODO: Test for EXPECT_DEATH
@@ -43,7 +42,7 @@ void Core::Run() noexcept {
   status[0] = raft_->Run();
   status[1] = Status();
   // status[1] = task_mgr_->Run();
-   status[2] = raft_pool_->Run();
+  status[2] = raft_pool_->Run();
   status[3] = Status();
   // status[3] = worker_pool_->Run();
   status[4] = raft_server_->Run();

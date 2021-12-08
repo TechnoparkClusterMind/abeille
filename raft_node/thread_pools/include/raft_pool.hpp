@@ -20,7 +20,7 @@ class RaftConsensus;
 class Peer;
 
 class RaftPool {
-public:
+ public:
   typedef std::shared_ptr<Peer> PeerRef;
   typedef std::shared_ptr<RaftConsensus> RaftRef;
   typedef error Status;
@@ -36,12 +36,12 @@ public:
   bool MajorityVotes();
   void AppendAll(const Entry &entry);
 
-private:
+ private:
   std::unordered_map<ServerId, PeerRef> peers_;
   RaftRef raft_;
 };
 
-} // namespace raft_node
-} // namespace abeille
+}  // namespace raft_node
+}  // namespace abeille
 
-#endif // ABEILLE_RAFT_RAFT_POOL_H_
+#endif  // ABEILLE_RAFT_RAFT_POOL_H_

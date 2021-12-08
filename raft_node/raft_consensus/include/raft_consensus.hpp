@@ -28,7 +28,7 @@ class RaftConsensus {
   typedef std::shared_ptr<Log> LogRef;
   // FIXME: refactor Core*
   // typedef std::shared_ptr<Core> CoreRef;
-  typedef Core* CoreRef;
+  typedef Core *CoreRef;
   typedef std::unique_ptr<StateMachine> StateMachineRef;
   typedef error Status;
 
@@ -36,14 +36,13 @@ class RaftConsensus {
   typedef std::chrono::milliseconds TimeDuration;
   typedef std::chrono::system_clock Clock;
 
-
   RaftConsensus() = default;
   explicit RaftConsensus(Core *core) noexcept;
   ~RaftConsensus();
 
   // process RPCs from another server
   void HandleAppendEntry(const AppendEntryRequest *msg,
-                           AppendEntryResponse *resp);
+                         AppendEntryResponse *resp);
   void HandleRequestVote(const RequestVoteRequest *msg,
                          RequestVoteResponse *resp);
 
@@ -68,11 +67,10 @@ class RaftConsensus {
   void stepDown(uint64_t term);
 
   // RPC request
-  void appendEntry(std::unique_lock<std::mutex>&, Peer &peer);
-  void requestVote(std::unique_lock<std::mutex>&, Peer &peer);
+  void appendEntry(std::unique_lock<std::mutex> &, Peer &peer);
+  void requestVote(std::unique_lock<std::mutex> &, Peer &peer);
 
  private:
-
   uint64_t id_ = 0;
   uint64_t leader_id_ = 0;
   State state_ = State::FOLLOWER;
@@ -81,11 +79,16 @@ class RaftConsensus {
   std::condition_variable raft_state_changed_;
   mutable std::mutex mutex_;
 
-  TimeDuration ELECTION_TIMEOUT_= (std::chrono::milliseconds(500));
+  TimeDuration ELECTION_TIMEOUT_ = (std::chrono::milliseconds(500));
 
   // when the next heartbeat should be sent
-  TimeDuration HEARTBEAT_PERIOD_ = std::chrono::milliseconds(
-      ELECTION_TIMEOUT_.count() / 2);
+<<<<<<< HEAD
+  TimeDuration HEARTBEAT_PERIOD_ =
+      std::chrono::milliseconds(ELECTION_TIMEOUT_.count() / 2);
+=======
+  TimePoint heartbeat_period_ = TimePoint(std::chrono::milliseconds(
+      election_timeout_.time_since_epoch().count() / 2));
+>>>>>>> develop-senago
 
   // the time at which timerThreadMain() should start a new election
   TimePoint start_new_election_at_ = TimePoint::max();

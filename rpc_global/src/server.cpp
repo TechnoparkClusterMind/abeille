@@ -6,7 +6,9 @@ namespace abeille {
 namespace rpc {
 
 Server::Server(Server &&other) noexcept
-    : services_(std::move(other.services_)), thread_(std::move(other.thread_)), server_(std::move(other.server_)) {}
+    : services_(std::move(other.services_)),
+      thread_(std::move(other.thread_)),
+      server_(std::move(other.server_)) {}
 
 Server &Server::operator=(Server &&other) noexcept {
   if (this != &other) {
@@ -37,14 +39,15 @@ error Server::Run() {
 
 void Server::Shutdown() {
   LOG_INFO("shutting down...");
-  server_->Shutdown(std::chrono::system_clock::now() + SHUTDOWN_TIMEOUT);
+  server_->Shutdown(std::chrono::system_clock::now());
   thread_->join();
 }
 
 void Server::init() {
   LOG_INFO("registering services...");
   for (const auto &service : services_) {
-    builder_.AddListeningPort(service.address, grpc::InsecureServerCredentials());
+    builder_.AddListeningPort(service.address,
+                              grpc::InsecureServerCredentials());
     builder_.RegisterService(service.address, service.service);
   }
 }
