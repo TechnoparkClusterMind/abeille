@@ -8,6 +8,9 @@ option(ENABLE_CPPCHECK "Enable cppcheck" OFF)
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 option(ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
+# Temporary
+add_compile_options(-g)
+
 add_compile_options(-Wpedantic -Wall -Wextra -Wshadow)
 add_compile_options(-Wno-unused-parameter -Wno-unused-function)
 

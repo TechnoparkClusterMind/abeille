@@ -21,7 +21,9 @@ Term Log::LastTerm() const noexcept {
   return log_.front().term();
 }
 
-Index Log::LastIndex() const noexcept { return log_.size() - 1; }
+  Index Log::LastIndex() const noexcept {
+    return log.size() == 0 ? 0 : log_.size() - 1;
+  }
 
 bool Log::Exists(Index index) const noexcept { return index < log_.size(); }
 
@@ -32,7 +34,9 @@ bool Log::Check(Index index, Term term) const noexcept {
   return true;
 }
 
-Entry* Log::GetEntry(Index index) noexcept { return &log_[index]; }
+Entry* Log::GetEntry(Index index) noexcept {
+  return index > log_.size() - 1 ? nullptr : &log_[index];
+}
 
 }  // namespace raft_node
 }  // namespace abeille

@@ -16,7 +16,7 @@ namespace raft_node {
 RaftConsensus::RaftConsensus(Core *core) noexcept
     : id_(core->config_.GetId()),
       core_(core),
-      log_(new Log),
+      log_(new Log()),
       state_machine_(new StateMachine(log_)) {}
 
 RaftConsensus::~RaftConsensus() {
@@ -27,7 +27,10 @@ RaftConsensus::~RaftConsensus() {
   }
 }
 
-void RaftConsensus::AddPeer() noexcept { ++core_->num_peers_threads_; }
+void RaftConsensus::AddPeer() noexcept {
+  ++core_->num_peers_threads_;
+  core_->pool_state_changed_.notify_all();
+}
 
 RaftConsensus::Status RaftConsensus::Run() {
   try {
@@ -37,7 +40,7 @@ RaftConsensus::Status RaftConsensus::Run() {
     return Status(Status::Code::FAILURE);
   }
 
-  LOG_INFO("RaftConsensus was started");
+  LOG_INFO("RaftConsensus for server %lu was started", id_);
   return Status(Status::Code::OK);
 }
 
@@ -57,19 +60,21 @@ void RaftConsensus::stepDown(uint64_t new_term) {
   if (start_new_election_at_ == TimePoint::max()) resetElectionTimer();
   if (hold_election_for == TimePoint::max())
     hold_election_for = TimePoint::min();
+
+  raft_state_changed_.notify_all();
 }
 
 // If election timeout elapses without recieving AppendEntries
 // initiates startNewElection()
 void RaftConsensus::timerThreadMain() {
-  std::unique_lock<std::mutex> lock_guard(core_->mutex);
+  std::unique_lock<std::mutex> lock_guard(mutex_);
+  resetElectionTimer();
   while (!shutdown_) {
-    if (start_new_election_at_ >= election_timeout_ && voted_for_ == 0) {
+    if (Clock::now() >= start_new_election_at_ ) {
       LOG_INFO("New election was started");
       startNewElection();
     }
-    raft_state_changed_.wait_until(lock_guard, start_new_election_at_,
-                                   [this] { return shutdown_; });
+    raft_state_changed_.wait_until(lock_guard, start_new_election_at_);
   }
 }
 
@@ -80,8 +85,8 @@ void RaftConsensus::Shutdown() noexcept {
 
 void RaftConsensus::resetElectionTimer() {
   uint64_t rand_duration =
-      rand() % election_timeout_.time_since_epoch().count() +
-      election_timeout_.time_since_epoch().count();
+      rand() % ELECTION_TIMEOUT_.count() +
+      ELECTION_TIMEOUT_.count();
   std::chrono::milliseconds duration(rand_duration);
   start_new_election_at_ = Clock::now() + duration;
   raft_state_changed_.notify_all();
@@ -93,6 +98,7 @@ void RaftConsensus::becomeLeader() {
   leader_id_ = id_;
   start_new_election_at_ = TimePoint::max();
   hold_election_for = TimePoint::max();
+  raft_state_changed_.notify_all();
 }
 
 void RaftConsensus::startNewElection() {
@@ -108,21 +114,22 @@ void RaftConsensus::startNewElection() {
   }
 
   ++current_term_;
+  state_ = State::CANDIDATE;
   voted_for_ = id_;
   resetElectionTimer();
-  // Resetting all peers:
   core_->raft_pool_->BeginRequestVote();
+  raft_state_changed_.notify_all();
 
   // if we are the only server
   if (core_->raft_pool_->MajorityVotes()) becomeLeader();
 }
 
-void RaftConsensus::appendEntry(Peer &peer) {
+void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   AppendEntryRequest request;
   request.set_term(current_term_);
   request.set_leader_id(id_);
   request.set_prev_log_index(peer.next_index_ - 1);
-  request.set_prev_log_term(log_->GetEntry(peer.next_index_ - 1)->term());
+  request.set_prev_log_term(log_->LastTerm());
   request.set_leader_commit(state_machine_->GetCommitIndex());
 
   if (log_->LastIndex() >= peer.next_index_) {
@@ -134,10 +141,7 @@ void RaftConsensus::appendEntry(Peer &peer) {
   grpc::ClientContext context;
   grpc::Status status = peer.stub_->AppendEntry(&context, request, &response);
 
-  if (!status.ok()) {
-    LOG_INFO("AppendEntry to peer %lu failed", peer.id_);
-    return;
-  }
+  if (!status.ok()) return;
 
   if (current_term_ != request.term() || peer.exiting_) return;
 
@@ -149,7 +153,7 @@ void RaftConsensus::appendEntry(Peer &peer) {
   } else {
     peer.next_heartbeat_time_ =
         Clock::now() + static_cast<std::chrono::milliseconds>(
-                           heartbeat_period_.time_since_epoch().count());
+                           HEARTBEAT_PERIOD_.count());
     raft_state_changed_.notify_all();
     if (response.success()) {
       peer.match_index_ = peer.next_index_;
@@ -160,20 +164,21 @@ void RaftConsensus::appendEntry(Peer &peer) {
   }
 }
 
-void RaftConsensus::requestVote(Peer &peer) {
-  LOG_INFO("Sending requestVote to %lu", peer.id_);
+void RaftConsensus::requestVote(std::unique_lock<std::mutex> &, Peer &peer) {
   RequestVoteRequest request;
   request.set_term(current_term_);
   request.set_candidate_id(id_);
   request.set_last_log_entry(log_->LastIndex());
-  request.set_last_log_term(log_->GetEntry(log_->LastIndex())->term());
+  request.set_last_log_term(log_->LastTerm());
 
   RequestVoteResponse response;
   grpc::ClientContext context;
-  grpc::Status status = peer.stub_->RequestVote(&context, request, &response);
+  context.set_deadline(std::chrono::system_clock::time_point::max());
+
+  grpc::Status status = grpc::Status::CANCELLED;
+  status = peer.stub_->RequestVote(&context, request, &response);
 
   if (!status.ok()) {
-    LOG_INFO("AppendEntry to peer %lu failed", peer.id_);
     return;
   }
 
@@ -189,15 +194,16 @@ void RaftConsensus::requestVote(Peer &peer) {
 
     if (response.vote_granted()) {
       peer.have_vote_ = true;
+      raft_state_changed_.notify_all();
       if (core_->raft_pool_->MajorityVotes()) becomeLeader();
     } else
-      LOG_INFO("RequestEntry was declined");
+      LOG_INFO("RequestVote was declined");
   }
 }
 
 void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
   LOG_INFO("Peer thread for server %lu was started", peer->id_);
-  std::unique_lock<std::mutex> lock_guard(core_->mutex);
+  std::unique_lock<std::mutex> lock_guard(mutex_);
   TimePoint wait_until = TimePoint::min();
 
   // issue RPC or sleeps on the cv
@@ -209,7 +215,7 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
       case State::CANDIDATE:
         if (!peer->vote_request_done_)
-          requestVote(*peer);
+          requestVote(lock_guard, *peer);
         else
           wait_until = TimePoint::max();
         break;
@@ -217,14 +223,17 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
       case State::LEADER:
         if (log_->LastIndex() >= peer->next_index_ ||
             peer->next_heartbeat_time_ <= Clock::now())
-          appendEntry(*peer);
+          appendEntry(lock_guard, *peer);
         else
           wait_until = peer->next_heartbeat_time_;
         break;
     }
+
+    raft_state_changed_.wait_until(lock_guard, wait_until);
   }
 
-  core_->pool_state_changed_.wait_until(lock_guard, wait_until);
+  --core_->num_peers_threads_;
+  core_->pool_state_changed_.notify_all();
 }
 
 void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
@@ -254,7 +263,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   resetElectionTimer();
   hold_election_for =
       Clock::now() + static_cast<std::chrono::milliseconds>(
-                         election_timeout_.time_since_epoch().count());
+                         ELECTION_TIMEOUT_.count());
 
   // Record LeaderId
   if (leader_id_ == 0) {

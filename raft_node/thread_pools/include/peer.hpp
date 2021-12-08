@@ -23,7 +23,7 @@ class RaftConsensus;
 // when we are the candidate or the leader
 class Peer {
  public:
-  using TimePoint = std::chrono::steady_clock::time_point;
+  using TimePoint = std::chrono::system_clock::time_point;
 
   // grpc stub is initialized with channel
   explicit Peer(std::shared_ptr<grpc::Channel> channel,

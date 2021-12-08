@@ -32,9 +32,9 @@ class RaftConsensus {
   typedef std::unique_ptr<StateMachine> StateMachineRef;
   typedef error Status;
 
-  typedef std::chrono::steady_clock::time_point TimePoint;
-  // typedef std::chrono::milliseconds TimeDuration;
-  typedef std::chrono::steady_clock Clock;
+  typedef std::chrono::system_clock::time_point TimePoint;
+  typedef std::chrono::milliseconds TimeDuration;
+  typedef std::chrono::system_clock Clock;
 
 
   RaftConsensus() = default;
@@ -68,8 +68,8 @@ class RaftConsensus {
   void stepDown(uint64_t term);
 
   // RPC request
-  void appendEntry(Peer &peer);
-  void requestVote(Peer &peer);
+  void appendEntry(std::unique_lock<std::mutex>&, Peer &peer);
+  void requestVote(std::unique_lock<std::mutex>&, Peer &peer);
 
  private:
 
@@ -79,13 +79,13 @@ class RaftConsensus {
 
   // Triggers when almost anything inside raft happens
   std::condition_variable raft_state_changed_;
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
 
-  TimePoint election_timeout_ = TimePoint(std::chrono::milliseconds(500));
+  TimeDuration ELECTION_TIMEOUT_= (std::chrono::milliseconds(500));
 
   // when the next heartbeat should be sent
-  TimePoint heartbeat_period_ = TimePoint(std::chrono::milliseconds(
-      election_timeout_.time_since_epoch().count() / 2));
+  TimeDuration HEARTBEAT_PERIOD_ = std::chrono::milliseconds(
+      ELECTION_TIMEOUT_.count() / 2);
 
   // the time at which timerThreadMain() should start a new election
   TimePoint start_new_election_at_ = TimePoint::max();

@@ -16,7 +16,6 @@ RaftPool::RaftPool(RaftPool::RaftRef raft) : raft_(raft) {
 
   for (const auto& addr : peers_adresses) {
     ServerId temp_id = address2uint(addr);
-
     peers_.insert(std::make_pair(
         temp_id,
         std::make_shared<Peer>(
