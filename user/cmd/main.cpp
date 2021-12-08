@@ -26,19 +26,13 @@ void RunCLI() {
   linenoise::SetHistoryMaxLen(4);
 
   std::string line;
-  while (true) {
-    bool quit = linenoise::Readline("abeille> ", line);
-    if (quit) {
-      break;
-    }
-
+  while (!linenoise::Readline("abeille> ", line)) {
     try {
       cli.Process(line);
     } catch (const std::exception &e) {  // is thrown in Exit
       std::cout << "goodbye!" << std::endl;
       break;
     }
-
     linenoise::AddHistory(line.c_str());
   }
 }
