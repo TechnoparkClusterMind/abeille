@@ -11,6 +11,7 @@ namespace abeille {
 namespace raft_node {
 
 // FIXME: refactor to sigleton
+// Indexing starts with 1 !!!
 class Log {
  public:
   Log() noexcept = default;

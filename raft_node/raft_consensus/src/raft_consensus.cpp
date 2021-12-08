@@ -125,6 +125,7 @@ void RaftConsensus::startNewElection() {
 }
 
 void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
+  LOG_DEBUG("Sending AppendEntry ...");
   AppendEntryRequest request;
   request.set_term(current_term_);
   request.set_leader_id(id_);
@@ -132,16 +133,23 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   request.set_prev_log_term(log_->LastTerm());
   request.set_leader_commit(state_machine_->GetCommitIndex());
 
+  uint8_t entries_num = 0;
   if (log_->LastIndex() >= peer.next_index_) {
     request.set_allocated_entry(log_->GetEntry(peer.next_index_));
     request.release_entry();
+    entries_num = 1;
   }
 
   AppendEntryResponse response;
   grpc::ClientContext context;
+  TimePoint start = Clock::now();
   grpc::Status status = peer.stub_->AppendEntry(&context, request, &response);
 
-  if (!status.ok()) return;
+  if (!status.ok()) {
+    LOG_DEBUG("Append entry is not ok");
+    LOG_DEBUG(status.error_message().c_str());
+    return;
+  }
 
   if (current_term_ != request.term() || peer.exiting_) return;
 
@@ -151,14 +159,13 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
     stepDown(response.term());
 
   } else {
-    peer.next_heartbeat_time_ =
-        Clock::now() + static_cast<std::chrono::milliseconds>(
-                           HEARTBEAT_PERIOD_.count());
+    peer.next_heartbeat_time_ = start + HEARTBEAT_PERIOD_;
     raft_state_changed_.notify_all();
+
     if (response.success()) {
-      peer.match_index_ = peer.next_index_;
+      peer.match_index_ = peer.next_index_ - 1 + entries_num;
       peer.next_index_ = peer.match_index_ + 1;
-    } else if (peer.next_index_ > 1) {
+    } else if (peer.next_index_ > 0) {
       --peer.next_index_;
     }
   }
@@ -208,6 +215,9 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
   // issue RPC or sleeps on the cv
   while (!peer->exiting_) {
+    TimePoint now = Clock::now();
+    // TimePoint wait_until = TimePoint::min();
+
     switch (state_) {
       case State::FOLLOWER:
         wait_until = TimePoint::max();
@@ -222,7 +232,7 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
       case State::LEADER:
         if (log_->LastIndex() >= peer->next_index_ ||
-            peer->next_heartbeat_time_ <= Clock::now())
+            peer->next_heartbeat_time_ <= now)
           appendEntry(lock_guard, *peer);
         else
           wait_until = peer->next_heartbeat_time_;
@@ -261,9 +271,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   // To follower state, update term, reset timer
   stepDown(msg->term());
   resetElectionTimer();
-  hold_election_for =
-      Clock::now() + static_cast<std::chrono::milliseconds>(
-                         ELECTION_TIMEOUT_.count());
+  hold_election_for = Clock::now() + ELECTION_TIMEOUT_;
 
   // Record LeaderId
   if (leader_id_ == 0) {
@@ -277,7 +285,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
     return;
   }
 
-  if (msg->prev_log_index() != log_->GetEntry(msg->prev_log_index())->term()) {
+  if (msg->prev_log_index() != log_->LastTerm()) {
     LOG_INFO("Rejecting AppendEntry... Terms don't agree");
     return;
   }

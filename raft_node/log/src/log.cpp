@@ -18,24 +18,25 @@ Term Log::LastTerm() const noexcept {
   if (log_.empty()) {
     return 0;
   }
-  return log_.front().term();
+  return log_.back().term();
 }
 
-  Index Log::LastIndex() const noexcept {
-    return log.size() == 0 ? 0 : log_.size() - 1;
-  }
+Index Log::LastIndex() const noexcept {
+    return log_.size();
+}
 
-bool Log::Exists(Index index) const noexcept { return index < log_.size(); }
+bool Log::Exists(Index index) const noexcept { return index <= log_.size(); }
 
 bool Log::Check(Index index, Term term) const noexcept {
-  if (index >= log_.size() || log_[index].term() != term) {
+  if (index > log_.size() || log_[index - 1].term() != term) {
     return false;
   }
   return true;
 }
 
 Entry* Log::GetEntry(Index index) noexcept {
-  return index > log_.size() - 1 ? nullptr : &log_[index];
+  assert(index != 0);
+  return index > log_.size() || log_.size() == 0 ? nullptr : &log_[index - 1];
 }
 
 }  // namespace raft_node
