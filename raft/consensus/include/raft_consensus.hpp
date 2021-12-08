@@ -32,9 +32,9 @@ class RaftConsensus {
   typedef Core *CoreRef;
   typedef std::unique_ptr<StateMachine> StateMachineRef;
 
-  typedef std::chrono::system_clock::time_point TimePoint;
+  typedef std::chrono::steady_clock::time_point TimePoint;
   typedef std::chrono::milliseconds TimeDuration;
-  typedef std::chrono::system_clock Clock;
+  typedef std::chrono::steady_clock Clock;
 
   RaftConsensus() = default;
   explicit RaftConsensus(Core *core) noexcept;
