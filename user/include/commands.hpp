@@ -19,7 +19,7 @@ struct Wrapper {
   CLI::handlers_helper helper;
 
   // FIXME: make a way to pass here all addresses to raft nodes
-  inline static Client user_client = Client({abeille::USER_SERVICE_ADDRESS});
+  inline static Client user_client = Client(abeille::USER_SERVICE_ADDRESS);
 };
 
 std::string Exit(CLI::args_type);

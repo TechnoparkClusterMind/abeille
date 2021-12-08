@@ -22,15 +22,12 @@ class Client {
  public:
   using ConnStream = grpc::ClientReaderWriter<ConnReq, ConnResp>;
   using SvcStub = typename Svc::Stub;
-  using CommandHandler = std::function<void(const ConnResp *)>;
 
   Client() = default;
   explicit Client(const std::string &address) noexcept : address_(address) {}
   ~Client() = default;
 
-  void SetCommandHandlers(const std::vector<CommandHandler> &command_handlers) {
-    command_handlers_ = command_handlers;
-  }
+  virtual void CommandsHandler(const ConnResp *resp) = 0;
 
   error Run() {
     LOG_INFO("connecting to the server [%s]...", address_.c_str());
@@ -46,14 +43,6 @@ class Client {
     LOG_INFO("shutting down...");
     shutdown_ = true;
   }
-
-  bool shutdown() const noexcept { return shutdown_; }
-  bool connected() const noexcept { return connected_; }
-  const std::string &address() const noexcept { return address_; }
-
-  void set_shutdown(bool shutdown) noexcept { shutdown_ = shutdown; }
-  void set_connected(bool connected) noexcept { connected_ = connected; }
-  void set_address(const std::string &address) noexcept { address_ = address; }
 
  protected:
   void createStub() {
@@ -98,9 +87,7 @@ class Client {
     // keep the connection alive: respond to beats from the server
     auto resp = std::make_unique<ConnResp>();
     while (connect_stream_->Read(resp.get()) && !shutdown_) {
-      LOG_DEBUG("command is [%s]", WorkerCommand_Name(resp->command()).c_str());
-
-      command_handlers_[resp->command()](resp.get());
+      CommandsHandler(resp.get());
 
       ConnReq req;
       connect_stream_->Write(req);
@@ -116,7 +103,7 @@ class Client {
     }
   }
 
- private:
+ protected:
   bool shutdown_ = false;
   bool connected_ = false;
   std::string address_;
@@ -127,8 +114,6 @@ class Client {
   std::unique_ptr<ClientContext> connect_ctx_ = nullptr;
   std::unique_ptr<ConnStream> connect_stream_ = nullptr;
   std::unique_ptr<SvcStub> stub_ptr_ = nullptr;
-
-  std::vector<CommandHandler> command_handlers_;
 };
 
 }  // namespace rpc

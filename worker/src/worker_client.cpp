@@ -15,6 +15,26 @@ using grpc::Status;
 namespace abeille {
 namespace worker {
 
+void Client::CommandsHandler(const WorkerConnectResponse *resp) {
+  switch (resp->command()) {
+    case WORKER_COMMAND_NONE:
+      handleCommandNone(resp);
+      break;
+    case WORKER_COMMAND_REDIRECT:
+      handleCommandRedirect(resp);
+      break;
+    case WORKER_COMMAND_ASSIGN:
+      handleCommandAssign(resp);
+      break;
+    case WORKER_COMMAND_PROCESS:
+      handleCommandProcess(resp);
+      break;
+    default:
+      handleCommandUnrecognized(resp);
+      break;
+  }
+}
+
 void Client::handleCommandNone(const WorkerConnectResponse *response) {}
 
 void Client::handleCommandAssign(const WorkerConnectResponse *response) {
@@ -36,10 +56,10 @@ void Client::handleCommandProcess(const WorkerConnectResponse *response) {
 }
 
 void Client::handleCommandRedirect(const WorkerConnectResponse *response) {
-  set_connected(false);
+  connected_ = false;
   leader_id_ = response->leader_id();
-  set_address(uint2address(response->leader_id()));
-  LOG_INFO("got redirected to the [%s]", address().c_str());
+  address_ = uint2address(response->leader_id());
+  LOG_INFO("got redirected to the [%s]", address_.c_str());
   connect();
 }
 
@@ -49,6 +69,10 @@ void Client::processData(const TaskData &task_data) {
   ProcessData(task_data, task_result_);
   LOG_INFO("finished processing data");
   status_ = WORKER_STATUS_COMPLETED;
+}
+
+void Client::handleCommandUnrecognized(const WorkerConnectResponse *response) {
+  LOG_ERROR("unrecognized user command");
 }
 
 }  // namespace worker

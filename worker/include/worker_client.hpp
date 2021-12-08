@@ -21,35 +21,22 @@ using namespace std::placeholders;
 namespace abeille {
 namespace worker {
 
-using WorkerClient = abeille::rpc::Client<WorkerConnectRequest,
-                                          WorkerConnectResponse, WorkerService>;
+using ConnReq = WorkerConnectRequest;
+using ConnResp = WorkerConnectResponse;
+using WorkerClient = abeille::rpc::Client<ConnReq, ConnResp, WorkerService>;
 
 class Client : public WorkerClient {
  public:
-  Client(const std::string &address) noexcept : WorkerClient(address) {
-    std::vector<WorkerClient::CommandHandler> command_handlers(
-        WorkerCommand_ARRAYSIZE);
+  Client(const std::string &address) noexcept : WorkerClient(address) {}
 
-    command_handlers[WORKER_COMMAND_NONE] =
-        std::bind(&Client::handleCommandNone, this, std::placeholders::_1);
-
-    command_handlers[WORKER_COMMAND_ASSIGN] =
-        std::bind(&Client::handleCommandAssign, this, std::placeholders::_1);
-
-    command_handlers[WORKER_COMMAND_PROCESS] =
-        std::bind(&Client::handleCommandProcess, this, std::placeholders::_1);
-
-    command_handlers[WORKER_COMMAND_REDIRECT] =
-        std::bind(&Client::handleCommandRedirect, this, std::placeholders::_1);
-
-    SetCommandHandlers(command_handlers);
-  }
+  void CommandsHandler(const ConnResp *resp) override;
 
  private:
-  void handleCommandNone(const WorkerConnectResponse *response);
-  void handleCommandAssign(const WorkerConnectResponse *response);
-  void handleCommandProcess(const WorkerConnectResponse *response);
-  void handleCommandRedirect(const WorkerConnectResponse *response);
+  void handleCommandNone(const ConnResp *response);
+  void handleCommandAssign(const ConnResp *response);
+  void handleCommandProcess(const ConnResp *response);
+  void handleCommandRedirect(const ConnResp *response);
+  void handleCommandUnrecognized(const ConnResp *response);
 
   void processData(const TaskData &task_data);
 
