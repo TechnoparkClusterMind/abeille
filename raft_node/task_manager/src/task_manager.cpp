@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "convert.hpp"
 #include "logger.hpp"
 
 namespace abeille {
@@ -11,35 +12,40 @@ error TaskManager::UploadData(TaskData *task_data,
                               UploadDataResponse *response) {
   // TODO: add raft logic - send entries
 
-  // auto task = new Task();
-  // task->set_allocated_task_data(task_data);
-  // task->set_id(last_task_id_);
+  auto task = new Task();
+  task->set_allocated_task_data(task_data);
+  task->set_id(last_task_id_);
 
-  // auto request = std::make_unique<AssignTaskRequest>();
-  // request->set_task_id(last_task_id_);
+  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
 
-  // auto resp = std::make_unique<AssignTaskResponse>();
+  auto request = std::make_unique<AssignTaskRequest>();
+  request->set_task_id(last_task_id_);
+  auto resp = std::make_unique<AssignTaskResponse>();
 
-  // auto casted = static_cast<WorkerServiceImpl
-  // *>(core_->worker_service_.get());
+  auto status = svc->AssignTask(request.get(), resp.get());
 
-  // auto status = casted->AssignTask(request.get(), resp.get());
-  // if (!status.ok()) {
-  //   LOG_ERROR("failed to assign the task");
-  // } else if (resp->success()) {
-  //   LOG_DEBUG("successfully assigned the task");
-  //   task->set_assignee(resp->worker_id());
+  Entry entry;
+  entry.set_command(RAFT_COMMAND_ADD);
 
-  //   auto send_task_request = std::make_unique<SendTaskRequest>();
-  //   send_task_request->set_allocated_task(task);
+  auto add_request = new AddRequest();
+  if (!status.ok()) {
+    LOG_ERROR("assign task request failed");
+    add_request->set_to(TASK_STATUS_UNASSIGNED);
+  } else if (resp->success()) {
+    LOG_INFO("successfully assigned task#[%llu] to [%s]", last_task_id_,
+             uint2address(resp->worker_id()).c_str());
+    task->set_worker_id(resp->worker_id());
+    add_request->set_to(TASK_STATUS_ASSIGNED);
+  } else {
+    LOG_WARN("failed to assign the task (probably all workers are busy)");
+    add_request->set_to(TASK_STATUS_UNASSIGNED);
+  }
+  entry.set_allocated_add_request(add_request);
 
-  //   auto send_task_response = std::make_unique<SendTaskResponse>();
+  entry.set_allocated_task(task);
+  ++last_task_id_;
 
-  //   LOG_DEBUG("send the task...");
-  //   casted->SendTask(send_task_request.get(), send_task_response.get());
-  // } else {
-  //   LOG_WARN("failed to assign the task (probably all workers are busy)");
-  // }
+  core_->raft_pool_->AppendAll(entry);
 
   return error();
 }

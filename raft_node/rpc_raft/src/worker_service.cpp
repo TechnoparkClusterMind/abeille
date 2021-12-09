@@ -102,21 +102,20 @@ Status WorkerServiceImpl::AssignTask(const AssignTaskRequest *request,
   return Status::OK;
 }
 
-Status WorkerServiceImpl::SendTask(SendTaskRequest *request,
-                                   SendTaskResponse *response) {
+Status WorkerServiceImpl::SendTask(Task *task, SendTaskResponse *response) {
   // TODO: rename assignee to worker_id
-  uint64_t worker_id = request->task().assignee();
-  auto it = workers_.find(worker_id);
-  if (it == workers_.end()) {
-    LOG_ERROR("could not find worker [%s]", uint2address(worker_id).c_str());
-    return Status::CANCELLED;
-  }
+  if (task) {
+    uint64_t worker_id = task->worker_id();
+    auto it = workers_.find(worker_id);
+    if (it == workers_.end()) {
+      LOG_ERROR("could not find worker [%s]", uint2address(worker_id).c_str());
+      return Status::CANCELLED;
+    }
 
-  if (request->has_task()) {
-    LOG_INFO("successfully sent [%llu] task to [%s]", request->task().id(),
+    LOG_INFO("successfully sent [%llu] task to [%s]", task->id(),
              uint2address(worker_id).c_str());
     it->second.command = WORKER_COMMAND_PROCESS;
-    it->second.task = request->mutable_task();
+    it->second.task = task;
   } else {
     LOG_ERROR("send task, but null task");
   }

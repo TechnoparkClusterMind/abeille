@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "convert.hpp"
+#include "logger.hpp"
 #include "types.hpp"
 
 namespace abeille {
@@ -47,7 +48,10 @@ bool RaftPool::MajorityVotes() {
   return votes_num + vote_yourself > peers_.size() / 2;
 }
 
-void RaftPool::AppendAll(const Entry& entry) { raft_->log_->Append(entry); }
+void RaftPool::AppendAll(const Entry& entry) {
+  LOG_TRACE();
+  raft_->log_->Append(entry);
+}
 
 void RaftPool::Shutdown() {
   for (auto& peer : peers_) peer.second->Shutdown();

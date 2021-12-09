@@ -48,15 +48,15 @@ service UserService {
 
 message Task {
   uint64 id = 1;
-  uint64 assignee = 2;
+  uint64 worker_id = 2;
   TaskData task_data = 3;
   TaskResult task_result = 4;
 }
 
 enum TaskStatus {
-  TO_DO = 0;
-  IN_PROGRESS = 2;
-  DONE = 1;
+  TASK_STATUS_UNASSIGNED = 0;
+  TASK_STATUS_ASSIGNED = 1;
+  TASK_STATUS_COMPLETED = 2;
 }
 
 message AddRequest { TaskStatus to = 1; }
@@ -68,26 +68,20 @@ message MoveRequest {
 
 message DeleteRequest { TaskStatus from = 1; }
 
-// According to the CommandType
-// needed request will be chosen
-message Command {
-  enum CommandType {
-    ADD = 0;
-    MOVE = 1;
-    DELETE = 2;
-  }
-
-  CommandType command = 1;
-  AddRequest add_request = 2;
-  MoveRequest move_request = 3;
-  DeleteRequest delete_request = 4;
+enum RaftCommand {
+  RAFT_COMMAND_ADD = 0;
+  RAFT_COMMAND_MOVE = 1;
+  RAFT_COMMAND_DELETE = 2;
 }
 
 // Log entry to store
 message Entry {
-  uint64 term = 1;
-  Task task = 2;
-  Command command = 3;
+  RaftCommand command = 1;
+  uint64 term = 2;
+  Task task = 3;
+  AddRequest add_request = 4;
+  MoveRequest move_request = 5;
+  DeleteRequest delete_request = 6;
 }
 
 // ----------------------------- Raft Service ----------------------------- //

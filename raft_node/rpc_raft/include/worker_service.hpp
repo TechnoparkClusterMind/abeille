@@ -28,7 +28,7 @@ class WorkerServiceImpl final : public WorkerService::Service {
   Status AssignTask(const AssignTaskRequest *request,
                     AssignTaskResponse *response);
 
-  Status SendTask(SendTaskRequest *request, SendTaskResponse *response);
+  Status SendTask(Task *task, SendTaskResponse *response);
 
   Status GetWorkerResult(const GetWorkerResultRequest *request,
                          GetWorkerResultResponse *response);
