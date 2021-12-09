@@ -30,10 +30,10 @@ Status UserServiceImpl::Connect(ServerContext *context, ConnectStream *stream) {
 
   while (stream->Read(&request)) {
     UserConnectResponse response;
-    response.set_leader_id(leader_id_);
+    response.set_leader_id(raft_consensus_->LeaderID());
 
     // check if we are the leader
-    if (!isLeader()) {
+    if (!raft_consensus_->IsLeader()) {
       LOG_INFO("redirecting [%s] to the leader...", address.c_str());
       response.set_command(USER_COMMAND_REDIRECT);
       stream->Write(response);

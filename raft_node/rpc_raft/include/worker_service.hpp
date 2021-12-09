@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "abeille.grpc.pb.h"
+#include "raft_consensus.hpp"
 
 using grpc::ServerContext;
 using grpc::ServerReaderWriter;
@@ -25,6 +26,11 @@ class WorkerServiceImpl final : public WorkerService::Service {
   using ConnectStream =
       grpc::ServerReaderWriter<WorkerConnectResponse, WorkerConnectRequest>;
 
+  using RaftConsensusPtr = std::shared_ptr<RaftConsensus>;
+
+  explicit WorkerServiceImpl(RaftConsensusPtr raft_consensus) noexcept
+      : raft_consensus_(raft_consensus){};
+
   Status AssignTask(const AssignTaskRequest *request,
                     AssignTaskResponse *response);
 
@@ -36,12 +42,9 @@ class WorkerServiceImpl final : public WorkerService::Service {
  private:
   Status Connect(ServerContext *context, ConnectStream *stream) override;
 
-  bool isLeader() const noexcept { return id_ == leader_id_; }
-
   std::unordered_map<uint64_t, WorkerWrapper> workers_;
 
-  uint64_t id_ = 0;
-  uint64_t leader_id_ = 0;
+  RaftConsensusPtr raft_consensus_ = nullptr;
 };
 
 }  // namespace raft_node

@@ -53,6 +53,12 @@ class RaftConsensus {
   // Interface for communication with Core
   void AddPeer() noexcept;
 
+  // IsLeader returns true if we are the leader, false otherwise.
+  bool IsLeader() const noexcept { return id_ == leader_id_; }
+
+  // LeaderID returns leader id.
+  uint64_t LeaderID() const noexcept {return leader_id_; } 
+
  private:  // Methods
   // Main logic for every node depending on current state of server
   void peerThreadMain(std::shared_ptr<Peer> peer);

@@ -19,11 +19,11 @@ Status WorkerServiceImpl::Connect(ServerContext *context,
 
   while (stream->Read(&request)) {
     // check if we are the leader
-    if (!isLeader()) {
+    if (!raft_consensus_->IsLeader()) {
       LOG_INFO("redirecting [%s] to the leader...", address.c_str());
 
       WorkerConnectResponse response;
-      response.set_leader_id(leader_id_);
+      response.set_leader_id(raft_consensus_->LeaderID());
       response.set_command(WORKER_COMMAND_REDIRECT);
 
       if (!stream->Write(response)) {
@@ -43,7 +43,7 @@ Status WorkerServiceImpl::Connect(ServerContext *context,
     }
 
     WorkerConnectResponse response;
-    response.set_leader_id(leader_id_);
+    response.set_leader_id(raft_consensus_->LeaderID());
     response.set_command(worker.command);
 
     if (worker.command == WORKER_COMMAND_PROCESS) {

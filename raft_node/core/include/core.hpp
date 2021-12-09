@@ -14,8 +14,8 @@
 #include "raft_service.hpp"
 #include "server.hpp"
 #include "task_manager.hpp"
-#include "worker_pool.hpp"
 #include "user_service.hpp"
+#include "worker_pool.hpp"
 #include "worker_service.hpp"
 
 using abeille::rpc::Server;
@@ -74,6 +74,8 @@ class Core {
   // In order to track the state of the peer and worker threads
   std::condition_variable pool_state_changed_;
   std::mutex mutex;
+
+  TaskMgrRef TaskManger() noexcept { return task_mgr_; }
 
  private:
   // Pretty self-explanatory
