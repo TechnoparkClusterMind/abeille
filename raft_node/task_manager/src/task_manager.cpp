@@ -16,29 +16,23 @@ error TaskManager::UploadData(TaskData *task_data,
   task->set_allocated_task_data(task_data);
   task->set_id(last_task_id_);
 
-  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
-
-  auto request = std::make_unique<AssignTaskRequest>();
-  request->set_task_id(last_task_id_);
-  auto resp = std::make_unique<AssignTaskResponse>();
-
-  auto status = svc->AssignTask(request.get(), resp.get());
-
   Entry entry;
   entry.set_command(RAFT_COMMAND_ADD);
 
+  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
+
+  uint64_t worker_id = 0;
+  error err = svc->AssignTask(last_task_id_, worker_id);
+
   auto add_request = new AddRequest();
-  if (!status.ok()) {
-    LOG_ERROR("assign task request failed");
+  if (!err.ok()) {
+    LOG_DEBUG(err.what().c_str());
     add_request->set_to(TASK_STATUS_UNASSIGNED);
-  } else if (resp->success()) {
-    LOG_INFO("successfully assigned task#[%llu] to [%s]", last_task_id_,
-             uint2address(resp->worker_id()).c_str());
-    task->set_worker_id(resp->worker_id());
-    add_request->set_to(TASK_STATUS_ASSIGNED);
   } else {
-    LOG_WARN("failed to assign the task (probably all workers are busy)");
-    add_request->set_to(TASK_STATUS_UNASSIGNED);
+    LOG_INFO("successfully assigned task#[%llu] to [%s]", last_task_id_,
+             uint2address(worker_id).c_str());
+    task->set_worker_id(worker_id);
+    add_request->set_to(TASK_STATUS_ASSIGNED);
   }
   entry.set_allocated_add_request(add_request);
 

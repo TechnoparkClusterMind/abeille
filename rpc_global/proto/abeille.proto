@@ -137,8 +137,9 @@ message WorkerConnectRequest {
 
 enum WorkerCommand {
   WORKER_COMMAND_NONE = 0;
-  WORKER_COMMAND_PROCESS = 1;
-  WORKER_COMMAND_REDIRECT = 2;
+  WORKER_COMMAND_ASSIGN = 1;
+  WORKER_COMMAND_PROCESS = 2;
+  WORKER_COMMAND_REDIRECT = 3;
 }
 
 message WorkerConnectResponse {  
@@ -147,32 +148,6 @@ message WorkerConnectResponse {
   uint64 leader_id = 3;
   TaskData task_data = 4;
   TaskResult task_result = 5;
-}
-
-message AssignTaskRequest {
-  uint64 task_id = 1;
-}
-
-message AssignTaskResponse {
-  bool success = 1;
-  uint64 worker_id = 2;
-}
-
-message SendTaskRequest {
-  Task task = 1;
-}
-
-message SendTaskResponse {
-  bool success = 1;
-}
-
-message GetWorkerResultRequest {
-  uint64 worker_id = 1;
-  uint64 task_id = 2;
-}
-
-message GetWorkerResultResponse {
-  TaskResult task_result = 2;
 }
 
 service WorkerService {

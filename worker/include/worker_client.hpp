@@ -34,8 +34,9 @@ class Client : public WorkerClient {
   void StatusHandler(ConnReq *req) override;
 
  private:
-  void handleCommandProcess(const ConnResp *response);
-  void handleCommandRedirect(const ConnResp *response);
+  void handleCommandAssign(const ConnResp *resp);
+  void handleCommandProcess(const ConnResp *resp);
+  void handleCommandRedirect(const ConnResp *resp);
 
   void processData(const TaskData &task_data);
 

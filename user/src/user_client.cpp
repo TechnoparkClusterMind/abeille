@@ -27,7 +27,6 @@ void Client::CommandHandler(const UserConnectResponse *resp) {
 }
 
 void Client::UploadData(TaskData *task_data) {
-  LOG_TRACE();
   status_ = USER_STATUS_UPLOAD_DATA;
   task_datas_.push(task_data);
 }

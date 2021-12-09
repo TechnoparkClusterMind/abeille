@@ -14,10 +14,13 @@ using grpc::Status;
 namespace abeille {
 namespace worker {
 
-void Client::CommandHandler(const WorkerConnectResponse *resp) {
+void Client::CommandHandler(const ConnResp *resp) {
   switch (resp->command()) {
     case WORKER_COMMAND_REDIRECT:
       handleCommandRedirect(resp);
+      break;
+    case WORKER_COMMAND_ASSIGN:
+      handleCommandAssign(resp);
       break;
     case WORKER_COMMAND_PROCESS:
       handleCommandProcess(resp);
@@ -27,18 +30,28 @@ void Client::CommandHandler(const WorkerConnectResponse *resp) {
   }
 }
 
-void Client::handleCommandProcess(const WorkerConnectResponse *response) {
-  if (!response->has_task_data()) {
-    LOG_ERROR("got asked to process null data");
+void Client::handleCommandAssign(const ConnResp *resp) {
+  if (resp->task_id() == 0) {
+    LOG_ERROR("got assigned zero task");
   } else {
-    std::thread(&Client::processData, this, response->task_data()).detach();
+    task_id_ = resp->task_id();
+    status_ = WORKER_STATUS_BUSY;
+    LOG_INFO("got assigned [%llu] task", resp->task_id());
   }
 }
 
-void Client::handleCommandRedirect(const WorkerConnectResponse *response) {
+void Client::handleCommandProcess(const ConnResp *resp) {
+  if (!resp->has_task_data()) {
+    LOG_ERROR("got asked to process null data");
+  } else {
+    std::thread(&Client::processData, this, resp->task_data()).detach();
+  }
+}
+
+void Client::handleCommandRedirect(const ConnResp *resp) {
   connected_ = false;
-  leader_id_ = response->leader_id();
-  address_ = uint2address(response->leader_id());
+  leader_id_ = resp->leader_id();
+  address_ = uint2address(resp->leader_id());
   LOG_INFO("got redirected to the [%s]", address_.c_str());
   connect();
 }
