@@ -8,12 +8,9 @@
 namespace abeille {
 namespace raft_node {
 
-error TaskManager::UploadData(TaskData *task_data,
-                              UploadDataResponse *response) {
-  // TODO: add raft logic - send entries
-
+error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
   auto task = new Task();
-  task->set_allocated_task_data(task_data);
+  task->set_allocated_task_data(new TaskData(task_data));
   task->set_id(last_task_id_);
 
   Entry entry;
@@ -37,6 +34,8 @@ error TaskManager::UploadData(TaskData *task_data,
   entry.set_allocated_add_request(add_request);
 
   entry.set_allocated_task(task);
+
+  task_id = last_task_id_;
   ++last_task_id_;
 
   core_->raft_pool_->AppendAll(entry);

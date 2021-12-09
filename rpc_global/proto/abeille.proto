@@ -10,6 +10,11 @@ message TaskResult { int32 result = 1; }
 
 // ----------------------------- User Service ----------------------------- //
 
+message TaskState {
+  uint64 task_id = 1;
+  TaskResult task_result = 2;
+}
+
 enum UserStatus {
   USER_STATUS_NONE = 0;
   USER_STATUS_UPLOAD_DATA = 1;
@@ -20,24 +25,18 @@ message UserConnectRequest {
   TaskData task_data = 2;
 }
 
-message UploadDataRequest { TaskData task_data = 1; }
-
-message UploadDataResponse {
-  bool success = 1;
-  uint64 task_id = 2;
-}
-
 enum UserCommand {
   USER_COMMAND_NONE = 0;
   USER_COMMAND_REDIRECT = 1;
-  USER_COMMAND_RECIEVE_RESULT = 2;
+  USER_COMMAND_ASSIGN = 2;
+  USER_COMMAND_RESULT = 3;
 }
 
 message UserConnectResponse {
   UserCommand command = 1;
   uint64 leader_id = 2;
-  TaskResult task_result = 3;
-  UploadDataResponse upload_data_response = 4;
+  uint64 task_id = 3;
+  TaskResult task_result = 4;
 }
 
 service UserService {

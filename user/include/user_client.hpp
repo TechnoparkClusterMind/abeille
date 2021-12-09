@@ -36,7 +36,8 @@ class Client : public UserClient {
 
  private:
   void handleCommandRedirect(const ConnResp *resp);
-  void handleCommandRecieveResult(const ConnResp *resp);
+  void handleCommandAssign(const ConnResp *resp);
+  void handleCommandResult(const ConnResp *resp);
 
   void handleStatusUploadData(ConnReq *req);
 

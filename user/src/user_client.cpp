@@ -18,8 +18,11 @@ void Client::CommandHandler(const UserConnectResponse *resp) {
     case USER_COMMAND_REDIRECT:
       handleCommandRedirect(resp);
       break;
-    case USER_COMMAND_RECIEVE_RESULT:
-      handleCommandRecieveResult(resp);
+    case USER_COMMAND_ASSIGN:
+      handleCommandAssign(resp);
+      break;
+    case USER_COMMAND_RESULT:
+      handleCommandResult(resp);
       break;
     default:
       break;
@@ -39,7 +42,12 @@ void Client::handleCommandRedirect(const UserConnectResponse *response) {
   connect();
 }
 
-void Client::handleCommandRecieveResult(const UserConnectResponse *response) {
+void Client::handleCommandAssign(const ConnResp *resp) {
+  LOG_DEBUG("task was given id [%llu]", resp->task_id());
+  // TODO: implement me
+}
+
+void Client::handleCommandResult(const UserConnectResponse *response) {
   // TODO: implement me
 }
 

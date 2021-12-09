@@ -22,7 +22,7 @@ class TaskManager {
   explicit TaskManager(Core *core) : core_(core) {}
   ~TaskManager() = default;
 
-  error UploadData(TaskData *task_data, UploadDataResponse *response);
+  error UploadData(const TaskData &task_data, uint64_t &task_id);
 
   // FIXME: not implemented
   void Run(){};

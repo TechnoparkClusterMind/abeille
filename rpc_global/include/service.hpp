@@ -23,7 +23,6 @@ class Service : public Svc {
   using ConnectStream = grpc::ServerReaderWriter<ConnResp, ConnReq>;
 
   virtual void CommandHandler(uint64_t client_id, ConnResp *resp) = 0;
-
   virtual void StatusHandler(uint64_t client_id, const ConnReq *req) = 0;
 
  private:

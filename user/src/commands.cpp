@@ -27,7 +27,6 @@ std::string UploadData(CLI::args_type args) {
   std::string filepath = args[1];
   std::ifstream file(filepath);
   if (!file.good()) {
-    LOG_TRACE();
     return "failed to open the file";
   }
 
@@ -40,13 +39,9 @@ std::string UploadData(CLI::args_type args) {
     return status.message().ToString();
   }
 
-  // auto response = Wrapper::user_client.UploadData(task);
   Wrapper::user_client.UploadData(task);
 
-  std::stringstream output;
-  // output << "task id is [" << response.task_id() << "]";
-
-  return output.str();
+  return "successfully uploaded the data";
 }
 
 std::string Status(CLI::args_type args) {

@@ -20,61 +20,62 @@ using grpc::Status;
 namespace abeille {
 namespace raft_node {
 
-Status UserServiceImpl::Connect(ServerContext *context, ConnectStream *stream) {
-  std::string address = ExtractAddress(context->peer());
-  uint64_t user_id = address2uint(address);
-  LOG_INFO("user connection request from [%s]", address.c_str());
+void UserServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
+  resp->set_leader_id(raft_consensus_->LeaderID());
 
-  UserConnectRequest request;
-  users_.insert(user_id);
-
-  while (stream->Read(&request)) {
-    UserConnectResponse response;
-    response.set_leader_id(raft_consensus_->LeaderID());
-
-    // check if we are the leader
-    if (!raft_consensus_->IsLeader()) {
-      LOG_INFO("redirecting [%s] to the leader...", address.c_str());
-      response.set_command(USER_COMMAND_REDIRECT);
-      stream->Write(response);
-      break;
-    }
-
-    if (request.status() == USER_STATUS_UPLOAD_DATA) {
-      if (request.has_task_data()) {
-        auto upload_data_response = new UploadDataResponse;
-        task_mgr_->UploadData(new TaskData(request.task_data()),
-                              upload_data_response);
-        response.set_allocated_upload_data_response(upload_data_response);
-      } else {
-        LOG_ERROR("user status upload data, but null task data");
-      }
-    }
-
-    if (!stream->Write(response)) {
-      break;
-    }
-
-    // LOG_DEBUG("[%s] is [%s]", address.c_str(),
-    //           UserStatus_Name(request.status()).c_str());
-
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+  // check if we are the leader
+  if (!raft_consensus_->IsLeader()) {
+    LOG_INFO("redirecting [%s] to the leader...",
+             uint2address(client_id).c_str());
+    resp->set_command(USER_COMMAND_REDIRECT);
+    return;
   }
 
-  LOG_WARN("connection with user [%s] was lost", address.c_str());
+  auto &cw = clients_[client_id];
+  resp->set_command(cw.command);
 
-  return Status::OK;
+  switch (cw.command) {
+    case USER_COMMAND_ASSIGN:
+      handleCommandAssign(cw, resp);
+    case USER_COMMAND_RESULT:
+    default:
+      break;
+  }
+
+  // reset command so to execute a command only once
+  cw.command = USER_COMMAND_NONE;
 }
 
-// Status UserServiceImpl::GetResult(ServerContext *context,
-//                                   const GetResultRequest *request,
-//                                   GetResultResponse *response) {
-//   LOG_DEBUG("request for [%u]", request->task_id());
-//   TaskResult *task_result = new TaskResult();
-//   task_result->set_result(7);
-//   response->set_allocated_task_result(task_result);
-//   return Status::OK;
-// }
+void UserServiceImpl::handleCommandAssign(ClientWrapper &cw, ConnResp *resp) {
+  resp->set_task_id(cw.task_state.task_id());
+}
+
+void UserServiceImpl::StatusHandler(uint64_t client_id, const ConnReq *req) {
+  auto &cw = clients_[client_id];
+
+  // update the status of the client
+  cw.status = req->status();
+
+  switch (cw.status) {
+    case USER_STATUS_UPLOAD_DATA:
+      handleStatusUploadData(cw, req);
+      break;
+    default:
+      break;
+  }
+}
+
+void UserServiceImpl::handleStatusUploadData(ClientWrapper &cw,
+                                             const ConnReq *req) {
+  if (req->has_task_data()) {
+    uint64_t task_id = 0;
+    task_mgr_->UploadData(req->task_data(), task_id);
+    cw.task_state.set_task_id(task_id);
+    cw.command = USER_COMMAND_ASSIGN;
+  } else {
+    LOG_ERROR("user status upload data, but null task data");
+  }
+}
 
 }  // namespace raft_node
 }  // namespace abeille

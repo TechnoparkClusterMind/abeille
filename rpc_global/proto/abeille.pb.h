@@ -47,7 +47,7 @@ struct TableStruct_abeille_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[19]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[18]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -93,12 +93,9 @@ extern TaskDataDefaultTypeInternal _TaskData_default_instance_;
 class TaskResult;
 struct TaskResultDefaultTypeInternal;
 extern TaskResultDefaultTypeInternal _TaskResult_default_instance_;
-class UploadDataRequest;
-struct UploadDataRequestDefaultTypeInternal;
-extern UploadDataRequestDefaultTypeInternal _UploadDataRequest_default_instance_;
-class UploadDataResponse;
-struct UploadDataResponseDefaultTypeInternal;
-extern UploadDataResponseDefaultTypeInternal _UploadDataResponse_default_instance_;
+class TaskState;
+struct TaskStateDefaultTypeInternal;
+extern TaskStateDefaultTypeInternal _TaskState_default_instance_;
 class UserConnectRequest;
 struct UserConnectRequestDefaultTypeInternal;
 extern UserConnectRequestDefaultTypeInternal _UserConnectRequest_default_instance_;
@@ -125,8 +122,7 @@ template<> ::RequestVoteResponse* Arena::CreateMaybeMessage<::RequestVoteRespons
 template<> ::Task* Arena::CreateMaybeMessage<::Task>(Arena*);
 template<> ::TaskData* Arena::CreateMaybeMessage<::TaskData>(Arena*);
 template<> ::TaskResult* Arena::CreateMaybeMessage<::TaskResult>(Arena*);
-template<> ::UploadDataRequest* Arena::CreateMaybeMessage<::UploadDataRequest>(Arena*);
-template<> ::UploadDataResponse* Arena::CreateMaybeMessage<::UploadDataResponse>(Arena*);
+template<> ::TaskState* Arena::CreateMaybeMessage<::TaskState>(Arena*);
 template<> ::UserConnectRequest* Arena::CreateMaybeMessage<::UserConnectRequest>(Arena*);
 template<> ::UserConnectResponse* Arena::CreateMaybeMessage<::UserConnectResponse>(Arena*);
 template<> ::WorkerConnectRequest* Arena::CreateMaybeMessage<::WorkerConnectRequest>(Arena*);
@@ -161,13 +157,14 @@ inline bool UserStatus_Parse(
 enum UserCommand : int {
   USER_COMMAND_NONE = 0,
   USER_COMMAND_REDIRECT = 1,
-  USER_COMMAND_RECIEVE_RESULT = 2,
+  USER_COMMAND_ASSIGN = 2,
+  USER_COMMAND_RESULT = 3,
   UserCommand_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   UserCommand_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool UserCommand_IsValid(int value);
 constexpr UserCommand UserCommand_MIN = USER_COMMAND_NONE;
-constexpr UserCommand UserCommand_MAX = USER_COMMAND_RECIEVE_RESULT;
+constexpr UserCommand UserCommand_MAX = USER_COMMAND_RESULT;
 constexpr int UserCommand_ARRAYSIZE = UserCommand_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserCommand_descriptor();
@@ -709,6 +706,165 @@ class TaskResult final :
 };
 // -------------------------------------------------------------------
 
+class TaskState final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TaskState) */ {
+ public:
+  inline TaskState() : TaskState(nullptr) {}
+  ~TaskState() override;
+  explicit constexpr TaskState(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  TaskState(const TaskState& from);
+  TaskState(TaskState&& from) noexcept
+    : TaskState() {
+    *this = ::std::move(from);
+  }
+
+  inline TaskState& operator=(const TaskState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TaskState& operator=(TaskState&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const TaskState& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const TaskState* internal_default_instance() {
+    return reinterpret_cast<const TaskState*>(
+               &_TaskState_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(TaskState& a, TaskState& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TaskState* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TaskState* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TaskState* New() const final {
+    return new TaskState();
+  }
+
+  TaskState* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TaskState>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const TaskState& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const TaskState& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TaskState* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "TaskState";
+  }
+  protected:
+  explicit TaskState(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTaskResultFieldNumber = 2,
+    kTaskIdFieldNumber = 1,
+  };
+  // .TaskResult task_result = 2;
+  bool has_task_result() const;
+  private:
+  bool _internal_has_task_result() const;
+  public:
+  void clear_task_result();
+  const ::TaskResult& task_result() const;
+  PROTOBUF_MUST_USE_RESULT ::TaskResult* release_task_result();
+  ::TaskResult* mutable_task_result();
+  void set_allocated_task_result(::TaskResult* task_result);
+  private:
+  const ::TaskResult& _internal_task_result() const;
+  ::TaskResult* _internal_mutable_task_result();
+  public:
+  void unsafe_arena_set_allocated_task_result(
+      ::TaskResult* task_result);
+  ::TaskResult* unsafe_arena_release_task_result();
+
+  // uint64 task_id = 1;
+  void clear_task_id();
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id() const;
+  void set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_task_id() const;
+  void _internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:TaskState)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::TaskResult* task_result_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_abeille_2eproto;
+};
+// -------------------------------------------------------------------
+
 class UserConnectRequest final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UserConnectRequest) */ {
  public:
@@ -753,7 +909,7 @@ class UserConnectRequest final :
                &_UserConnectRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(UserConnectRequest& a, UserConnectRequest& b) {
     a.Swap(&b);
@@ -868,304 +1024,6 @@ class UserConnectRequest final :
 };
 // -------------------------------------------------------------------
 
-class UploadDataRequest final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UploadDataRequest) */ {
- public:
-  inline UploadDataRequest() : UploadDataRequest(nullptr) {}
-  ~UploadDataRequest() override;
-  explicit constexpr UploadDataRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  UploadDataRequest(const UploadDataRequest& from);
-  UploadDataRequest(UploadDataRequest&& from) noexcept
-    : UploadDataRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline UploadDataRequest& operator=(const UploadDataRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline UploadDataRequest& operator=(UploadDataRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const UploadDataRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const UploadDataRequest* internal_default_instance() {
-    return reinterpret_cast<const UploadDataRequest*>(
-               &_UploadDataRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    4;
-
-  friend void swap(UploadDataRequest& a, UploadDataRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(UploadDataRequest* other) {
-    if (other == this) return;
-    if (GetOwningArena() == other->GetOwningArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(UploadDataRequest* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline UploadDataRequest* New() const final {
-    return new UploadDataRequest();
-  }
-
-  UploadDataRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<UploadDataRequest>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const UploadDataRequest& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const UploadDataRequest& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(UploadDataRequest* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "UploadDataRequest";
-  }
-  protected:
-  explicit UploadDataRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kTaskDataFieldNumber = 1,
-  };
-  // .TaskData task_data = 1;
-  bool has_task_data() const;
-  private:
-  bool _internal_has_task_data() const;
-  public:
-  void clear_task_data();
-  const ::TaskData& task_data() const;
-  PROTOBUF_MUST_USE_RESULT ::TaskData* release_task_data();
-  ::TaskData* mutable_task_data();
-  void set_allocated_task_data(::TaskData* task_data);
-  private:
-  const ::TaskData& _internal_task_data() const;
-  ::TaskData* _internal_mutable_task_data();
-  public:
-  void unsafe_arena_set_allocated_task_data(
-      ::TaskData* task_data);
-  ::TaskData* unsafe_arena_release_task_data();
-
-  // @@protoc_insertion_point(class_scope:UploadDataRequest)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::TaskData* task_data_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_abeille_2eproto;
-};
-// -------------------------------------------------------------------
-
-class UploadDataResponse final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UploadDataResponse) */ {
- public:
-  inline UploadDataResponse() : UploadDataResponse(nullptr) {}
-  ~UploadDataResponse() override;
-  explicit constexpr UploadDataResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  UploadDataResponse(const UploadDataResponse& from);
-  UploadDataResponse(UploadDataResponse&& from) noexcept
-    : UploadDataResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline UploadDataResponse& operator=(const UploadDataResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline UploadDataResponse& operator=(UploadDataResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const UploadDataResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const UploadDataResponse* internal_default_instance() {
-    return reinterpret_cast<const UploadDataResponse*>(
-               &_UploadDataResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    5;
-
-  friend void swap(UploadDataResponse& a, UploadDataResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(UploadDataResponse* other) {
-    if (other == this) return;
-    if (GetOwningArena() == other->GetOwningArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(UploadDataResponse* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline UploadDataResponse* New() const final {
-    return new UploadDataResponse();
-  }
-
-  UploadDataResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<UploadDataResponse>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const UploadDataResponse& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const UploadDataResponse& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(UploadDataResponse* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "UploadDataResponse";
-  }
-  protected:
-  explicit UploadDataResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kTaskIdFieldNumber = 2,
-    kSuccessFieldNumber = 1,
-  };
-  // uint64 task_id = 2;
-  void clear_task_id();
-  ::PROTOBUF_NAMESPACE_ID::uint64 task_id() const;
-  void set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_task_id() const;
-  void _internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
-  public:
-
-  // bool success = 1;
-  void clear_success();
-  bool success() const;
-  void set_success(bool value);
-  private:
-  bool _internal_success() const;
-  void _internal_set_success(bool value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:UploadDataResponse)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::uint64 task_id_;
-  bool success_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_abeille_2eproto;
-};
-// -------------------------------------------------------------------
-
 class UserConnectResponse final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UserConnectResponse) */ {
  public:
@@ -1210,7 +1068,7 @@ class UserConnectResponse final :
                &_UserConnectResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    5;
 
   friend void swap(UserConnectResponse& a, UserConnectResponse& b) {
     a.Swap(&b);
@@ -1281,12 +1139,12 @@ class UserConnectResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kTaskResultFieldNumber = 3,
-    kUploadDataResponseFieldNumber = 4,
+    kTaskResultFieldNumber = 4,
     kLeaderIdFieldNumber = 2,
+    kTaskIdFieldNumber = 3,
     kCommandFieldNumber = 1,
   };
-  // .TaskResult task_result = 3;
+  // .TaskResult task_result = 4;
   bool has_task_result() const;
   private:
   bool _internal_has_task_result() const;
@@ -1304,24 +1162,6 @@ class UserConnectResponse final :
       ::TaskResult* task_result);
   ::TaskResult* unsafe_arena_release_task_result();
 
-  // .UploadDataResponse upload_data_response = 4;
-  bool has_upload_data_response() const;
-  private:
-  bool _internal_has_upload_data_response() const;
-  public:
-  void clear_upload_data_response();
-  const ::UploadDataResponse& upload_data_response() const;
-  PROTOBUF_MUST_USE_RESULT ::UploadDataResponse* release_upload_data_response();
-  ::UploadDataResponse* mutable_upload_data_response();
-  void set_allocated_upload_data_response(::UploadDataResponse* upload_data_response);
-  private:
-  const ::UploadDataResponse& _internal_upload_data_response() const;
-  ::UploadDataResponse* _internal_mutable_upload_data_response();
-  public:
-  void unsafe_arena_set_allocated_upload_data_response(
-      ::UploadDataResponse* upload_data_response);
-  ::UploadDataResponse* unsafe_arena_release_upload_data_response();
-
   // uint64 leader_id = 2;
   void clear_leader_id();
   ::PROTOBUF_NAMESPACE_ID::uint64 leader_id() const;
@@ -1329,6 +1169,15 @@ class UserConnectResponse final :
   private:
   ::PROTOBUF_NAMESPACE_ID::uint64 _internal_leader_id() const;
   void _internal_set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // uint64 task_id = 3;
+  void clear_task_id();
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id() const;
+  void set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_task_id() const;
+  void _internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
   // .UserCommand command = 1;
@@ -1348,8 +1197,8 @@ class UserConnectResponse final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::TaskResult* task_result_;
-  ::UploadDataResponse* upload_data_response_;
   ::PROTOBUF_NAMESPACE_ID::uint64 leader_id_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 task_id_;
   int command_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
@@ -1400,7 +1249,7 @@ class Task final :
                &_Task_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    6;
 
   friend void swap(Task& a, Task& b) {
     a.Swap(&b);
@@ -1590,7 +1439,7 @@ class AddRequest final :
                &_AddRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    7;
 
   friend void swap(AddRequest& a, AddRequest& b) {
     a.Swap(&b);
@@ -1729,7 +1578,7 @@ class MoveRequest final :
                &_MoveRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    8;
 
   friend void swap(MoveRequest& a, MoveRequest& b) {
     a.Swap(&b);
@@ -1879,7 +1728,7 @@ class DeleteRequest final :
                &_DeleteRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    9;
 
   friend void swap(DeleteRequest& a, DeleteRequest& b) {
     a.Swap(&b);
@@ -2018,7 +1867,7 @@ class Entry final :
                &_Entry_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    10;
 
   friend void swap(Entry& a, Entry& b) {
     a.Swap(&b);
@@ -2248,7 +2097,7 @@ class AppendEntryRequest final :
                &_AppendEntryRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    11;
 
   friend void swap(AppendEntryRequest& a, AppendEntryRequest& b) {
     a.Swap(&b);
@@ -2451,7 +2300,7 @@ class AppendEntryResponse final :
                &_AppendEntryResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    12;
 
   friend void swap(AppendEntryResponse& a, AppendEntryResponse& b) {
     a.Swap(&b);
@@ -2601,7 +2450,7 @@ class RequestVoteRequest final :
                &_RequestVoteRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    13;
 
   friend void swap(RequestVoteRequest& a, RequestVoteRequest& b) {
     a.Swap(&b);
@@ -2773,7 +2622,7 @@ class RequestVoteResponse final :
                &_RequestVoteResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    14;
 
   friend void swap(RequestVoteResponse& a, RequestVoteResponse& b) {
     a.Swap(&b);
@@ -2923,7 +2772,7 @@ class WorkerConnectRequest final :
                &_WorkerConnectRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    15;
 
   friend void swap(WorkerConnectRequest& a, WorkerConnectRequest& b) {
     a.Swap(&b);
@@ -3093,7 +2942,7 @@ class WorkerConnectResponse final :
                &_WorkerConnectResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    16;
 
   friend void swap(WorkerConnectResponse& a, WorkerConnectResponse& b) {
     a.Swap(&b);
@@ -3294,7 +3143,7 @@ class RaftConfig final :
                &_RaftConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    17;
 
   friend void swap(RaftConfig& a, RaftConfig& b) {
     a.Swap(&b);
@@ -3564,6 +3413,120 @@ inline void TaskResult::set_result(::PROTOBUF_NAMESPACE_ID::int32 value) {
 
 // -------------------------------------------------------------------
 
+// TaskState
+
+// uint64 task_id = 1;
+inline void TaskState::clear_task_id() {
+  task_id_ = uint64_t{0u};
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 TaskState::_internal_task_id() const {
+  return task_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 TaskState::task_id() const {
+  // @@protoc_insertion_point(field_get:TaskState.task_id)
+  return _internal_task_id();
+}
+inline void TaskState::_internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  task_id_ = value;
+}
+inline void TaskState::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_task_id(value);
+  // @@protoc_insertion_point(field_set:TaskState.task_id)
+}
+
+// .TaskResult task_result = 2;
+inline bool TaskState::_internal_has_task_result() const {
+  return this != internal_default_instance() && task_result_ != nullptr;
+}
+inline bool TaskState::has_task_result() const {
+  return _internal_has_task_result();
+}
+inline void TaskState::clear_task_result() {
+  if (GetArenaForAllocation() == nullptr && task_result_ != nullptr) {
+    delete task_result_;
+  }
+  task_result_ = nullptr;
+}
+inline const ::TaskResult& TaskState::_internal_task_result() const {
+  const ::TaskResult* p = task_result_;
+  return p != nullptr ? *p : reinterpret_cast<const ::TaskResult&>(
+      ::_TaskResult_default_instance_);
+}
+inline const ::TaskResult& TaskState::task_result() const {
+  // @@protoc_insertion_point(field_get:TaskState.task_result)
+  return _internal_task_result();
+}
+inline void TaskState::unsafe_arena_set_allocated_task_result(
+    ::TaskResult* task_result) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(task_result_);
+  }
+  task_result_ = task_result;
+  if (task_result) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:TaskState.task_result)
+}
+inline ::TaskResult* TaskState::release_task_result() {
+  
+  ::TaskResult* temp = task_result_;
+  task_result_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::TaskResult* TaskState::unsafe_arena_release_task_result() {
+  // @@protoc_insertion_point(field_release:TaskState.task_result)
+  
+  ::TaskResult* temp = task_result_;
+  task_result_ = nullptr;
+  return temp;
+}
+inline ::TaskResult* TaskState::_internal_mutable_task_result() {
+  
+  if (task_result_ == nullptr) {
+    auto* p = CreateMaybeMessage<::TaskResult>(GetArenaForAllocation());
+    task_result_ = p;
+  }
+  return task_result_;
+}
+inline ::TaskResult* TaskState::mutable_task_result() {
+  ::TaskResult* _msg = _internal_mutable_task_result();
+  // @@protoc_insertion_point(field_mutable:TaskState.task_result)
+  return _msg;
+}
+inline void TaskState::set_allocated_task_result(::TaskResult* task_result) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete task_result_;
+  }
+  if (task_result) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::TaskResult>::GetOwningArena(task_result);
+    if (message_arena != submessage_arena) {
+      task_result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, task_result, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  task_result_ = task_result;
+  // @@protoc_insertion_point(field_set_allocated:TaskState.task_result)
+}
+
+// -------------------------------------------------------------------
+
 // UserConnectRequest
 
 // .UserStatus status = 1;
@@ -3678,144 +3641,6 @@ inline void UserConnectRequest::set_allocated_task_data(::TaskData* task_data) {
 
 // -------------------------------------------------------------------
 
-// UploadDataRequest
-
-// .TaskData task_data = 1;
-inline bool UploadDataRequest::_internal_has_task_data() const {
-  return this != internal_default_instance() && task_data_ != nullptr;
-}
-inline bool UploadDataRequest::has_task_data() const {
-  return _internal_has_task_data();
-}
-inline void UploadDataRequest::clear_task_data() {
-  if (GetArenaForAllocation() == nullptr && task_data_ != nullptr) {
-    delete task_data_;
-  }
-  task_data_ = nullptr;
-}
-inline const ::TaskData& UploadDataRequest::_internal_task_data() const {
-  const ::TaskData* p = task_data_;
-  return p != nullptr ? *p : reinterpret_cast<const ::TaskData&>(
-      ::_TaskData_default_instance_);
-}
-inline const ::TaskData& UploadDataRequest::task_data() const {
-  // @@protoc_insertion_point(field_get:UploadDataRequest.task_data)
-  return _internal_task_data();
-}
-inline void UploadDataRequest::unsafe_arena_set_allocated_task_data(
-    ::TaskData* task_data) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(task_data_);
-  }
-  task_data_ = task_data;
-  if (task_data) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:UploadDataRequest.task_data)
-}
-inline ::TaskData* UploadDataRequest::release_task_data() {
-  
-  ::TaskData* temp = task_data_;
-  task_data_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::TaskData* UploadDataRequest::unsafe_arena_release_task_data() {
-  // @@protoc_insertion_point(field_release:UploadDataRequest.task_data)
-  
-  ::TaskData* temp = task_data_;
-  task_data_ = nullptr;
-  return temp;
-}
-inline ::TaskData* UploadDataRequest::_internal_mutable_task_data() {
-  
-  if (task_data_ == nullptr) {
-    auto* p = CreateMaybeMessage<::TaskData>(GetArenaForAllocation());
-    task_data_ = p;
-  }
-  return task_data_;
-}
-inline ::TaskData* UploadDataRequest::mutable_task_data() {
-  ::TaskData* _msg = _internal_mutable_task_data();
-  // @@protoc_insertion_point(field_mutable:UploadDataRequest.task_data)
-  return _msg;
-}
-inline void UploadDataRequest::set_allocated_task_data(::TaskData* task_data) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete task_data_;
-  }
-  if (task_data) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::TaskData>::GetOwningArena(task_data);
-    if (message_arena != submessage_arena) {
-      task_data = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, task_data, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  task_data_ = task_data;
-  // @@protoc_insertion_point(field_set_allocated:UploadDataRequest.task_data)
-}
-
-// -------------------------------------------------------------------
-
-// UploadDataResponse
-
-// bool success = 1;
-inline void UploadDataResponse::clear_success() {
-  success_ = false;
-}
-inline bool UploadDataResponse::_internal_success() const {
-  return success_;
-}
-inline bool UploadDataResponse::success() const {
-  // @@protoc_insertion_point(field_get:UploadDataResponse.success)
-  return _internal_success();
-}
-inline void UploadDataResponse::_internal_set_success(bool value) {
-  
-  success_ = value;
-}
-inline void UploadDataResponse::set_success(bool value) {
-  _internal_set_success(value);
-  // @@protoc_insertion_point(field_set:UploadDataResponse.success)
-}
-
-// uint64 task_id = 2;
-inline void UploadDataResponse::clear_task_id() {
-  task_id_ = uint64_t{0u};
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint64 UploadDataResponse::_internal_task_id() const {
-  return task_id_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint64 UploadDataResponse::task_id() const {
-  // @@protoc_insertion_point(field_get:UploadDataResponse.task_id)
-  return _internal_task_id();
-}
-inline void UploadDataResponse::_internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  
-  task_id_ = value;
-}
-inline void UploadDataResponse::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _internal_set_task_id(value);
-  // @@protoc_insertion_point(field_set:UploadDataResponse.task_id)
-}
-
-// -------------------------------------------------------------------
-
 // UserConnectResponse
 
 // .UserCommand command = 1;
@@ -3858,7 +3683,27 @@ inline void UserConnectResponse::set_leader_id(::PROTOBUF_NAMESPACE_ID::uint64 v
   // @@protoc_insertion_point(field_set:UserConnectResponse.leader_id)
 }
 
-// .TaskResult task_result = 3;
+// uint64 task_id = 3;
+inline void UserConnectResponse::clear_task_id() {
+  task_id_ = uint64_t{0u};
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 UserConnectResponse::_internal_task_id() const {
+  return task_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 UserConnectResponse::task_id() const {
+  // @@protoc_insertion_point(field_get:UserConnectResponse.task_id)
+  return _internal_task_id();
+}
+inline void UserConnectResponse::_internal_set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  task_id_ = value;
+}
+inline void UserConnectResponse::set_task_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_task_id(value);
+  // @@protoc_insertion_point(field_set:UserConnectResponse.task_id)
+}
+
+// .TaskResult task_result = 4;
 inline bool UserConnectResponse::_internal_has_task_result() const {
   return this != internal_default_instance() && task_result_ != nullptr;
 }
@@ -3946,96 +3791,6 @@ inline void UserConnectResponse::set_allocated_task_result(::TaskResult* task_re
   }
   task_result_ = task_result;
   // @@protoc_insertion_point(field_set_allocated:UserConnectResponse.task_result)
-}
-
-// .UploadDataResponse upload_data_response = 4;
-inline bool UserConnectResponse::_internal_has_upload_data_response() const {
-  return this != internal_default_instance() && upload_data_response_ != nullptr;
-}
-inline bool UserConnectResponse::has_upload_data_response() const {
-  return _internal_has_upload_data_response();
-}
-inline void UserConnectResponse::clear_upload_data_response() {
-  if (GetArenaForAllocation() == nullptr && upload_data_response_ != nullptr) {
-    delete upload_data_response_;
-  }
-  upload_data_response_ = nullptr;
-}
-inline const ::UploadDataResponse& UserConnectResponse::_internal_upload_data_response() const {
-  const ::UploadDataResponse* p = upload_data_response_;
-  return p != nullptr ? *p : reinterpret_cast<const ::UploadDataResponse&>(
-      ::_UploadDataResponse_default_instance_);
-}
-inline const ::UploadDataResponse& UserConnectResponse::upload_data_response() const {
-  // @@protoc_insertion_point(field_get:UserConnectResponse.upload_data_response)
-  return _internal_upload_data_response();
-}
-inline void UserConnectResponse::unsafe_arena_set_allocated_upload_data_response(
-    ::UploadDataResponse* upload_data_response) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(upload_data_response_);
-  }
-  upload_data_response_ = upload_data_response;
-  if (upload_data_response) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:UserConnectResponse.upload_data_response)
-}
-inline ::UploadDataResponse* UserConnectResponse::release_upload_data_response() {
-  
-  ::UploadDataResponse* temp = upload_data_response_;
-  upload_data_response_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::UploadDataResponse* UserConnectResponse::unsafe_arena_release_upload_data_response() {
-  // @@protoc_insertion_point(field_release:UserConnectResponse.upload_data_response)
-  
-  ::UploadDataResponse* temp = upload_data_response_;
-  upload_data_response_ = nullptr;
-  return temp;
-}
-inline ::UploadDataResponse* UserConnectResponse::_internal_mutable_upload_data_response() {
-  
-  if (upload_data_response_ == nullptr) {
-    auto* p = CreateMaybeMessage<::UploadDataResponse>(GetArenaForAllocation());
-    upload_data_response_ = p;
-  }
-  return upload_data_response_;
-}
-inline ::UploadDataResponse* UserConnectResponse::mutable_upload_data_response() {
-  ::UploadDataResponse* _msg = _internal_mutable_upload_data_response();
-  // @@protoc_insertion_point(field_mutable:UserConnectResponse.upload_data_response)
-  return _msg;
-}
-inline void UserConnectResponse::set_allocated_upload_data_response(::UploadDataResponse* upload_data_response) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete upload_data_response_;
-  }
-  if (upload_data_response) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::UploadDataResponse>::GetOwningArena(upload_data_response);
-    if (message_arena != submessage_arena) {
-      upload_data_response = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, upload_data_response, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  upload_data_response_ = upload_data_response;
-  // @@protoc_insertion_point(field_set_allocated:UserConnectResponse.upload_data_response)
 }
 
 // -------------------------------------------------------------------
@@ -5797,8 +5552,6 @@ RaftConfig::mutable_workers() {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
-// -------------------------------------------------------------------
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
