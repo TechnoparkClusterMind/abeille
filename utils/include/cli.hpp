@@ -5,6 +5,7 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -12,6 +13,9 @@
 
 namespace abeille {
 namespace cli {
+
+static constexpr const char *HELP_COMMAND = "help";
+static constexpr const char *EXIT_COMMAND = "exit";
 
 class CLI {
  public:
@@ -22,11 +26,14 @@ class CLI {
 
   CLI(const handlers_map &handlers, const handlers_helper &helper) noexcept;
 
-  void Process(std::string &line) const;
+  bool Process(std::string &line);
 
-  void Help() const noexcept;
+  virtual void Help() const noexcept;
+
+  virtual void Exit() noexcept;
 
  private:
+  bool exit_ = false;
   handlers_map handlers_;
   handlers_helper helper_;
 };

@@ -5,21 +5,26 @@ namespace cli {
 
 CLI::CLI(const handlers_map &handlers, const handlers_helper &helper) noexcept
     : handlers_(handlers), helper_(helper) {
-  helper_.push_back({"help", "lists available functions"});
+  helper_.push_back({HELP_COMMAND, "lists available functions"});
+  helper_.push_back({EXIT_COMMAND, "terminates the programm"});
 }
 
-void CLI::Process(std::string &line) const {
+bool CLI::Process(std::string &line) {
   args_type args = Split(line, ' ');
-  if (args[0] == "help") {
+  std::string command = args[0];
+  if (command == HELP_COMMAND) {
     Help();
+  } else if (command == EXIT_COMMAND) {
+    Exit();
   } else {
-    auto it = handlers_.find(args[0]);
+    auto it = handlers_.find(command);
     if (it != handlers_.end()) {
       std::cout << it->second(args) << std::endl;
     } else {
-      std::cout << "cli: command not found: " << args[0] << std::endl;
+      std::cout << "cli: command not found: " << command << std::endl;
     }
   }
+  return exit_;
 }
 
 void CLI::Help() const noexcept {
@@ -28,6 +33,8 @@ void CLI::Help() const noexcept {
               << value.second << std::endl;
   }
 }
+
+void CLI::Exit() noexcept { exit_ = true; }
 
 }  // namespace cli
 }  // namespace abeille

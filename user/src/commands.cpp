@@ -10,16 +10,14 @@ namespace user {
 namespace commands {
 
 Wrapper::Wrapper() noexcept {
-  handlers = {{"exit", Exit}, {"ud", UploadData}, {"status", Status}};
-  helper = {{"exit", "gracefully terminates the programm"},
-            {"ud <filepath>",
+  handlers = {{"ud", UploadData}, {"status", Status}};
+  helper = {{"ud <filepath>",
              "uploads data from the <filepath> to abeille (json format with "
              "accordance to the proto file)"},
             {"status", "prints current status of all tasks"}};
-  user_client.Run();
 }
 
-std::string Exit(CLI::args_type) { throw std::exception(); }
+void Wrapper::RunUserClient() { user_client.Run(); }
 
 std::string UploadData(CLI::args_type args) {
   if (args.size() != 2) {

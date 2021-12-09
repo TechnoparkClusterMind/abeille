@@ -124,7 +124,7 @@ void RaftConsensus::startNewElection() {
 }
 
 void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
-  LOG_INFO("Sending AppendEntry to peer %lu ...", peer.id_);
+  // LOG_INFO("Sending AppendEntry to peer %lu ...", peer.id_);
   AppendEntryRequest request;
   request.set_term(current_term_);
   request.set_leader_id(id_);
@@ -248,7 +248,7 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
 void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
                                       AppendEntryResponse *resp) {
-  LOG_INFO("AppendEntry request was recieved from %lu", msg->leader_id());
+  // LOG_INFO("AppendEntry request was recieved from %lu", msg->leader_id());
   std::lock_guard<std::mutex> lockGuard(mutex_);
 
   // Set response to rejection at first

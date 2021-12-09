@@ -58,7 +58,7 @@ class Client {
     {
       // try to connect to the server; last stream and context are preserved
       std::lock_guard<std::mutex> lk(mutex_);
-      while (!handshake() && !shutdown_) {
+      while (!shutdown_ && !handshake()) {
         LOG_ERROR("failed to connect to the server, retrying...");
         std::this_thread::sleep_for(std::chrono::seconds(3));
       }
@@ -79,6 +79,10 @@ class Client {
   }
 
   bool handshake() {
+    if (shutdown_) {
+      return false;
+    }
+
     ConnReq req;
     connect_ctx_ = std::make_unique<ClientContext>();
     connect_stream_ = stub_ptr_->Connect(connect_ctx_.get());

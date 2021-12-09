@@ -18,26 +18,33 @@ using abeille::user::Client;
 
 // ud user/data/test.json
 
+bool shutdown = false;
+abeille::user::commands::Wrapper wrapper;
+
+void Shutdown() { wrapper.user_client.Shutdown(); }
+
 void RunCLI() {
-  abeille::user::commands::Wrapper wrapper;
   CLI cli(wrapper.handlers, wrapper.helper);
 
-  linenoise::SetMultiLine(true);
-  linenoise::SetHistoryMaxLen(4);
-
   std::string line;
-  while (!linenoise::Readline("abeille> ", line)) {
-    try {
-      cli.Process(line);
-    } catch (const std::exception &e) {  // is thrown in Exit
-      std::cout << "goodbye!" << std::endl;
+  while (!shutdown && !linenoise::Readline("abeille> ", line)) {
+    bool exit = cli.Process(line);
+    if (exit) {
       break;
     }
     linenoise::AddHistory(line.c_str());
   }
+  Shutdown();
 }
 
-// TODO: add graceful shutdown
+void SignalHandler(int signal) { shutdown = true; }
+
+void ListenShutdown() {
+  while (!shutdown) {
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+  }
+  Shutdown();
+}
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
@@ -45,7 +52,13 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  RunCLI();
+  std::signal(SIGINT, SignalHandler);
+  std::thread(ListenShutdown).detach();
+
+  std::thread([] {
+    wrapper.RunUserClient();
+    RunCLI();
+  }).join();
 
   return 0;
 }
