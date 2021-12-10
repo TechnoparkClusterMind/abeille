@@ -31,9 +31,10 @@ error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
     task->set_worker_id(worker_id);
     add_request->set_to(TASK_STATUS_ASSIGNED);
   }
-  entry.set_allocated_add_request(add_request);
 
+  entry.set_allocated_add_request(add_request);
   entry.set_allocated_task(task);
+  entry.set_term(core_->raft_->GetTerm());
 
   task_id = last_task_id_;
   ++last_task_id_;

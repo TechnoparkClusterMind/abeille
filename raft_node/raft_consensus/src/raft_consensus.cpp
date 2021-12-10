@@ -1,5 +1,6 @@
 #include "raft_consensus.hpp"
 
+#include <google/protobuf/util/json_util.h>
 #include <grpcpp/grpcpp.h>
 
 #include <chrono>
@@ -9,8 +10,6 @@
 #include "core.hpp"
 #include "logger.hpp"
 #include "types.hpp"
-
-#include <google/protobuf/util/json_util.h>
 using namespace google::protobuf::util;
 
 namespace abeille {
@@ -119,20 +118,60 @@ void RaftConsensus::startNewElection() {
   state_ = State::CANDIDATE;
   voted_for_ = id_;
   resetElectionTimer();
-  core_->raft_pool_->BeginRequestVote();
+  core_->raft_pool_->beginRequestVote();
   raft_state_changed_.notify_all();
 
   // if we are the only server
-  if (core_->raft_pool_->MajorityVotes()) becomeLeader();
+  if (core_->raft_pool_->majorityVotes()) becomeLeader();
+}
+
+void RaftConsensus::advanceCommitIndex() {
+  if (state_ != State::LEADER) {
+    LOG_WARN("Advancing commit initiated NOT by the leader");
+  }
+
+  Index commit_idx = state_machine_->GetCommitIndex();
+  LOG_DEBUG("Commit idx from state machine: %lu", commit_idx);
+  Index new_commit_idx = core_->raft_pool_->poolCommitIndex(commit_idx);
+  LOG_DEBUG("Commit idx from RaftPoo: %lu", new_commit_idx);
+
+  if (commit_idx >= new_commit_idx) {
+    return;
+  }
+
+  if (log_->GetEntry(new_commit_idx)->term() != current_term_) {
+    LOG_INFO("Returning from advance commit");
+
+    std::string msg_str;
+    MessageToJsonString(*log_->GetEntry(new_commit_idx), &msg_str);
+    std::cout << msg_str << std::endl;
+
+    return;
+  }
+
+  state_machine_->Commit(new_commit_idx);
+  LOG_INFO("Updating commit index from %lu to %lu", commit_idx, new_commit_idx);
+
+  raft_state_changed_.notify_all();
 }
 
 void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   assert(state_ == State::LEADER);
+
+  Index prev_log_idx = peer.next_index_ - 1;
+  Term prev_log_term;
+
+  if (prev_log_idx == 0) {
+    prev_log_term = 0;
+  } else {
+    prev_log_term = log_->GetEntry(prev_log_idx)->term();
+  }
+
   AppendEntryRequest request;
   request.set_term(current_term_);
   request.set_leader_id(id_);
-  request.set_prev_log_index(peer.next_index_ - 1);
-  request.set_prev_log_term(log_->LastTerm());
+  request.set_prev_log_index(prev_log_idx);
+  request.set_prev_log_term(prev_log_term);
   request.set_leader_commit(state_machine_->GetCommitIndex());
 
   uint8_t entries_num = 0;
@@ -163,12 +202,11 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
     if (response.success()) {
       peer.match_index_ = peer.next_index_ - 1 + entries_num;
       peer.next_index_ = peer.match_index_ + 1;
+      advanceCommitIndex();
     } else if (peer.next_index_ > 1) {
       --peer.next_index_;
     }
   }
-
-  // logic for commiting entry
 }
 
 void RaftConsensus::requestVote(std::unique_lock<std::mutex> &, Peer &peer) {
@@ -202,7 +240,7 @@ void RaftConsensus::requestVote(std::unique_lock<std::mutex> &, Peer &peer) {
     if (response.vote_granted()) {
       peer.have_vote_ = true;
       raft_state_changed_.notify_all();
-      if (core_->raft_pool_->MajorityVotes()) becomeLeader();
+      if (core_->raft_pool_->majorityVotes()) becomeLeader();
     } else
       LOG_INFO("RequestVote was declined");
   }
@@ -255,8 +293,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   std::cout << msg_str << std::endl;
   */
 
-  // Set response to rejection at first
-  // Will be changed
+  // Set response to rejection at first. Will be changed
   resp->set_term(current_term_);
   resp->set_success(false);
 
@@ -300,9 +337,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   if (msg->has_entry()) {
     LOG_DEBUG("Logging task ...");
     log_->Purge(msg->prev_log_index());
-    auto prev = log_->LastIndex();
     log_->Append(msg->entry());
-    assert(log_->LastIndex() == prev + 1);
   }
 
   if (state_machine_->GetCommitIndex() < msg->leader_commit()) {

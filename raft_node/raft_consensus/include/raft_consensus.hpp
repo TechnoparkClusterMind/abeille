@@ -57,7 +57,8 @@ class RaftConsensus {
   bool IsLeader() const noexcept { return id_ == leader_id_; }
 
   // LeaderID returns leader id.
-  uint64_t LeaderID() const noexcept {return leader_id_; } 
+  ServerId LeaderID() const noexcept {return leader_id_; }
+  Term GetTerm() const noexcept { return current_term_; }
 
  private:  // Methods
   // Main logic for every node depending on current state of server
@@ -71,8 +72,12 @@ class RaftConsensus {
 
   // Update term, convert to follower,
   void stepDown(uint64_t term);
+  void advanceCommitIndex();
 
   // RPC request
+  // void appendEntry(std::unique_lock<std::mutex> &, Peer &peer);
+  // void requestVote(std::unique_lock<std::mutex> &, Peer &peer);
+
   void appendEntry(std::unique_lock<std::mutex> &, Peer &peer);
   void requestVote(std::unique_lock<std::mutex> &, Peer &peer);
 

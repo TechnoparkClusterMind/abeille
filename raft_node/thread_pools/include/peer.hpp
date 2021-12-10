@@ -36,6 +36,7 @@ class Peer {
   void Shutdown() { exiting_ = true; }
   void BeginRequestVote() noexcept;
   bool HaveVote() const noexcept { return have_vote_; }
+  Index const& GetMatchIndex() const noexcept { return match_index_; }
 
   // id of the current raft_node
   uint64_t id_;

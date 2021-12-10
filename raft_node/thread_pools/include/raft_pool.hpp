@@ -32,13 +32,18 @@ class RaftPool {
   // Launches peer_thread_main from raft_consensus for all peers
   Status Run();
   void Shutdown();
-  void BeginRequestVote();
-  bool MajorityVotes();
   void AppendAll(const Entry &entry);
 
  private:
-  std::unordered_map<ServerId, PeerRef> peers_;
+  Index poolCommitIndex(Index& prev_commit_idx);
+  void beginRequestVote();
+  bool majorityVotes();
+
+  // std::unordered_map<ServerId, PeerRef> peers_;
+  std::vector<PeerRef> peers_;
   RaftRef raft_;
+
+  friend class RaftConsensus;
 };
 
 }  // namespace raft_node
