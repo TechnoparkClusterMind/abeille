@@ -16,8 +16,9 @@ message TaskState {
 }
 
 enum UserStatus {
-  USER_STATUS_NONE = 0;
-  USER_STATUS_UPLOAD_DATA = 1;
+  USER_STATUS_DOWN = 0;
+  USER_STATUS_IDLE = 1;
+  USER_STATUS_UPLOAD_DATA = 2;
 }
 
 message UserConnectRequest {
@@ -123,7 +124,8 @@ message RequestVoteResponse {
 // ----------------------------- Worker Service ----------------------------- //
 
 enum WorkerStatus {
-  WORKER_STATUS_IDLE = 0;
+  WORKER_STATUS_DOWN = 0;
+  WORKER_STATUS_IDLE = 1;
   WORKER_STATUS_BUSY = 2;
   WORKER_STATUS_COMPLETED = 3;
 }

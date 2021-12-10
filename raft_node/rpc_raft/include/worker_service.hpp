@@ -4,6 +4,7 @@
 #include <grpc/grpc.h>
 
 #include <unordered_map>
+#include <vector>
 
 #include "abeille.grpc.pb.h"
 #include "errors.hpp"
@@ -23,21 +24,25 @@ using WorkerServiceSpec =
 
 class WorkerServiceImpl final : public WorkerServiceSpec {
  public:
-  using ConnReq = WorkerConnectRequest;
-  using ConnResp = WorkerConnectResponse;
-  using RaftConsensusPtr = std::shared_ptr<RaftConsensus>;
-
   struct ClientWrapper {
     Task task;
+    uint64_t payload = 0;
     WorkerStatus status = WORKER_STATUS_IDLE;
     WorkerCommand command = WORKER_COMMAND_NONE;
   };
 
+  using ConnReq = WorkerConnectRequest;
+  using ConnResp = WorkerConnectResponse;
+  using RaftConsensusPtr = std::shared_ptr<RaftConsensus>;
+  using ClientsMap = std::unordered_map<uint64_t, ClientWrapper>;
+
   explicit WorkerServiceImpl(RaftConsensusPtr raft_consensus) noexcept
       : raft_consensus_(raft_consensus){};
 
+  void ConnectHandler(uint64_t client_id) override;
   void CommandHandler(uint64_t client_id, ConnResp *resp) override;
   void StatusHandler(uint64_t client_id, const ConnReq *req) override;
+  void DisconnectHandler(uint64_t client_id) override;
 
   error AssignTask(uint64_t task_id, uint64_t &worker_id);
   error SendTask(const Task &task);
@@ -50,7 +55,11 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
   void handleStatusCompleted(ClientWrapper &cw, const ConnReq *req);
 
  private:
-  std::unordered_map<uint64_t, ClientWrapper> clients_;
+  ClientsMap client_wrappers_;
+
+  size_t curr_client_id_ = 0;
+  std::vector<uint64_t> client_ids_;
+
   RaftConsensusPtr raft_consensus_ = nullptr;
 };
 

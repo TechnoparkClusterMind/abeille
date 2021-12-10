@@ -130,13 +130,14 @@ template<> ::WorkerConnectResponse* Arena::CreateMaybeMessage<::WorkerConnectRes
 PROTOBUF_NAMESPACE_CLOSE
 
 enum UserStatus : int {
-  USER_STATUS_NONE = 0,
-  USER_STATUS_UPLOAD_DATA = 1,
+  USER_STATUS_DOWN = 0,
+  USER_STATUS_IDLE = 1,
+  USER_STATUS_UPLOAD_DATA = 2,
   UserStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   UserStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool UserStatus_IsValid(int value);
-constexpr UserStatus UserStatus_MIN = USER_STATUS_NONE;
+constexpr UserStatus UserStatus_MIN = USER_STATUS_DOWN;
 constexpr UserStatus UserStatus_MAX = USER_STATUS_UPLOAD_DATA;
 constexpr int UserStatus_ARRAYSIZE = UserStatus_MAX + 1;
 
@@ -234,14 +235,15 @@ inline bool RaftCommand_Parse(
     RaftCommand_descriptor(), name, value);
 }
 enum WorkerStatus : int {
-  WORKER_STATUS_IDLE = 0,
+  WORKER_STATUS_DOWN = 0,
+  WORKER_STATUS_IDLE = 1,
   WORKER_STATUS_BUSY = 2,
   WORKER_STATUS_COMPLETED = 3,
   WorkerStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   WorkerStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool WorkerStatus_IsValid(int value);
-constexpr WorkerStatus WorkerStatus_MIN = WORKER_STATUS_IDLE;
+constexpr WorkerStatus WorkerStatus_MIN = WORKER_STATUS_DOWN;
 constexpr WorkerStatus WorkerStatus_MAX = WORKER_STATUS_COMPLETED;
 constexpr int WorkerStatus_ARRAYSIZE = WorkerStatus_MAX + 1;
 

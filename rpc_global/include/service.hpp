@@ -22,13 +22,17 @@ class Service : public Svc {
  public:
   using ConnectStream = grpc::ServerReaderWriter<ConnResp, ConnReq>;
 
+  virtual void ConnectHandler(uint64_t client_id) {}
   virtual void CommandHandler(uint64_t client_id, ConnResp *resp) = 0;
   virtual void StatusHandler(uint64_t client_id, const ConnReq *req) = 0;
+  virtual void DisconnectHandler(uint64_t client_id) {}
 
  private:
   Status Connect(ServerContext *context, ConnectStream *stream) override {
     std::string address = ExtractAddress(context->peer());
     uint64_t client_id = address2uint(address);
+
+    ConnectHandler(client_id);
     LOG_INFO("connection request from [%s]", address.c_str());
 
     auto req = std::make_unique<ConnReq>();
@@ -45,6 +49,8 @@ class Service : public Svc {
 
       std::this_thread::sleep_for(std::chrono::seconds(3));
     }
+
+    DisconnectHandler(client_id);
     LOG_WARN("connection with [%s] was lost", address.c_str());
 
     return Status::OK;

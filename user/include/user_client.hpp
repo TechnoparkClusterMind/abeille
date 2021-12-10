@@ -47,7 +47,7 @@ class Client : public UserClient {
   std::queue<TaskData *> task_datas_;
 
   uint64_t leader_id_ = 0;
-  UserStatus status_ = USER_STATUS_NONE;
+  UserStatus status_ = USER_STATUS_IDLE;
 };
 
 // class Client {

@@ -69,7 +69,7 @@ void Client::handleStatusUploadData(ConnReq *req) {
     req->set_allocated_task_data(task_datas_.front());
     task_datas_.pop();
   }
-  status_ = USER_STATUS_NONE;
+  status_ = USER_STATUS_IDLE;
 }
 
 }  // namespace user

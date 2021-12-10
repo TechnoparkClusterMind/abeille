@@ -503,33 +503,34 @@ const char descriptor_table_protodef_abeille_2eproto[] PROTOBUF_SECTION_VARIABLE
   "t\030\005 \001(\0132\013.TaskResult\"p\n\nRaftConfig\022\024\n\014us"
   "er_address\030\001 \001(\t\022\024\n\014raft_address\030\002 \001(\t\022\026"
   "\n\016worker_address\030\003 \001(\t\022\r\n\005peers\030\004 \003(\t\022\017\n"
-  "\007workers\030\005 \003(\t*\?\n\nUserStatus\022\024\n\020USER_STA"
-  "TUS_NONE\020\000\022\033\n\027USER_STATUS_UPLOAD_DATA\020\001*"
-  "q\n\013UserCommand\022\025\n\021USER_COMMAND_NONE\020\000\022\031\n"
-  "\025USER_COMMAND_REDIRECT\020\001\022\027\n\023USER_COMMAND"
-  "_ASSIGN\020\002\022\027\n\023USER_COMMAND_RESULT\020\003*]\n\nTa"
-  "skStatus\022\032\n\026TASK_STATUS_UNASSIGNED\020\000\022\030\n\024"
-  "TASK_STATUS_ASSIGNED\020\001\022\031\n\025TASK_STATUS_CO"
-  "MPLETED\020\002*S\n\013RaftCommand\022\024\n\020RAFT_COMMAND"
-  "_ADD\020\000\022\025\n\021RAFT_COMMAND_MOVE\020\001\022\027\n\023RAFT_CO"
-  "MMAND_DELETE\020\002*[\n\014WorkerStatus\022\026\n\022WORKER"
-  "_STATUS_IDLE\020\000\022\026\n\022WORKER_STATUS_BUSY\020\002\022\033"
-  "\n\027WORKER_STATUS_COMPLETED\020\003*|\n\rWorkerCom"
-  "mand\022\027\n\023WORKER_COMMAND_NONE\020\000\022\031\n\025WORKER_"
-  "COMMAND_ASSIGN\020\001\022\032\n\026WORKER_COMMAND_PROCE"
-  "SS\020\002\022\033\n\027WORKER_COMMAND_REDIRECT\020\0032I\n\013Use"
-  "rService\022:\n\007Connect\022\023.UserConnectRequest"
-  "\032\024.UserConnectResponse\"\000(\0010\0012\205\001\n\013RaftSer"
-  "vice\022:\n\013AppendEntry\022\023.AppendEntryRequest"
-  "\032\024.AppendEntryResponse\"\000\022:\n\013RequestVote\022"
-  "\023.RequestVoteRequest\032\024.RequestVoteRespon"
-  "se\"\0002O\n\rWorkerService\022>\n\007Connect\022\025.Worke"
-  "rConnectRequest\032\026.WorkerConnectResponse\""
-  "\000(\0010\001b\006proto3"
+  "\007workers\030\005 \003(\t*U\n\nUserStatus\022\024\n\020USER_STA"
+  "TUS_DOWN\020\000\022\024\n\020USER_STATUS_IDLE\020\001\022\033\n\027USER"
+  "_STATUS_UPLOAD_DATA\020\002*q\n\013UserCommand\022\025\n\021"
+  "USER_COMMAND_NONE\020\000\022\031\n\025USER_COMMAND_REDI"
+  "RECT\020\001\022\027\n\023USER_COMMAND_ASSIGN\020\002\022\027\n\023USER_"
+  "COMMAND_RESULT\020\003*]\n\nTaskStatus\022\032\n\026TASK_S"
+  "TATUS_UNASSIGNED\020\000\022\030\n\024TASK_STATUS_ASSIGN"
+  "ED\020\001\022\031\n\025TASK_STATUS_COMPLETED\020\002*S\n\013RaftC"
+  "ommand\022\024\n\020RAFT_COMMAND_ADD\020\000\022\025\n\021RAFT_COM"
+  "MAND_MOVE\020\001\022\027\n\023RAFT_COMMAND_DELETE\020\002*s\n\014"
+  "WorkerStatus\022\026\n\022WORKER_STATUS_DOWN\020\000\022\026\n\022"
+  "WORKER_STATUS_IDLE\020\001\022\026\n\022WORKER_STATUS_BU"
+  "SY\020\002\022\033\n\027WORKER_STATUS_COMPLETED\020\003*|\n\rWor"
+  "kerCommand\022\027\n\023WORKER_COMMAND_NONE\020\000\022\031\n\025W"
+  "ORKER_COMMAND_ASSIGN\020\001\022\032\n\026WORKER_COMMAND"
+  "_PROCESS\020\002\022\033\n\027WORKER_COMMAND_REDIRECT\020\0032"
+  "I\n\013UserService\022:\n\007Connect\022\023.UserConnectR"
+  "equest\032\024.UserConnectResponse\"\000(\0010\0012\205\001\n\013R"
+  "aftService\022:\n\013AppendEntry\022\023.AppendEntryR"
+  "equest\032\024.AppendEntryResponse\"\000\022:\n\013Reques"
+  "tVote\022\023.RequestVoteRequest\032\024.RequestVote"
+  "Response\"\0002O\n\rWorkerService\022>\n\007Connect\022\025"
+  ".WorkerConnectRequest\032\026.WorkerConnectRes"
+  "ponse\"\000(\0010\001b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_abeille_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_abeille_2eproto = {
-  false, false, 2413, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
+  false, false, 2459, descriptor_table_protodef_abeille_2eproto, "abeille.proto", 
   &descriptor_table_abeille_2eproto_once, nullptr, 0, 18,
   schemas, file_default_instances, TableStruct_abeille_2eproto::offsets,
   file_level_metadata_abeille_2eproto, file_level_enum_descriptors_abeille_2eproto, file_level_service_descriptors_abeille_2eproto,
@@ -548,6 +549,7 @@ bool UserStatus_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;
@@ -607,6 +609,7 @@ const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* WorkerStatus_descriptor() {
 bool WorkerStatus_IsValid(int value) {
   switch (value) {
     case 0:
+    case 1:
     case 2:
     case 3:
       return true;

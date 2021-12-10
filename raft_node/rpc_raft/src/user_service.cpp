@@ -31,7 +31,7 @@ void UserServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
     return;
   }
 
-  auto &cw = clients_[client_id];
+  auto &cw = client_wrappers_[client_id];
   resp->set_command(cw.command);
 
   switch (cw.command) {
@@ -51,7 +51,7 @@ void UserServiceImpl::handleCommandAssign(ClientWrapper &cw, ConnResp *resp) {
 }
 
 void UserServiceImpl::StatusHandler(uint64_t client_id, const ConnReq *req) {
-  auto &cw = clients_[client_id];
+  auto &cw = client_wrappers_[client_id];
 
   // update the status of the client
   cw.status = req->status();
@@ -75,6 +75,14 @@ void UserServiceImpl::handleStatusUploadData(ClientWrapper &cw,
   } else {
     LOG_ERROR("user status upload data, but null task data");
   }
+}
+
+void UserServiceImpl::DisconnectHandler(uint64_t client_id) {
+  auto it = client_wrappers_.find(client_id);
+  if (it == client_wrappers_.end()) {
+    LOG_ERROR("unregistered client was disconnected");
+  }
+  it->second.status = USER_STATUS_DOWN;
 }
 
 }  // namespace raft_node

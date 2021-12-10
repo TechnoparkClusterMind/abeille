@@ -31,7 +31,7 @@ class UserServiceImpl final : public UserServiceSpec {
 
   struct ClientWrapper {
     TaskState task_state;
-    UserStatus status = USER_STATUS_NONE;
+    UserStatus status = USER_STATUS_IDLE;
     UserCommand command = USER_COMMAND_NONE;
   };
 
@@ -41,6 +41,7 @@ class UserServiceImpl final : public UserServiceSpec {
 
   void CommandHandler(uint64_t client_id, ConnResp *resp) override;
   void StatusHandler(uint64_t client_id, const ConnReq *req) override;
+  void DisconnectHandler(uint64_t client_id) override;
 
   error AssignTask(uint64_t task_id, uint64_t &worker_id);
   error SendTask(const Task &task);
@@ -58,7 +59,7 @@ class UserServiceImpl final : public UserServiceSpec {
   RaftConsensusPtr raft_consensus_ = nullptr;
   TaskManagerPtr task_mgr_ = nullptr;
 
-  std::unordered_map<uint64_t, ClientWrapper> clients_;
+  std::unordered_map<uint64_t, ClientWrapper> client_wrappers_;
 };
 
 }  // namespace raft_node
