@@ -60,7 +60,6 @@ void Core::Shutdown() noexcept {
     LOG_INFO("Shutting down all instances...");
 
     raft_->Shutdown();
-    task_mgr_->Shutdown();
     raft_pool_->Shutdown();
     raft_server_->Shutdown();
 

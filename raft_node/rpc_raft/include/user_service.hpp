@@ -7,8 +7,8 @@
 
 #include "abeille.grpc.pb.h"
 #include "raft_consensus.hpp"
+#include "raft_node/task_manager/include/task_manager.hpp"
 #include "service.hpp"
-#include "task_manager.hpp"
 
 using grpc::ServerContext;
 using grpc::Status;
@@ -31,6 +31,7 @@ class UserServiceImpl final : public UserServiceSpec {
 
   struct ClientWrapper {
     TaskState task_state;
+    uint64_t task_number = 0;
     UserStatus status = USER_STATUS_IDLE;
     UserCommand command = USER_COMMAND_NONE;
   };

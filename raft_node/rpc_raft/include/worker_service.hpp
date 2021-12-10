@@ -45,8 +45,8 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
   void DisconnectHandler(uint64_t client_id) override;
 
   error AssignTask(uint64_t task_id, uint64_t &worker_id);
-  error SendTask(const Task &task);
-  error GetWorkerResult(uint64_t worker_id, TaskResult *task_result);
+  error ProcessTask(const Task &task);
+  error GetResult(uint64_t worker_id, TaskResult *task_result);
 
  private:
   void redirectToLeader(ConnResp *resp);

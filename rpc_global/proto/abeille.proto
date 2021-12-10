@@ -11,7 +11,7 @@ message TaskResult { int32 result = 1; }
 // ----------------------------- User Service ----------------------------- //
 
 message TaskState {
-  uint64 task_id = 1;
+  uint64 task_number = 1;
   TaskResult task_result = 2;
 }
 
@@ -47,16 +47,16 @@ service UserService {
 // ----------------------------- Raft Entry ----------------------------- //
 
 message Task {
-  uint64 id = 1;
-  uint64 worker_id = 2;
-  TaskData task_data = 3;
-  TaskResult task_result = 4;
+  uint64 number = 1;
+  uint64 client_id = 2;
+  uint64 worker_id = 3;
+  TaskData task_data = 4;
+  TaskResult task_result = 5;
 }
 
 enum TaskStatus {
-  TASK_STATUS_UNASSIGNED = 0;
-  TASK_STATUS_ASSIGNED = 1;
-  TASK_STATUS_COMPLETED = 2;
+  TASK_STATUS_ASSIGNED = 0;
+  TASK_STATUS_COMPLETED = 1;
 }
 
 message AddRequest { TaskStatus to = 1; }

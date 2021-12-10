@@ -81,12 +81,13 @@ void WorkerServiceImpl::handleStatusCompleted(ClientWrapper &cw,
   // TODO: implement me
 }
 
+// TODO: refactor this crap
 error WorkerServiceImpl::AssignTask(uint64_t task_id, uint64_t &worker_id) {
   LOG_DEBUG("assigning task#[%llu]", task_id);
 
-  if (client_ids_.empty()) {
-    LOG_ERROR("no workers are connected");
-    return error("no workers are connected");
+  while (client_ids_.empty()) {
+    LOG_WARN("no workers are connected, waiting...");
+    std::this_thread::sleep_for(std::chrono::seconds(3));
   }
 
   // round-robin load balancing
@@ -111,10 +112,12 @@ error WorkerServiceImpl::AssignTask(uint64_t task_id, uint64_t &worker_id) {
   LOG_DEBUG("assigned task#[%llu] to [%s]", task_id,
             uint2address(worker_id).c_str());
 
+  curr_client_id_ = (curr_client_id_ + 1) % client_ids_.size();
+
   return error();
 }
 
-error WorkerServiceImpl::SendTask(const Task &task) {
+error WorkerServiceImpl::ProcessTask(const Task &task) {
   uint64_t worker_id = task.worker_id();
   auto it = client_wrappers_.find(worker_id);
   if (it == client_wrappers_.end()) {
@@ -130,8 +133,8 @@ error WorkerServiceImpl::SendTask(const Task &task) {
   return error();
 }
 
-error WorkerServiceImpl::GetWorkerResult(uint64_t worker_id,
-                                         TaskResult *task_result) {
+error WorkerServiceImpl::GetResult(uint64_t worker_id,
+                                   TaskResult *task_result) {
   auto it = client_wrappers_.find(worker_id);
   if (it == client_wrappers_.end()) {
     return error("worker with given id was not found");

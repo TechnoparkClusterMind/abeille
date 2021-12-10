@@ -27,9 +27,9 @@ class Client {
   explicit Client(const std::string &address) noexcept : address_(address) {}
   ~Client() = default;
 
-  virtual void CommandHandler(const ConnResp *resp) = 0;
+  virtual void CommandHandler(const ConnResp &resp) = 0;
 
-  virtual void StatusHandler(ConnReq *req) = 0;
+  virtual void StatusHandler(ConnReq &req) = 0;
 
   error Run() {
     LOG_INFO("connecting to the server [%s]...", address_.c_str());
@@ -91,14 +91,14 @@ class Client {
 
   void keepAlive() {
     // keep the connection alive: respond to beats from the server
-    auto resp = std::make_unique<ConnResp>();
-    while (connect_stream_->Read(resp.get()) && !shutdown_) {
-      CommandHandler(resp.get());
+    ConnResp resp;
+    while (connect_stream_->Read(&resp) && !shutdown_) {
+      CommandHandler(resp);
 
-      auto req = std::make_unique<ConnReq>();
-      StatusHandler(req.get());
+      ConnReq req;
+      StatusHandler(req);
 
-      connect_stream_->Write(*req);
+      connect_stream_->Write(req);
     }
 
     connected_ = false;

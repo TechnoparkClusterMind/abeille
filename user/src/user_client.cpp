@@ -6,6 +6,7 @@
 #include "constants.hpp"
 #include "convert.hpp"
 #include "logger.hpp"
+#include "user/include/registry.hpp"
 
 using grpc::ClientContext;
 using grpc::Status;
@@ -13,8 +14,8 @@ using grpc::Status;
 namespace abeille {
 namespace user {
 
-void Client::CommandHandler(const UserConnectResponse *resp) {
-  switch (resp->command()) {
+void Client::CommandHandler(const ConnResp &resp) {
+  switch (resp.command()) {
     case USER_COMMAND_REDIRECT:
       handleCommandRedirect(resp);
       break;
@@ -29,30 +30,33 @@ void Client::CommandHandler(const UserConnectResponse *resp) {
   }
 }
 
-void Client::UploadData(TaskData *task_data) {
+error Client::UploadData(TaskData *task_data) {
   status_ = USER_STATUS_UPLOAD_DATA;
-  task_datas_.push(task_data);
+  Registry::Instance().task_datas.push(task_data);
+  std::unique_lock<std::mutex> lk(mutex_);
+  cv_.wait(lk, [&] { return status_ == USER_STATUS_IDLE; });
+  return error();
 }
 
-void Client::handleCommandRedirect(const UserConnectResponse *response) {
+void Client::handleCommandRedirect(const ConnResp &resp) {
   connected_ = false;
-  leader_id_ = response->leader_id();
-  address_ = uint2address(response->leader_id());
+  leader_id_ = resp.leader_id();
+  address_ = uint2address(resp.leader_id());
   LOG_INFO("got redirected to the [%s]", address_.c_str());
   connect();
 }
 
-void Client::handleCommandAssign(const ConnResp *resp) {
-  LOG_DEBUG("task was given id [%llu]", resp->task_id());
+void Client::handleCommandAssign(const ConnResp &resp) {
+  LOG_DEBUG("task was given id [%llu]", resp.task_id());
   // TODO: implement me
 }
 
-void Client::handleCommandResult(const UserConnectResponse *response) {
+void Client::handleCommandResult(const ConnResp &resp) {
   // TODO: implement me
 }
 
-void Client::StatusHandler(ConnReq *req) {
-  req->set_status(status_);
+void Client::StatusHandler(ConnReq &req) {
+  req.set_status(status_);
   switch (status_) {
     case USER_STATUS_UPLOAD_DATA:
       handleStatusUploadData(req);
@@ -62,14 +66,16 @@ void Client::StatusHandler(ConnReq *req) {
   }
 }
 
-void Client::handleStatusUploadData(ConnReq *req) {
-  if (task_datas_.empty()) {
+void Client::handleStatusUploadData(ConnReq &req) {
+  status_ = USER_STATUS_IDLE;
+  if (Registry::Instance().task_datas.empty()) {
     LOG_ERROR("user status upload data, but empty task data queue");
   } else {
-    req->set_allocated_task_data(task_datas_.front());
-    task_datas_.pop();
+    std::lock_guard<std::mutex> lk(mutex_);
+    req.set_allocated_task_data(Registry::Instance().task_datas.front());
+    Registry::Instance().task_datas.pop();
   }
-  status_ = USER_STATUS_IDLE;
+  cv_.notify_one();
 }
 
 }  // namespace user

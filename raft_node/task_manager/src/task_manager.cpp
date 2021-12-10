@@ -1,4 +1,4 @@
-#include "task_manager.hpp"
+#include "raft_node/task_manager/include/task_manager.hpp"
 
 #include <memory>
 
@@ -16,9 +16,8 @@ error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
   Entry entry;
   entry.set_command(RAFT_COMMAND_ADD);
 
-  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
-
   uint64_t worker_id = 0;
+  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
   error err = svc->AssignTask(last_task_id_, worker_id);
 
   auto add_request = new AddRequest();
@@ -42,6 +41,12 @@ error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
   core_->raft_pool_->AppendAll(entry);
 
   return error();
+}
+
+error TaskManager::ProcessTask(const Task &task) {
+  auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
+  error err = svc->ProcessTask(task);
+  return err;
 }
 
 }  // namespace raft_node
