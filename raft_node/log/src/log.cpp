@@ -1,4 +1,5 @@
 #include "log.hpp"
+#include "logger.hpp"
 
 namespace abeille {
 namespace raft_node {
@@ -12,7 +13,10 @@ size_t Log::Purge(Index index) noexcept {
   return count;
 }
 
-void Log::Append(const Entry& entry) noexcept { log_.push_back(entry); }
+void Log::Append(const Entry& entry) noexcept {
+    LOG_TRACE();
+    log_.push_back(entry);
+}
 
 Term Log::LastTerm() const noexcept {
   if (log_.empty()) {

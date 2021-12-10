@@ -10,6 +10,9 @@
 #include "logger.hpp"
 #include "types.hpp"
 
+#include <google/protobuf/util/json_util.h>
+using namespace google::protobuf::util;
+
 namespace abeille {
 namespace raft_node {
 
@@ -71,9 +74,9 @@ void RaftConsensus::timerThreadMain() {
   resetElectionTimer();
   while (!shutdown_) {
     if (Clock::now() >= start_new_election_at_) {
-      LOG_INFO("New election was started");
       startNewElection();
     }
+
     raft_state_changed_.wait_until(lock_guard, start_new_election_at_);
   }
 }
@@ -124,7 +127,7 @@ void RaftConsensus::startNewElection() {
 }
 
 void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
-  // LOG_INFO("Sending AppendEntry to peer %lu ...", peer.id_);
+  assert(state_ == State::LEADER);
   AppendEntryRequest request;
   request.set_term(current_term_);
   request.set_leader_id(id_);
@@ -134,22 +137,17 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
 
   uint8_t entries_num = 0;
   if (log_->LastIndex() >= peer.next_index_) {
+    LOG_DEBUG("Task replicating ... ");
     request.set_allocated_entry(log_->GetEntry(peer.next_index_));
-    request.release_entry();
     entries_num = 1;
+    assert(request.has_entry());
   }
 
   AppendEntryResponse response;
   grpc::ClientContext context;
   TimePoint start = Clock::now();
   grpc::Status status = peer.stub_->AppendEntry(&context, request, &response);
-
-  /*
-  if (!status.ok()) {
-    LOG_DEBUG(status.error_message().c_str());
-    return;
-  }
-  */
+  request.release_entry();
 
   if (current_term_ != request.term() || peer.exiting_) return;
 
@@ -169,6 +167,8 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
       --peer.next_index_;
     }
   }
+
+  // logic for commiting entry
 }
 
 void RaftConsensus::requestVote(std::unique_lock<std::mutex> &, Peer &peer) {
@@ -216,8 +216,6 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
   // issue RPC or sleeps on the cv
   while (!peer->exiting_) {
     TimePoint now = Clock::now();
-    // TimePoint wait_until = TimePoint::min();
-
     switch (state_) {
       case State::FOLLOWER:
         wait_until = TimePoint::max();
@@ -231,7 +229,7 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
         break;
 
       case State::LEADER:
-        if (log_->LastIndex() >= peer->next_index_ ||
+        if (log_->LastIndex() > peer->match_index_ ||
             peer->next_heartbeat_time_ <= now) {
           appendEntry(lock_guard, *peer);
         } else
@@ -248,8 +246,14 @@ void RaftConsensus::peerThreadMain(std::shared_ptr<Peer> peer) {
 
 void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
                                       AppendEntryResponse *resp) {
-  // LOG_INFO("AppendEntry request was recieved from %lu", msg->leader_id());
+  // LOG_DEBUG("AppendEntry request was recieved from %lu", msg->leader_id());
   std::lock_guard<std::mutex> lockGuard(mutex_);
+
+  /*
+  std::string msg_str;
+  MessageToJsonString(*msg, &msg_str);
+  std::cout << msg_str << std::endl;
+  */
 
   // Set response to rejection at first
   // Will be changed
@@ -285,7 +289,7 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
     return;
   }
 
-  if (msg->prev_log_index() != log_->LastTerm()) {
+  if (msg->prev_log_term() != log_->LastTerm()) {
     LOG_INFO("Rejecting AppendEntry... Terms don't agree");
     return;
   }
@@ -294,8 +298,11 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
   resp->set_success(true);
 
   if (msg->has_entry()) {
+    LOG_DEBUG("Logging task ...");
     log_->Purge(msg->prev_log_index());
+    auto prev = log_->LastIndex();
     log_->Append(msg->entry());
+    assert(log_->LastIndex() == prev + 1);
   }
 
   if (state_machine_->GetCommitIndex() < msg->leader_commit()) {
