@@ -5,13 +5,13 @@
 #include <string>
 #include <vector>
 
-#include "cli.hpp"
-#include "constants.hpp"
-#include "convert.hpp"
 #include "linenoise.hpp"
-#include "logger.hpp"
 #include "user/include/commands.hpp"
 #include "user/include/user_client.hpp"
+#include "utils/include/cli.hpp"
+#include "utils/include/constants.hpp"
+#include "utils/include/convert.hpp"
+#include "utils/include/logger.hpp"
 
 using abeille::cli::CLI;
 using abeille::user::Client;

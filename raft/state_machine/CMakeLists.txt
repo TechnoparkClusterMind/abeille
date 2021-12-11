@@ -1,0 +1,7 @@
+add_library(state_machine src/state_machine.cpp)
+target_include_directories(state_machine PUBLIC ${PROJECT_SOURCE_DIR})
+target_link_libraries(state_machine PUBLIC utils thread_pools core)
+
+if(ENABLE_TESTS)
+    add_subdirectory(tests)
+endif()

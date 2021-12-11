@@ -4,9 +4,9 @@
 #include <filesystem>
 #include <fstream>
 
-#include "errors.hpp"
-#include "logger.hpp"
 #include "user/include/registry.hpp"
+#include "utils/include/errors.hpp"
+#include "utils/include/logger.hpp"
 
 namespace abeille {
 namespace user {

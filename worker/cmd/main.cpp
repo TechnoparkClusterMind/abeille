@@ -4,10 +4,10 @@
 #include <thread>
 #include <vector>
 
-#include "constants.hpp"
-#include "convert.hpp"
-#include "logger.hpp"
-#include "worker_client.hpp"
+#include "utils/include/constants.hpp"
+#include "utils/include/convert.hpp"
+#include "utils/include/logger.hpp"
+#include "worker/include/worker_client.hpp"
 
 using abeille::worker::Client;
 

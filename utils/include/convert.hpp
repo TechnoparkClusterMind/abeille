@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "abeille.grpc.pb.h"
+#include "rpc/proto/abeille.grpc.pb.h"
 
 static const uint64_t shift_mask[] = {40, 32, 24, 16};
 

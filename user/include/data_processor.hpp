@@ -1,8 +1,8 @@
 #ifndef ABEILLE_USER_DATA_PROCESSOR_HPP_
 #define ABEILLE_USER_DATA_PROCESSOR_HPP_
 
-#include "abeille.grpc.pb.h"
-#include "errors.hpp"
+#include "rpc/proto/abeille.grpc.pb.h"
+#include "utils/include/errors.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;

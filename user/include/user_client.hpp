@@ -11,9 +11,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "abeille.grpc.pb.h"
-#include "client.hpp"
-#include "errors.hpp"
+#include "rpc/include/client.hpp"
+#include "rpc/proto/abeille.grpc.pb.h"
+#include "utils/include/errors.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;

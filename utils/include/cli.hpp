@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "convert.hpp"
+#include "utils/include/convert.hpp"
 
 namespace abeille {
 namespace cli {

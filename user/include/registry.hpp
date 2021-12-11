@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "abeille.grpc.pb.h"
+#include "rpc/proto/abeille.grpc.pb.h"
 
 namespace abeille {
 namespace user {

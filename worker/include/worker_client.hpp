@@ -9,10 +9,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "abeille.grpc.pb.h"
-#include "client.hpp"
-#include "errors.hpp"
-#include "logger.hpp"
+#include "rpc/include/client.hpp"
+#include "rpc/proto/abeille.grpc.pb.h"
+#include "utils/include/errors.hpp"
+#include "utils/include/logger.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;

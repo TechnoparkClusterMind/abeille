@@ -1,10 +1,10 @@
 #ifndef ABEILLE_USER_COMMANDS_HPP_
 #define ABEILLE_USER_COMMANDS_HPP_
 
-#include "abeille.grpc.pb.h"
-#include "cli.hpp"
-#include "constants.hpp"
+#include "rpc/proto/abeille.grpc.pb.h"
 #include "user_client.hpp"
+#include "utils/include/cli.hpp"
+#include "utils/include/constants.hpp"
 
 using abeille::cli::CLI;
 using abeille::user::Client;
