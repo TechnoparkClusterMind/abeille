@@ -14,7 +14,6 @@
 #include "raft/rpc/include/worker_service.hpp"
 #include "raft/task_manager/include/task_manager.hpp"
 #include "raft/thread_pools/include/raft_pool.hpp"
-#include "raft/thread_pools/include/worker_pool.hpp"
 #include "rpc/include/server.hpp"
 #include "utils/include/errors.hpp"
 
@@ -39,7 +38,6 @@ class Core {
   typedef std::shared_ptr<TaskManager> TaskMgrRef;
   typedef std::unique_ptr<grpc::Service> ServiceRef;
   typedef std::unique_ptr<RaftPool> RaftThreadPoolRef;
-  typedef std::unique_ptr<WorkerPool> WorkerThreadPoolRef;
   typedef std::unique_ptr<Server> ServerRef;
   typedef std::atomic<uint64_t> ThreadsNum;
   typedef std::shared_ptr<Core> This;
@@ -85,7 +83,6 @@ class Core {
 
   // Making outbound RPCs to Raft_nodes
   RaftThreadPoolRef raft_pool_ = nullptr;
-  WorkerThreadPoolRef worker_pool_ = nullptr;
 
   // Listens for inbound RPCs from raft nodes and pass them to the services
   ServerRef raft_server_ = nullptr;

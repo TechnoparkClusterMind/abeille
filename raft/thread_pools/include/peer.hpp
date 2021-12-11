@@ -27,14 +27,15 @@ class Peer {
 
   // grpc stub is initialized with channel
   explicit Peer(std::shared_ptr<grpc::Channel> channel,
-                std::shared_ptr<RaftConsensus> raft, uint64_t id);
+                std::shared_ptr<RaftConsensus> raft, uint64_t id) noexcept;
 
   ~Peer() = default;
 
   // Run peer_thread_main from Raft_consensus
-  void Run(std::shared_ptr<Peer> self);
-  void Shutdown() { exiting_ = true; }
+  void Run(std::shared_ptr<Peer> self) noexcept;
+  void Shutdown() noexcept { exiting_ = true; }
   void BeginRequestVote() noexcept;
+  void UpdatePeer() noexcept;
   bool HaveVote() const noexcept { return have_vote_; }
   Index const& GetMatchIndex() const noexcept { return match_index_; }
 

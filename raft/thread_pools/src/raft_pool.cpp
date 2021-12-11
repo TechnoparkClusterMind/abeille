@@ -11,7 +11,7 @@
 namespace abeille {
 namespace raft {
 
-RaftPool::RaftPool(RaftPool::RaftRef raft) : raft_(raft) {
+RaftPool::RaftPool(RaftPool::RaftRef raft) noexcept : raft_(raft) {
   // FIXME: It's not ok. Maybe singleton global Config
   auto peers_adresses = raft_->core_->config_.GetPeers();
   for (const auto& addr : peers_adresses) {
@@ -22,27 +22,26 @@ RaftPool::RaftPool(RaftPool::RaftRef raft) : raft_(raft) {
   }
 }
 
-RaftPool::Status RaftPool::Run() {
-  for (auto& peer : peers_) {
-    peer->Run(peer);
-  }
-  return Status();
+void RaftPool::Run() noexcept {
+  std::for_each(peers_.begin(), peers_.end(),
+                [](PeerRef& peer) { peer->Run(peer); });
 }
 
-void RaftPool::beginRequestVote() {
-  for (auto& peer : peers_) peer->BeginRequestVote();
+void RaftPool::beginRequestVote() noexcept {
+  std::for_each(peers_.begin(), peers_.end(),
+                [](PeerRef& peer) {peer->BeginRequestVote(); });
 }
 
-bool RaftPool::majorityVotes() {
+bool RaftPool::majorityVotes() const noexcept {
   uint64_t votes_num = std::count_if(
       peers_.cbegin(), peers_.cend(),
-      [](const RaftPool::PeerRef peer) { return peer->HaveVote(); });
+      [](const RaftPool::PeerRef& peer) { return peer->HaveVote(); });
 
   bool vote_yourself = raft_->voted_for_ == raft_->id_;
   return votes_num + vote_yourself > peers_.size() / 2;
 }
 
-Index RaftPool::poolCommitIndex(Index& prev_commit_idx) {
+Index RaftPool::poolCommitIndex(Index& prev_commit_idx) noexcept {
   bool stored_majority = true;
   Index temp_index = prev_commit_idx;
 
@@ -58,16 +57,20 @@ Index RaftPool::poolCommitIndex(Index& prev_commit_idx) {
   return --temp_index;
 }
 
-void RaftPool::AppendAll(const Entry& entry) {
+void RaftPool::AppendAll(const Entry& entry) noexcept {
   LOG_TRACE();
   raft_->log_->Append(entry);
   raft_->raft_state_changed_.notify_all();
 }
 
-void RaftPool::Shutdown() {
-  for (auto& peer : peers_) {
-    peer->Shutdown();
+  void RaftPool::updatePeers() noexcept {
+    std::for_each(peers_.begin(), peers_.end(),
+                [](PeerRef& peer) {peer->UpdatePeer(); });
   }
+
+void RaftPool::Shutdown() noexcept {
+  std::for_each(peers_.begin(), peers_.end(),
+                [](PeerRef& peer) { peer->Shutdown(); });
 }
 
 }  // namespace raft

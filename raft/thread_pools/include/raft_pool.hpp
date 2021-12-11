@@ -23,21 +23,22 @@ class RaftPool {
  public:
   typedef std::shared_ptr<Peer> PeerRef;
   typedef std::shared_ptr<RaftConsensus> RaftRef;
-  typedef error Status;
 
   // Init all peers with raft_consensus
-  explicit RaftPool(RaftRef raft);
+  explicit RaftPool(RaftRef raft) noexcept;
   ~RaftPool() = default;
 
   // Launches peer_thread_main from raft_consensus for all peers
-  Status Run();
-  void Shutdown();
-  void AppendAll(const Entry& entry);
+  void Run() noexcept;
+  void Shutdown() noexcept;
+  void AppendAll(const Entry& entry) noexcept;
 
  private:
-  Index poolCommitIndex(Index& prev_commit_idx);
-  void beginRequestVote();
-  bool majorityVotes();
+  Index poolCommitIndex(Index& prev_commit_idx) noexcept;
+  void beginRequestVote() noexcept;
+  bool majorityVotes() const noexcept;
+  // Updating next idx & commit idx
+  void updatePeers() noexcept;
 
   // std::unordered_map<ServerId, PeerRef> peers_;
   std::vector<PeerRef> peers_;

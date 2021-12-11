@@ -36,20 +36,13 @@ Core::Core(Config &&conf) noexcept
 // TODO: Test for EXPECT_DEATH
 void Core::Run() noexcept {
   LOG_INFO("Launching top-level objects");
+  // Raft and pool are supposed to be earlier rather than server
+  raft_->Run();
+  raft_pool_->Run();
 
-  // Commented ones are not implemented yet
-  std::vector<Status> status(5);
-  status[0] = raft_->Run();
-  status[1] = Status();
-  // status[1] = task_mgr_->Run();
-  status[2] = raft_pool_->Run();
-  status[3] = Status();
-  // status[3] = worker_pool_->Run();
-  status[4] = raft_server_->Run();
-
-  if (!std::all_of(status.cbegin(), status.cend(),
-                   [](const Status &st) { return st.ok(); })) {
-    LOG_ERROR("Unable to launch top-level objects\n");
+  Status server_status = raft_server_->Run();
+  if (!server_status.ok()) {
+    LOG_ERROR("Server wasn't started. Shutting down raft node ...");
     Shutdown();
   }
 }

@@ -31,7 +31,6 @@ class RaftConsensus {
   // typedef std::shared_ptr<Core> CoreRef;
   typedef Core *CoreRef;
   typedef std::unique_ptr<StateMachine> StateMachineRef;
-  typedef error Status;
 
   typedef std::chrono::system_clock::time_point TimePoint;
   typedef std::chrono::milliseconds TimeDuration;
@@ -48,7 +47,7 @@ class RaftConsensus {
                          RequestVoteResponse *resp);
 
   // Starts shutdown timerThreadMain
-  Status Run();
+  void Run();
   void Shutdown() noexcept;
 
   // Interface for communication with Core

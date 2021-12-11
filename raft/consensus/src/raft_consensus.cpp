@@ -34,16 +34,9 @@ void RaftConsensus::AddPeer() noexcept {
   core_->pool_state_changed_.notify_all();
 }
 
-RaftConsensus::Status RaftConsensus::Run() {
-  try {
-    timer_thread_ = std::thread(&RaftConsensus::timerThreadMain, this);
-  } catch (...) {
-    LOG_ERROR("Unable to start RaftConsensus");
-    return Status(Status::Code::FAILURE);
-  }
-
+void RaftConsensus::Run() {
+  timer_thread_ = std::thread(&RaftConsensus::timerThreadMain, this);
   LOG_INFO("RaftConsensus for server %lu was started", id_);
-  return Status(Status::Code::OK);
 }
 
 void RaftConsensus::stepDown(uint64_t new_term) {
@@ -99,6 +92,7 @@ void RaftConsensus::becomeLeader() {
   leader_id_ = id_;
   start_new_election_at_ = TimePoint::max();
   hold_election_for = TimePoint::max();
+  core_->raft_pool_->updatePeers();
   raft_state_changed_.notify_all();
 }
 
@@ -140,7 +134,7 @@ void RaftConsensus::advanceCommitIndex() {
   }
 
   if (log_->GetEntry(new_commit_idx)->term() != current_term_) {
-    LOG_INFO("Returning from advance commit");
+    // LOG_INFO("Returning from advance commit");
 
     std::string msg_str;
     MessageToJsonString(*log_->GetEntry(new_commit_idx), &msg_str);
@@ -157,6 +151,7 @@ void RaftConsensus::advanceCommitIndex() {
 
 void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
   assert(state_ == State::LEADER);
+  // LOG_DEBUG("Appending entry to %lu peer...", peer.id_);
 
   Index prev_log_idx = peer.next_index_ - 1;
   Term prev_log_term;
