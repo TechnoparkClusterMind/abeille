@@ -37,7 +37,7 @@ void UserServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
     return;
   }
 
-  auto command = cw.commands.back();
+  auto command = cw.commands.front();
   cw.commands.pop();
 
   resp->set_command(command);
