@@ -16,10 +16,10 @@ void WorkerServiceImpl::ConnectHandler(uint64_t client_id) {
 }
 
 void WorkerServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
-  resp->set_leader_id(raft_consensus_->LeaderID());
+  resp->set_leader_id(core_->raft_->LeaderID());
 
   // check if we are the leader
-  if (!raft_consensus_->IsLeader()) {
+  if (!core_->raft_->IsLeader()) {
     LOG_INFO("redirecting [%s] to the leader...",
              uint2address(client_id).c_str());
     resp->set_command(WORKER_COMMAND_REDIRECT);
@@ -32,7 +32,7 @@ void WorkerServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
     return;
   }
 
-  auto command = cw.commands.back();
+  auto command = cw.commands.front();
   cw.commands.pop();
 
   resp->set_command(command);
@@ -55,6 +55,7 @@ void WorkerServiceImpl::handleCommandAssign(ClientWrapper &cw, ConnResp *resp) {
 
 void WorkerServiceImpl::handleCommandProcess(ClientWrapper &cw,
                                              ConnResp *resp) {
+  LOG_TRACE();
   if (cw.task.has_task_data()) {
     resp->set_task_id(cw.task.id());
     // TODO: get rid of reallocation
@@ -82,7 +83,8 @@ void WorkerServiceImpl::StatusHandler(uint64_t client_id, const ConnReq *req) {
 
 void WorkerServiceImpl::handleStatusCompleted(ClientWrapper &cw,
                                               const ConnReq *req) {
-  LOG_DEBUG("worker has finished task#[%llu]", req->task_id());
+  LOG_DEBUG("worker has finished task#[%llu], result = [%d]", req->task_id(),
+            req->task_result().result());
   // TODO: implement me
 }
 

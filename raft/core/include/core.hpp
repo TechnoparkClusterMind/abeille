@@ -108,6 +108,7 @@ class Core {
   friend class Worker;
   friend class TaskManager;
   friend class StateMachine;
+  friend class WorkerServiceImpl;
 };
 
 }  // namespace raft

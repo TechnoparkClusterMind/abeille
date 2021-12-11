@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "raft/consensus/include/raft_consensus.hpp"
+#include "raft/core/include/core.hpp"
 #include "rpc/include/service.hpp"
 #include "rpc/proto/abeille.grpc.pb.h"
 #include "utils/include/errors.hpp"
@@ -18,6 +18,8 @@ using grpc::Status;
 
 namespace abeille {
 namespace raft {
+
+class Core;
 
 using WorkerServiceSpec =
     abeille::rpc::Service<WorkerConnectRequest, WorkerConnectResponse,
@@ -34,11 +36,9 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
 
   using ConnReq = WorkerConnectRequest;
   using ConnResp = WorkerConnectResponse;
-  using RaftConsensusPtr = std::shared_ptr<RaftConsensus>;
   using ClientsMap = std::unordered_map<uint64_t, ClientWrapper>;
 
-  explicit WorkerServiceImpl(RaftConsensusPtr raft_consensus) noexcept
-      : raft_consensus_(raft_consensus){};
+  explicit WorkerServiceImpl(Core *core) noexcept : core_(core){};
 
   void ConnectHandler(uint64_t client_id) override;
   void CommandHandler(uint64_t client_id, ConnResp *resp) override;
@@ -61,7 +61,7 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
   size_t curr_client_id_ = 0;
   std::vector<uint64_t> client_ids_;
 
-  RaftConsensusPtr raft_consensus_ = nullptr;
+  Core *core_ = nullptr;  // TODO: refactor this
 };
 
 }  // namespace raft

@@ -24,7 +24,7 @@ Core::Core(Config &&conf) noexcept
       raft_pool_(new RaftPool(raft_)),
       raft_service_(new RaftServiceImpl(raft_)),
       user_service_(new UserServiceImpl(raft_, task_mgr_)),
-      worker_service_(new WorkerServiceImpl(raft_)) {
+      worker_service_(new WorkerServiceImpl(this)) {
   std::vector<ServiceInfo> services = {
       {config_.GetRaftAddress(), raft_service_.get()},
       {config_.GetUserAddress(), user_service_.get()},
