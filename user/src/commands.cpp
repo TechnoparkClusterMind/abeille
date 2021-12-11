@@ -1,8 +1,11 @@
 #include "user/include/commands.hpp"
 
+#include <google/protobuf/util/json_util.h>
+
 #include <exception>
 #include <filesystem>
 #include <fstream>
+#include <sstream>
 
 #include "user/include/registry.hpp"
 #include "utils/include/errors.hpp"
@@ -44,7 +47,7 @@ std::string UploadData(CLI::args_type args) {
   auto task_data = new TaskData();
   auto status = JsonStringToMessage(input.str(), task_data);
   if (!status.ok()) {
-    return status.message().ToString();
+    return status.message().as_string();
   }
 
   error err = Wrapper::user_client.UploadData(task_data);

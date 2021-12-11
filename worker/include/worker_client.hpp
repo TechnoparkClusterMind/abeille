@@ -27,7 +27,8 @@ using WorkerClient = abeille::rpc::Client<ConnReq, ConnResp, WorkerService>;
 
 class Client : public WorkerClient {
  public:
-  Client(const std::string &address) noexcept : WorkerClient(address) {}
+  Client(const std::vector<std::string> &cluster_addresses) noexcept
+      : WorkerClient(cluster_addresses) {}
 
   void CommandHandler(const ConnResp &resp) override;
   void StatusHandler(ConnReq &req) override;

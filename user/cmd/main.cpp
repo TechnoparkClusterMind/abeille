@@ -5,15 +5,14 @@
 #include <string>
 #include <vector>
 
+#include "common/include/client_config.hpp"
 #include "linenoise.hpp"
 #include "user/include/commands.hpp"
 #include "user/include/user_client.hpp"
 #include "utils/include/cli.hpp"
-#include "utils/include/constants.hpp"
-#include "utils/include/convert.hpp"
-#include "utils/include/logger.hpp"
 
 using abeille::cli::CLI;
+using abeille::common::ClientConfig;
 using abeille::user::Client;
 
 // ud user/data/test.json
@@ -47,10 +46,20 @@ void ListenShutdown() {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    LOG_ERROR("expected path to task results directory");
+  if (argc != 3) {
+    std::cout << "expected [config path] and [data dir path]" << std::endl;
     return -1;
   }
+
+  std::string config_path = argv[1];
+  error err = ClientConfig::Instance().Init(config_path);
+  if (!err.ok()) {
+    std::cout << err.what() << std::endl;
+    return -1;
+  }
+
+  wrapper.user_client.SetClusterAddresses(
+      ClientConfig::Instance().cluster_addresses);
 
   std::signal(SIGINT, SignalHandler);
   std::thread(ListenShutdown).detach();

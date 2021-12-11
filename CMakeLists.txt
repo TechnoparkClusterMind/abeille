@@ -59,16 +59,10 @@ elseif(NOT ENABLE_COVERAGE)
   add_compile_options("-O3")
 endif()
 
-# Common libraries for all executables
-add_subdirectory(utils)
 add_subdirectory(rpc)
-
-# Three executables will be compiled
-# * abeille-raft -- launch raft node
-# * abeille-worker -- launch worker node
-# * abeille-client -- launch the interface 
-#                     for communication with the raft cluster
 add_subdirectory(raft)
-add_subdirectory(worker)
 add_subdirectory(user)
+add_subdirectory(utils)
+add_subdirectory(common)
+add_subdirectory(worker)
 add_subdirectory(cpp-linenoise)

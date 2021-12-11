@@ -24,15 +24,20 @@ class Client {
   using SvcStub = typename Svc::Stub;
 
   Client() = default;
-  explicit Client(const std::string &address) noexcept : address_(address) {}
+  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept
+      : cluster_addresses_(cluster_addresses) {}
   ~Client() = default;
+
+  void SetClusterAddresses(const std::vector<std::string> &cluster_addresses) {
+    cluster_addresses_ = cluster_addresses;
+  }
 
   virtual void CommandHandler(const ConnResp &resp) = 0;
 
   virtual void StatusHandler(ConnReq &req) = 0;
 
   error Run() {
-    LOG_INFO("connecting to the server [%s]...", address_.c_str());
+    address_ = cluster_addresses_[0];
     std::thread(&Client::connect, this).detach();
 
     std::unique_lock<std::mutex> lk(mutex_);
@@ -47,30 +52,31 @@ class Client {
   }
 
  protected:
-  void createStub() {
-    auto channel =
-        grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
-    stub_ptr_ = Svc::NewStub(channel);
-  }
-
   void connect() {
-    createStub();
     {
       // try to connect to the server; last stream and context are preserved
       std::lock_guard<std::mutex> lk(mutex_);
-      while (!shutdown_ && !handshake()) {
-        LOG_ERROR("failed to connect to the server, retrying...");
+
+      createStub();
+      size_t index = 0;
+      while (!handshake() && !shutdown_) {
+        LOG_ERROR("failed to connect to [%s], trying another node...",
+                  address_.c_str());
+
+        index = (index + 1) % cluster_addresses_.size();
+        address_ = cluster_addresses_[index];
+        createStub();
+
         std::this_thread::sleep_for(std::chrono::seconds(3));
       }
 
-      // if exited because of shutdown, notify and return to successfully
-      // shutdown
+      // if were shutdown, notify and return to perform shutdown
       if (shutdown_) {
         cv_.notify_one();
         return;
       }
 
-      LOG_INFO("successfully connected to the server");
+      LOG_INFO("successfully connected to [%s]", address_.c_str());
       connected_ = true;
     }
     cv_.notify_one();
@@ -78,11 +84,13 @@ class Client {
     keepAlive();
   }
 
-  bool handshake() {
-    if (shutdown_) {
-      return false;
-    }
+  void createStub() {
+    auto channel =
+        grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
+    stub_ptr_ = Svc::NewStub(channel);
+  }
 
+  bool handshake() {
     ConnReq req;
     connect_ctx_ = std::make_unique<ClientContext>();
     connect_stream_ = stub_ptr_->Connect(connect_ctx_.get());
@@ -90,7 +98,6 @@ class Client {
   }
 
   void keepAlive() {
-    // keep the connection alive: respond to beats from the server
     ConnResp resp;
     while (connect_stream_->Read(&resp) && !shutdown_) {
       CommandHandler(resp);
@@ -114,7 +121,9 @@ class Client {
  protected:
   bool shutdown_ = false;
   bool connected_ = false;
+
   std::string address_;
+  std::vector<std::string> cluster_addresses_;
 
   std::mutex mutex_;
   std::condition_variable cv_;

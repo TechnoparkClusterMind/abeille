@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "user/include/data_processor.hpp"
-#include "utils/include/constants.hpp"
 #include "utils/include/convert.hpp"
 #include "utils/include/logger.hpp"
 

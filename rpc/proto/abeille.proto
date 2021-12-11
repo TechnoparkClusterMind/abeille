@@ -10,6 +10,10 @@ message TaskResult { int32 result = 1; }
 
 // ----------------------------- User Service ----------------------------- //
 
+message UserConfig {
+  repeated string cluster_addresses = 1;
+}
+
 message TaskState {
   uint64 task_id = 1;
   TaskResult task_result = 2;

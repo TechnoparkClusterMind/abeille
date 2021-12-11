@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "user/include/registry.hpp"
-#include "utils/include/constants.hpp"
 #include "utils/include/convert.hpp"
 #include "utils/include/logger.hpp"
 

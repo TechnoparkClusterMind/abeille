@@ -4,6 +4,9 @@
 #ifndef GRPC_abeille_2eproto__INCLUDED
 #define GRPC_abeille_2eproto__INCLUDED
 
+#include "abeille.pb.h"
+
+#include <functional>
 #include <grpcpp/impl/codegen/async_generic_service.h>
 #include <grpcpp/impl/codegen/async_stream.h>
 #include <grpcpp/impl/codegen/async_unary_call.h>
@@ -22,216 +25,135 @@
 #include <grpcpp/impl/codegen/stub_options.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 
-#include <functional>
-
-#include "rpc/proto/abeille.pb.h"
-
 class UserService final {
  public:
-  static constexpr char const* service_full_name() { return "UserService"; }
+  static constexpr char const* service_full_name() {
+    return "UserService";
+  }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr<::grpc::ClientReaderWriterInterface<::UserConnectRequest,
-                                                        ::UserConnectResponse>>
-    Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr<::grpc::ClientReaderWriterInterface<
-          ::UserConnectRequest, ::UserConnectResponse>>(ConnectRaw(context));
+    std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-        ::UserConnectRequest, ::UserConnectResponse>>
-    AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                 void* tag) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-          ::UserConnectRequest, ::UserConnectResponse>>(
-          AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-        ::UserConnectRequest, ::UserConnectResponse>>
-    PrepareAsyncConnect(::grpc::ClientContext* context,
-                        ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-          ::UserConnectRequest, ::UserConnectResponse>>(
-          PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void Connect(
-          ::grpc::ClientContext* context,
-          ::grpc::ClientBidiReactor<::UserConnectRequest,
-                                    ::UserConnectResponse>* reactor) = 0;
+      virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
-    class async_interface* experimental_async() {
-      return async();
-    }
-
+    class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientReaderWriterInterface<::UserConnectRequest,
-                                                ::UserConnectResponse>*
-    ConnectRaw(::grpc::ClientContext* context) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface<::UserConnectRequest,
-                                                     ::UserConnectResponse>*
-    AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                    void* tag) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface<::UserConnectRequest,
-                                                     ::UserConnectResponse>*
-    PrepareAsyncConnectRaw(::grpc::ClientContext* context,
-                           ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::UserConnectRequest, ::UserConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
-    Stub(const std::shared_ptr<::grpc::ChannelInterface>& channel,
-         const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    std::unique_ptr<
-        ::grpc::ClientReaderWriter<::UserConnectRequest, ::UserConnectResponse>>
-    Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr<::grpc::ClientReaderWriter<::UserConnectRequest,
-                                                        ::UserConnectResponse>>(
-          ConnectRaw(context));
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+    std::unique_ptr< ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriter<::UserConnectRequest,
-                                                    ::UserConnectResponse>>
-    AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                 void* tag) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriter<
-          ::UserConnectRequest, ::UserConnectResponse>>(
-          AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriter<::UserConnectRequest,
-                                                    ::UserConnectResponse>>
-    PrepareAsyncConnect(::grpc::ClientContext* context,
-                        ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriter<
-          ::UserConnectRequest, ::UserConnectResponse>>(
-          PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
-    class async final : public StubInterface::async_interface {
+    class async final :
+      public StubInterface::async_interface {
      public:
-      void Connect(
-          ::grpc::ClientContext* context,
-          ::grpc::ClientBidiReactor<::UserConnectRequest,
-                                    ::UserConnectResponse>* reactor) override;
-
+      void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) override;
      private:
       friend class Stub;
-      explicit async(Stub* stub) : stub_(stub) {}
+      explicit async(Stub* stub): stub_(stub) { }
       Stub* stub() { return stub_; }
       Stub* stub_;
     };
-    class async* async() override {
-      return &async_stub_;
-    }
+    class async* async() override { return &async_stub_; }
 
    private:
-    std::shared_ptr<::grpc::ChannelInterface> channel_;
-    class async async_stub_ {
-      this
-    };
-    ::grpc::ClientReaderWriter<::UserConnectRequest, ::UserConnectResponse>*
-    ConnectRaw(::grpc::ClientContext* context) override;
-    ::grpc::ClientAsyncReaderWriter<::UserConnectRequest,
-                                    ::UserConnectResponse>*
-    AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                    void* tag) override;
-    ::grpc::ClientAsyncReaderWriter<::UserConnectRequest,
-                                    ::UserConnectResponse>*
-    PrepareAsyncConnectRaw(::grpc::ClientContext* context,
-                           ::grpc::CompletionQueue* cq) override;
+    std::shared_ptr< ::grpc::ChannelInterface> channel_;
+    class async async_stub_{this};
+    ::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
+    ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Connect_;
   };
-  static std::unique_ptr<Stub> NewStub(
-      const std::shared_ptr<::grpc::ChannelInterface>& channel,
-      const ::grpc::StubOptions& options = ::grpc::StubOptions());
+  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
   class Service : public ::grpc::Service {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status Connect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerReaderWriter<::UserConnectResponse, ::UserConnectRequest>*
-            stream);
+    virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream);
   };
   template <class BaseClass>
   class WithAsyncMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithAsyncMethod_Connect() { ::grpc::Service::MarkMethodAsync(0); }
+    WithAsyncMethod_Connect() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
     ~WithAsyncMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::UserConnectResponse,
-                                   ::UserConnectRequest>* /*stream*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestConnect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerAsyncReaderWriter<::UserConnectResponse,
-                                        ::UserConnectRequest>* stream,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(
-          0, context, stream, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Connect<Service> AsyncService;
+  typedef WithAsyncMethod_Connect<Service > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithCallbackMethod_Connect() {
-      ::grpc::Service::MarkMethodCallback(
-          0, new ::grpc::internal::CallbackBidiHandler<::UserConnectRequest,
-                                                       ::UserConnectResponse>(
-                 [this](::grpc::CallbackServerContext* context) {
-                   return this->Connect(context);
-                 }));
+      ::grpc::Service::MarkMethodCallback(0,
+          new ::grpc::internal::CallbackBidiHandler< ::UserConnectRequest, ::UserConnectResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
     ~WithCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::UserConnectResponse,
-                                   ::UserConnectRequest>* /*stream*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerBidiReactor<::UserConnectRequest,
-                                      ::UserConnectResponse>*
-    Connect(::grpc::CallbackServerContext* /*context*/) {
-      return nullptr;
-    }
+    virtual ::grpc::ServerBidiReactor< ::UserConnectRequest, ::UserConnectResponse>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
-  typedef WithCallbackMethod_Connect<Service> CallbackService;
+  typedef WithCallbackMethod_Connect<Service > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithGenericMethod_Connect() { ::grpc::Service::MarkMethodGeneric(0); }
+    WithGenericMethod_Connect() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
     ~WithGenericMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::UserConnectResponse,
-                                   ::UserConnectRequest>* /*stream*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -240,59 +162,44 @@ class UserService final {
   class WithRawMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithRawMethod_Connect() { ::grpc::Service::MarkMethodRaw(0); }
+    WithRawMethod_Connect() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
     ~WithRawMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::UserConnectResponse,
-                                   ::UserConnectRequest>* /*stream*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestConnect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerAsyncReaderWriter<::grpc::ByteBuffer, ::grpc::ByteBuffer>*
-            stream,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(
-          0, context, stream, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
   class WithRawCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithRawCallbackMethod_Connect() {
-      ::grpc::Service::MarkMethodRawCallback(
-          0, new ::grpc::internal::CallbackBidiHandler<::grpc::ByteBuffer,
-                                                       ::grpc::ByteBuffer>(
-                 [this](::grpc::CallbackServerContext* context) {
-                   return this->Connect(context);
-                 }));
+      ::grpc::Service::MarkMethodRawCallback(0,
+          new ::grpc::internal::CallbackBidiHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
     ~WithRawCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::UserConnectResponse,
-                                   ::UserConnectRequest>* /*stream*/) override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerBidiReactor<::grpc::ByteBuffer, ::grpc::ByteBuffer>*
-    Connect(::grpc::CallbackServerContext* /*context*/) {
-      return nullptr;
-    }
+    virtual ::grpc::ServerBidiReactor< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
   typedef Service StreamedUnaryService;
   typedef Service SplitStreamedService;
@@ -304,362 +211,204 @@ class UserService final {
 // Main raft servers service
 class RaftService final {
  public:
-  static constexpr char const* service_full_name() { return "RaftService"; }
+  static constexpr char const* service_full_name() {
+    return "RaftService";
+  }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status AppendEntry(::grpc::ClientContext* context,
-                                       const ::AppendEntryRequest& request,
-                                       ::AppendEntryResponse* response) = 0;
-    std::unique_ptr<
-        ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>>
-    AsyncAppendEntry(::grpc::ClientContext* context,
-                     const ::AppendEntryRequest& request,
-                     ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>>(
-          AsyncAppendEntryRaw(context, request, cq));
+    virtual ::grpc::Status AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::AppendEntryResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>> AsyncAppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>>(AsyncAppendEntryRaw(context, request, cq));
     }
-    std::unique_ptr<
-        ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>>
-    PrepareAsyncAppendEntry(::grpc::ClientContext* context,
-                            const ::AppendEntryRequest& request,
-                            ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>>(
-          PrepareAsyncAppendEntryRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>> PrepareAsyncAppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>>(PrepareAsyncAppendEntryRaw(context, request, cq));
     }
-    virtual ::grpc::Status RequestVote(::grpc::ClientContext* context,
-                                       const ::RequestVoteRequest& request,
-                                       ::RequestVoteResponse* response) = 0;
-    std::unique_ptr<
-        ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>>
-    AsyncRequestVote(::grpc::ClientContext* context,
-                     const ::RequestVoteRequest& request,
-                     ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>>(
-          AsyncRequestVoteRaw(context, request, cq));
+    virtual ::grpc::Status RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::RequestVoteResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>> AsyncRequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>>(AsyncRequestVoteRaw(context, request, cq));
     }
-    std::unique_ptr<
-        ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>>
-    PrepareAsyncRequestVote(::grpc::ClientContext* context,
-                            const ::RequestVoteRequest& request,
-                            ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>>(
-          PrepareAsyncRequestVoteRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>> PrepareAsyncRequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>>(PrepareAsyncRequestVoteRaw(context, request, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void AppendEntry(::grpc::ClientContext* context,
-                               const ::AppendEntryRequest* request,
-                               ::AppendEntryResponse* response,
-                               std::function<void(::grpc::Status)>) = 0;
-      virtual void AppendEntry(::grpc::ClientContext* context,
-                               const ::AppendEntryRequest* request,
-                               ::AppendEntryResponse* response,
-                               ::grpc::ClientUnaryReactor* reactor) = 0;
-      virtual void RequestVote(::grpc::ClientContext* context,
-                               const ::RequestVoteRequest* request,
-                               ::RequestVoteResponse* response,
-                               std::function<void(::grpc::Status)>) = 0;
-      virtual void RequestVote(::grpc::ClientContext* context,
-                               const ::RequestVoteRequest* request,
-                               ::RequestVoteResponse* response,
-                               ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
-    class async_interface* experimental_async() {
-      return async();
-    }
-
+    class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>*
-    AsyncAppendEntryRaw(::grpc::ClientContext* context,
-                        const ::AppendEntryRequest& request,
-                        ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface<::AppendEntryResponse>*
-    PrepareAsyncAppendEntryRaw(::grpc::ClientContext* context,
-                               const ::AppendEntryRequest& request,
-                               ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>*
-    AsyncRequestVoteRaw(::grpc::ClientContext* context,
-                        const ::RequestVoteRequest& request,
-                        ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface<::RequestVoteResponse>*
-    PrepareAsyncRequestVoteRaw(::grpc::ClientContext* context,
-                               const ::RequestVoteRequest& request,
-                               ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>* AsyncAppendEntryRaw(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::AppendEntryResponse>* PrepareAsyncAppendEntryRaw(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>* AsyncRequestVoteRaw(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::RequestVoteResponse>* PrepareAsyncRequestVoteRaw(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
-    Stub(const std::shared_ptr<::grpc::ChannelInterface>& channel,
-         const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    ::grpc::Status AppendEntry(::grpc::ClientContext* context,
-                               const ::AppendEntryRequest& request,
-                               ::AppendEntryResponse* response) override;
-    std::unique_ptr<::grpc::ClientAsyncResponseReader<::AppendEntryResponse>>
-    AsyncAppendEntry(::grpc::ClientContext* context,
-                     const ::AppendEntryRequest& request,
-                     ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReader<::AppendEntryResponse>>(
-          AsyncAppendEntryRaw(context, request, cq));
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+    ::grpc::Status AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::AppendEntryResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>> AsyncAppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>>(AsyncAppendEntryRaw(context, request, cq));
     }
-    std::unique_ptr<::grpc::ClientAsyncResponseReader<::AppendEntryResponse>>
-    PrepareAsyncAppendEntry(::grpc::ClientContext* context,
-                            const ::AppendEntryRequest& request,
-                            ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReader<::AppendEntryResponse>>(
-          PrepareAsyncAppendEntryRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>> PrepareAsyncAppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>>(PrepareAsyncAppendEntryRaw(context, request, cq));
     }
-    ::grpc::Status RequestVote(::grpc::ClientContext* context,
-                               const ::RequestVoteRequest& request,
-                               ::RequestVoteResponse* response) override;
-    std::unique_ptr<::grpc::ClientAsyncResponseReader<::RequestVoteResponse>>
-    AsyncRequestVote(::grpc::ClientContext* context,
-                     const ::RequestVoteRequest& request,
-                     ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReader<::RequestVoteResponse>>(
-          AsyncRequestVoteRaw(context, request, cq));
+    ::grpc::Status RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::RequestVoteResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>> AsyncRequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>>(AsyncRequestVoteRaw(context, request, cq));
     }
-    std::unique_ptr<::grpc::ClientAsyncResponseReader<::RequestVoteResponse>>
-    PrepareAsyncRequestVote(::grpc::ClientContext* context,
-                            const ::RequestVoteRequest& request,
-                            ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<
-          ::grpc::ClientAsyncResponseReader<::RequestVoteResponse>>(
-          PrepareAsyncRequestVoteRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>> PrepareAsyncRequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>>(PrepareAsyncRequestVoteRaw(context, request, cq));
     }
-    class async final : public StubInterface::async_interface {
+    class async final :
+      public StubInterface::async_interface {
      public:
-      void AppendEntry(::grpc::ClientContext* context,
-                       const ::AppendEntryRequest* request,
-                       ::AppendEntryResponse* response,
-                       std::function<void(::grpc::Status)>) override;
-      void AppendEntry(::grpc::ClientContext* context,
-                       const ::AppendEntryRequest* request,
-                       ::AppendEntryResponse* response,
-                       ::grpc::ClientUnaryReactor* reactor) override;
-      void RequestVote(::grpc::ClientContext* context,
-                       const ::RequestVoteRequest* request,
-                       ::RequestVoteResponse* response,
-                       std::function<void(::grpc::Status)>) override;
-      void RequestVote(::grpc::ClientContext* context,
-                       const ::RequestVoteRequest* request,
-                       ::RequestVoteResponse* response,
-                       ::grpc::ClientUnaryReactor* reactor) override;
-
+      void AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response, std::function<void(::grpc::Status)>) override;
+      void AppendEntry(::grpc::ClientContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response, std::function<void(::grpc::Status)>) override;
+      void RequestVote(::grpc::ClientContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
       friend class Stub;
-      explicit async(Stub* stub) : stub_(stub) {}
+      explicit async(Stub* stub): stub_(stub) { }
       Stub* stub() { return stub_; }
       Stub* stub_;
     };
-    class async* async() override {
-      return &async_stub_;
-    }
+    class async* async() override { return &async_stub_; }
 
    private:
-    std::shared_ptr<::grpc::ChannelInterface> channel_;
-    class async async_stub_ {
-      this
-    };
-    ::grpc::ClientAsyncResponseReader<::AppendEntryResponse>*
-    AsyncAppendEntryRaw(::grpc::ClientContext* context,
-                        const ::AppendEntryRequest& request,
-                        ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader<::AppendEntryResponse>*
-    PrepareAsyncAppendEntryRaw(::grpc::ClientContext* context,
-                               const ::AppendEntryRequest& request,
-                               ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader<::RequestVoteResponse>*
-    AsyncRequestVoteRaw(::grpc::ClientContext* context,
-                        const ::RequestVoteRequest& request,
-                        ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader<::RequestVoteResponse>*
-    PrepareAsyncRequestVoteRaw(::grpc::ClientContext* context,
-                               const ::RequestVoteRequest& request,
-                               ::grpc::CompletionQueue* cq) override;
+    std::shared_ptr< ::grpc::ChannelInterface> channel_;
+    class async async_stub_{this};
+    ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>* AsyncAppendEntryRaw(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::AppendEntryResponse>* PrepareAsyncAppendEntryRaw(::grpc::ClientContext* context, const ::AppendEntryRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>* AsyncRequestVoteRaw(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::RequestVoteResponse>* PrepareAsyncRequestVoteRaw(::grpc::ClientContext* context, const ::RequestVoteRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_AppendEntry_;
     const ::grpc::internal::RpcMethod rpcmethod_RequestVote_;
   };
-  static std::unique_ptr<Stub> NewStub(
-      const std::shared_ptr<::grpc::ChannelInterface>& channel,
-      const ::grpc::StubOptions& options = ::grpc::StubOptions());
+  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
   class Service : public ::grpc::Service {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status AppendEntry(::grpc::ServerContext* context,
-                                       const ::AppendEntryRequest* request,
-                                       ::AppendEntryResponse* response);
-    virtual ::grpc::Status RequestVote(::grpc::ServerContext* context,
-                                       const ::RequestVoteRequest* request,
-                                       ::RequestVoteResponse* response);
+    virtual ::grpc::Status AppendEntry(::grpc::ServerContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response);
+    virtual ::grpc::Status RequestVote(::grpc::ServerContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithAsyncMethod_AppendEntry() { ::grpc::Service::MarkMethodAsync(0); }
+    WithAsyncMethod_AppendEntry() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
     ~WithAsyncMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestAppendEntry(
-        ::grpc::ServerContext* context, ::AppendEntryRequest* request,
-        ::grpc::ServerAsyncResponseWriter<::AppendEntryResponse>* response,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response,
-                                         new_call_cq, notification_cq, tag);
+    void RequestAppendEntry(::grpc::ServerContext* context, ::AppendEntryRequest* request, ::grpc::ServerAsyncResponseWriter< ::AppendEntryResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
   class WithAsyncMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithAsyncMethod_RequestVote() { ::grpc::Service::MarkMethodAsync(1); }
+    WithAsyncMethod_RequestVote() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
     ~WithAsyncMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestRequestVote(
-        ::grpc::ServerContext* context, ::RequestVoteRequest* request,
-        ::grpc::ServerAsyncResponseWriter<::RequestVoteResponse>* response,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response,
-                                         new_call_cq, notification_cq, tag);
+    void RequestRequestVote(::grpc::ServerContext* context, ::RequestVoteRequest* request, ::grpc::ServerAsyncResponseWriter< ::RequestVoteResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_AppendEntry<WithAsyncMethod_RequestVote<Service>>
-      AsyncService;
+  typedef WithAsyncMethod_AppendEntry<WithAsyncMethod_RequestVote<Service > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithCallbackMethod_AppendEntry() {
-      ::grpc::Service::MarkMethodCallback(
-          0, new ::grpc::internal::CallbackUnaryHandler<::AppendEntryRequest,
-                                                        ::AppendEntryResponse>(
-                 [this](::grpc::CallbackServerContext* context,
-                        const ::AppendEntryRequest* request,
-                        ::AppendEntryResponse* response) {
-                   return this->AppendEntry(context, request, response);
-                 }));
-    }
+      ::grpc::Service::MarkMethodCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::AppendEntryRequest, ::AppendEntryResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::AppendEntryRequest* request, ::AppendEntryResponse* response) { return this->AppendEntry(context, request, response); }));}
     void SetMessageAllocatorFor_AppendEntry(
-        ::grpc::MessageAllocator<::AppendEntryRequest, ::AppendEntryResponse>*
-            allocator) {
-      ::grpc::internal::MethodHandler* const handler =
-          ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler<
-          ::AppendEntryRequest, ::AppendEntryResponse>*>(handler)
-          ->SetMessageAllocator(allocator);
+        ::grpc::MessageAllocator< ::AppendEntryRequest, ::AppendEntryResponse>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::AppendEntryRequest, ::AppendEntryResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
     }
     ~WithCallbackMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* AppendEntry(
-        ::grpc::CallbackServerContext* /*context*/,
-        const ::AppendEntryRequest* /*request*/,
-        ::AppendEntryResponse* /*response*/) {
-      return nullptr;
-    }
+      ::grpc::CallbackServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
   class WithCallbackMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithCallbackMethod_RequestVote() {
-      ::grpc::Service::MarkMethodCallback(
-          1, new ::grpc::internal::CallbackUnaryHandler<::RequestVoteRequest,
-                                                        ::RequestVoteResponse>(
-                 [this](::grpc::CallbackServerContext* context,
-                        const ::RequestVoteRequest* request,
-                        ::RequestVoteResponse* response) {
-                   return this->RequestVote(context, request, response);
-                 }));
-    }
+      ::grpc::Service::MarkMethodCallback(1,
+          new ::grpc::internal::CallbackUnaryHandler< ::RequestVoteRequest, ::RequestVoteResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::RequestVoteRequest* request, ::RequestVoteResponse* response) { return this->RequestVote(context, request, response); }));}
     void SetMessageAllocatorFor_RequestVote(
-        ::grpc::MessageAllocator<::RequestVoteRequest, ::RequestVoteResponse>*
-            allocator) {
-      ::grpc::internal::MethodHandler* const handler =
-          ::grpc::Service::GetHandler(1);
-      static_cast<::grpc::internal::CallbackUnaryHandler<
-          ::RequestVoteRequest, ::RequestVoteResponse>*>(handler)
-          ->SetMessageAllocator(allocator);
+        ::grpc::MessageAllocator< ::RequestVoteRequest, ::RequestVoteResponse>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::RequestVoteRequest, ::RequestVoteResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
     }
     ~WithCallbackMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* RequestVote(
-        ::grpc::CallbackServerContext* /*context*/,
-        const ::RequestVoteRequest* /*request*/,
-        ::RequestVoteResponse* /*response*/) {
-      return nullptr;
-    }
+      ::grpc::CallbackServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_AppendEntry<
-      WithCallbackMethod_RequestVote<Service>>
-      CallbackService;
+  typedef WithCallbackMethod_AppendEntry<WithCallbackMethod_RequestVote<Service > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithGenericMethod_AppendEntry() { ::grpc::Service::MarkMethodGeneric(0); }
+    WithGenericMethod_AppendEntry() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
     ~WithGenericMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -668,16 +417,15 @@ class RaftService final {
   class WithGenericMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithGenericMethod_RequestVote() { ::grpc::Service::MarkMethodGeneric(1); }
+    WithGenericMethod_RequestVote() {
+      ::grpc::Service::MarkMethodGeneric(1);
+    }
     ~WithGenericMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -686,409 +434,274 @@ class RaftService final {
   class WithRawMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithRawMethod_AppendEntry() { ::grpc::Service::MarkMethodRaw(0); }
+    WithRawMethod_AppendEntry() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
     ~WithRawMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestAppendEntry(
-        ::grpc::ServerContext* context, ::grpc::ByteBuffer* request,
-        ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response,
-                                         new_call_cq, notification_cq, tag);
+    void RequestAppendEntry(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
   class WithRawMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithRawMethod_RequestVote() { ::grpc::Service::MarkMethodRaw(1); }
+    WithRawMethod_RequestVote() {
+      ::grpc::Service::MarkMethodRaw(1);
+    }
     ~WithRawMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestRequestVote(
-        ::grpc::ServerContext* context, ::grpc::ByteBuffer* request,
-        ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response,
-                                         new_call_cq, notification_cq, tag);
+    void RequestRequestVote(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
   class WithRawCallbackMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithRawCallbackMethod_AppendEntry() {
-      ::grpc::Service::MarkMethodRawCallback(
-          0, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer,
-                                                        ::grpc::ByteBuffer>(
-                 [this](::grpc::CallbackServerContext* context,
-                        const ::grpc::ByteBuffer* request,
-                        ::grpc::ByteBuffer* response) {
-                   return this->AppendEntry(context, request, response);
-                 }));
+      ::grpc::Service::MarkMethodRawCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->AppendEntry(context, request, response); }));
     }
     ~WithRawCallbackMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* AppendEntry(
-        ::grpc::CallbackServerContext* /*context*/,
-        const ::grpc::ByteBuffer* /*request*/,
-        ::grpc::ByteBuffer* /*response*/) {
-      return nullptr;
-    }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
   class WithRawCallbackMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithRawCallbackMethod_RequestVote() {
-      ::grpc::Service::MarkMethodRawCallback(
-          1, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer,
-                                                        ::grpc::ByteBuffer>(
-                 [this](::grpc::CallbackServerContext* context,
-                        const ::grpc::ByteBuffer* request,
-                        ::grpc::ByteBuffer* response) {
-                   return this->RequestVote(context, request, response);
-                 }));
+      ::grpc::Service::MarkMethodRawCallback(1,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->RequestVote(context, request, response); }));
     }
     ~WithRawCallbackMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* RequestVote(
-        ::grpc::CallbackServerContext* /*context*/,
-        const ::grpc::ByteBuffer* /*request*/,
-        ::grpc::ByteBuffer* /*response*/) {
-      return nullptr;
-    }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_AppendEntry : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithStreamedUnaryMethod_AppendEntry() {
-      ::grpc::Service::MarkMethodStreamed(
-          0,
-          new ::grpc::internal::StreamedUnaryHandler<::AppendEntryRequest,
-                                                     ::AppendEntryResponse>(
-              [this](
-                  ::grpc::ServerContext* context,
-                  ::grpc::ServerUnaryStreamer<
-                      ::AppendEntryRequest, ::AppendEntryResponse>* streamer) {
-                return this->StreamedAppendEntry(context, streamer);
-              }));
+      ::grpc::Service::MarkMethodStreamed(0,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::AppendEntryRequest, ::AppendEntryResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::AppendEntryRequest, ::AppendEntryResponse>* streamer) {
+                       return this->StreamedAppendEntry(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_AppendEntry() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/,
-                               const ::AppendEntryRequest* /*request*/,
-                               ::AppendEntryResponse* /*response*/) override {
+    ::grpc::Status AppendEntry(::grpc::ServerContext* /*context*/, const ::AppendEntryRequest* /*request*/, ::AppendEntryResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedAppendEntry(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerUnaryStreamer<::AppendEntryRequest,
-                                    ::AppendEntryResponse>*
-            server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedAppendEntry(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::AppendEntryRequest,::AppendEntryResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_RequestVote : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithStreamedUnaryMethod_RequestVote() {
-      ::grpc::Service::MarkMethodStreamed(
-          1,
-          new ::grpc::internal::StreamedUnaryHandler<::RequestVoteRequest,
-                                                     ::RequestVoteResponse>(
-              [this](
-                  ::grpc::ServerContext* context,
-                  ::grpc::ServerUnaryStreamer<
-                      ::RequestVoteRequest, ::RequestVoteResponse>* streamer) {
-                return this->StreamedRequestVote(context, streamer);
-              }));
+      ::grpc::Service::MarkMethodStreamed(1,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::RequestVoteRequest, ::RequestVoteResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::RequestVoteRequest, ::RequestVoteResponse>* streamer) {
+                       return this->StreamedRequestVote(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestVote() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/,
-                               const ::RequestVoteRequest* /*request*/,
-                               ::RequestVoteResponse* /*response*/) override {
+    ::grpc::Status RequestVote(::grpc::ServerContext* /*context*/, const ::RequestVoteRequest* /*request*/, ::RequestVoteResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedRequestVote(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerUnaryStreamer<::RequestVoteRequest,
-                                    ::RequestVoteResponse>*
-            server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedRequestVote(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::RequestVoteRequest,::RequestVoteResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_AppendEntry<
-      WithStreamedUnaryMethod_RequestVote<Service>>
-      StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_AppendEntry<WithStreamedUnaryMethod_RequestVote<Service > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_AppendEntry<
-      WithStreamedUnaryMethod_RequestVote<Service>>
-      StreamedService;
+  typedef WithStreamedUnaryMethod_AppendEntry<WithStreamedUnaryMethod_RequestVote<Service > > StreamedService;
 };
 
 class WorkerService final {
  public:
-  static constexpr char const* service_full_name() { return "WorkerService"; }
+  static constexpr char const* service_full_name() {
+    return "WorkerService";
+  }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr<::grpc::ClientReaderWriterInterface<
-        ::WorkerConnectRequest, ::WorkerConnectResponse>>
-    Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr<::grpc::ClientReaderWriterInterface<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          ConnectRaw(context));
+    std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-        ::WorkerConnectRequest, ::WorkerConnectResponse>>
-    AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                 void* tag) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-        ::WorkerConnectRequest, ::WorkerConnectResponse>>
-    PrepareAsyncConnect(::grpc::ClientContext* context,
-                        ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void Connect(
-          ::grpc::ClientContext* context,
-          ::grpc::ClientBidiReactor<::WorkerConnectRequest,
-                                    ::WorkerConnectResponse>* reactor) = 0;
+      virtual void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
-    class async_interface* experimental_async() {
-      return async();
-    }
-
+    class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientReaderWriterInterface<::WorkerConnectRequest,
-                                                ::WorkerConnectResponse>*
-    ConnectRaw(::grpc::ClientContext* context) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface<::WorkerConnectRequest,
-                                                     ::WorkerConnectResponse>*
-    AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                    void* tag) = 0;
-    virtual ::grpc::ClientAsyncReaderWriterInterface<::WorkerConnectRequest,
-                                                     ::WorkerConnectResponse>*
-    PrepareAsyncConnectRaw(::grpc::ClientContext* context,
-                           ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderWriterInterface< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
-    Stub(const std::shared_ptr<::grpc::ChannelInterface>& channel,
-         const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    std::unique_ptr<::grpc::ClientReaderWriter<::WorkerConnectRequest,
-                                               ::WorkerConnectResponse>>
-    Connect(::grpc::ClientContext* context) {
-      return std::unique_ptr<::grpc::ClientReaderWriter<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          ConnectRaw(context));
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+    std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> Connect(::grpc::ClientContext* context) {
+      return std::unique_ptr< ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(ConnectRaw(context));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriter<::WorkerConnectRequest,
-                                                    ::WorkerConnectResponse>>
-    AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                 void* tag) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriter<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          AsyncConnectRaw(context, cq, tag));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> AsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(AsyncConnectRaw(context, cq, tag));
     }
-    std::unique_ptr<::grpc::ClientAsyncReaderWriter<::WorkerConnectRequest,
-                                                    ::WorkerConnectResponse>>
-    PrepareAsyncConnect(::grpc::ClientContext* context,
-                        ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr<::grpc::ClientAsyncReaderWriter<
-          ::WorkerConnectRequest, ::WorkerConnectResponse>>(
-          PrepareAsyncConnectRaw(context, cq));
+    std::unique_ptr<  ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>> PrepareAsyncConnect(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>>(PrepareAsyncConnectRaw(context, cq));
     }
-    class async final : public StubInterface::async_interface {
+    class async final :
+      public StubInterface::async_interface {
      public:
-      void Connect(
-          ::grpc::ClientContext* context,
-          ::grpc::ClientBidiReactor<::WorkerConnectRequest,
-                                    ::WorkerConnectResponse>* reactor) override;
-
+      void Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::WorkerConnectRequest,::WorkerConnectResponse>* reactor) override;
      private:
       friend class Stub;
-      explicit async(Stub* stub) : stub_(stub) {}
+      explicit async(Stub* stub): stub_(stub) { }
       Stub* stub() { return stub_; }
       Stub* stub_;
     };
-    class async* async() override {
-      return &async_stub_;
-    }
+    class async* async() override { return &async_stub_; }
 
    private:
-    std::shared_ptr<::grpc::ChannelInterface> channel_;
-    class async async_stub_ {
-      this
-    };
-    ::grpc::ClientReaderWriter<::WorkerConnectRequest, ::WorkerConnectResponse>*
-    ConnectRaw(::grpc::ClientContext* context) override;
-    ::grpc::ClientAsyncReaderWriter<::WorkerConnectRequest,
-                                    ::WorkerConnectResponse>*
-    AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq,
-                    void* tag) override;
-    ::grpc::ClientAsyncReaderWriter<::WorkerConnectRequest,
-                                    ::WorkerConnectResponse>*
-    PrepareAsyncConnectRaw(::grpc::ClientContext* context,
-                           ::grpc::CompletionQueue* cq) override;
+    std::shared_ptr< ::grpc::ChannelInterface> channel_;
+    class async async_stub_{this};
+    ::grpc::ClientReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* ConnectRaw(::grpc::ClientContext* context) override;
+    ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReaderWriter< ::WorkerConnectRequest, ::WorkerConnectResponse>* PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Connect_;
   };
-  static std::unique_ptr<Stub> NewStub(
-      const std::shared_ptr<::grpc::ChannelInterface>& channel,
-      const ::grpc::StubOptions& options = ::grpc::StubOptions());
+  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
   class Service : public ::grpc::Service {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status Connect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* stream);
+    virtual ::grpc::Status Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* stream);
   };
   template <class BaseClass>
   class WithAsyncMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithAsyncMethod_Connect() { ::grpc::Service::MarkMethodAsync(0); }
+    WithAsyncMethod_Connect() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
     ~WithAsyncMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* /*stream*/)
-        override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestConnect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerAsyncReaderWriter<::WorkerConnectResponse,
-                                        ::WorkerConnectRequest>* stream,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(
-          0, context, stream, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Connect<Service> AsyncService;
+  typedef WithAsyncMethod_Connect<Service > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithCallbackMethod_Connect() {
-      ::grpc::Service::MarkMethodCallback(
-          0, new ::grpc::internal::CallbackBidiHandler<::WorkerConnectRequest,
-                                                       ::WorkerConnectResponse>(
-                 [this](::grpc::CallbackServerContext* context) {
-                   return this->Connect(context);
-                 }));
+      ::grpc::Service::MarkMethodCallback(0,
+          new ::grpc::internal::CallbackBidiHandler< ::WorkerConnectRequest, ::WorkerConnectResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
     ~WithCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* /*stream*/)
-        override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerBidiReactor<::WorkerConnectRequest,
-                                      ::WorkerConnectResponse>*
-    Connect(::grpc::CallbackServerContext* /*context*/) {
-      return nullptr;
-    }
+    virtual ::grpc::ServerBidiReactor< ::WorkerConnectRequest, ::WorkerConnectResponse>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
-  typedef WithCallbackMethod_Connect<Service> CallbackService;
+  typedef WithCallbackMethod_Connect<Service > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithGenericMethod_Connect() { ::grpc::Service::MarkMethodGeneric(0); }
+    WithGenericMethod_Connect() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
     ~WithGenericMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* /*stream*/)
-        override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -1097,65 +710,49 @@ class WorkerService final {
   class WithRawMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
-    WithRawMethod_Connect() { ::grpc::Service::MarkMethodRaw(0); }
+    WithRawMethod_Connect() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
     ~WithRawMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* /*stream*/)
-        override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestConnect(
-        ::grpc::ServerContext* context,
-        ::grpc::ServerAsyncReaderWriter<::grpc::ByteBuffer, ::grpc::ByteBuffer>*
-            stream,
-        ::grpc::CompletionQueue* new_call_cq,
-        ::grpc::ServerCompletionQueue* notification_cq, void* tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(
-          0, context, stream, new_call_cq, notification_cq, tag);
+    void RequestConnect(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncBidiStreaming(0, context, stream, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
   class WithRawCallbackMethod_Connect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-
    public:
     WithRawCallbackMethod_Connect() {
-      ::grpc::Service::MarkMethodRawCallback(
-          0, new ::grpc::internal::CallbackBidiHandler<::grpc::ByteBuffer,
-                                                       ::grpc::ByteBuffer>(
-                 [this](::grpc::CallbackServerContext* context) {
-                   return this->Connect(context);
-                 }));
+      ::grpc::Service::MarkMethodRawCallback(0,
+          new ::grpc::internal::CallbackBidiHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context) { return this->Connect(context); }));
     }
     ~WithRawCallbackMethod_Connect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Connect(
-        ::grpc::ServerContext* /*context*/,
-        ::grpc::ServerReaderWriter<::WorkerConnectResponse,
-                                   ::WorkerConnectRequest>* /*stream*/)
-        override {
+    ::grpc::Status Connect(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter< ::WorkerConnectResponse, ::WorkerConnectRequest>* /*stream*/)  override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerBidiReactor<::grpc::ByteBuffer, ::grpc::ByteBuffer>*
-    Connect(::grpc::CallbackServerContext* /*context*/) {
-      return nullptr;
-    }
+    virtual ::grpc::ServerBidiReactor< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* Connect(
+      ::grpc::CallbackServerContext* /*context*/)
+      { return nullptr; }
   };
   typedef Service StreamedUnaryService;
   typedef Service SplitStreamedService;
   typedef Service StreamedService;
 };
+
 
 #endif  // GRPC_abeille_2eproto__INCLUDED

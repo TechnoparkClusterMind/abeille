@@ -47,7 +47,7 @@ struct TableStruct_abeille_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[17]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[18]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -93,6 +93,9 @@ extern TaskResultDefaultTypeInternal _TaskResult_default_instance_;
 class TaskState;
 struct TaskStateDefaultTypeInternal;
 extern TaskStateDefaultTypeInternal _TaskState_default_instance_;
+class UserConfig;
+struct UserConfigDefaultTypeInternal;
+extern UserConfigDefaultTypeInternal _UserConfig_default_instance_;
 class UserConnectRequest;
 struct UserConnectRequestDefaultTypeInternal;
 extern UserConnectRequestDefaultTypeInternal _UserConnectRequest_default_instance_;
@@ -119,6 +122,7 @@ template<> ::Task* Arena::CreateMaybeMessage<::Task>(Arena*);
 template<> ::TaskData* Arena::CreateMaybeMessage<::TaskData>(Arena*);
 template<> ::TaskResult* Arena::CreateMaybeMessage<::TaskResult>(Arena*);
 template<> ::TaskState* Arena::CreateMaybeMessage<::TaskState>(Arena*);
+template<> ::UserConfig* Arena::CreateMaybeMessage<::UserConfig>(Arena*);
 template<> ::UserConnectRequest* Arena::CreateMaybeMessage<::UserConnectRequest>(Arena*);
 template<> ::UserConnectResponse* Arena::CreateMaybeMessage<::UserConnectResponse>(Arena*);
 template<> ::WorkerConnectRequest* Arena::CreateMaybeMessage<::WorkerConnectRequest>(Arena*);
@@ -702,6 +706,160 @@ class TaskResult final :
 };
 // -------------------------------------------------------------------
 
+class UserConfig final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UserConfig) */ {
+ public:
+  inline UserConfig() : UserConfig(nullptr) {}
+  ~UserConfig() override;
+  explicit constexpr UserConfig(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  UserConfig(const UserConfig& from);
+  UserConfig(UserConfig&& from) noexcept
+    : UserConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline UserConfig& operator=(const UserConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UserConfig& operator=(UserConfig&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UserConfig& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const UserConfig* internal_default_instance() {
+    return reinterpret_cast<const UserConfig*>(
+               &_UserConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(UserConfig& a, UserConfig& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(UserConfig* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UserConfig* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline UserConfig* New() const final {
+    return new UserConfig();
+  }
+
+  UserConfig* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<UserConfig>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const UserConfig& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const UserConfig& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(UserConfig* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "UserConfig";
+  }
+  protected:
+  explicit UserConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kClusterAddressesFieldNumber = 1,
+  };
+  // repeated string cluster_addresses = 1;
+  int cluster_addresses_size() const;
+  private:
+  int _internal_cluster_addresses_size() const;
+  public:
+  void clear_cluster_addresses();
+  const std::string& cluster_addresses(int index) const;
+  std::string* mutable_cluster_addresses(int index);
+  void set_cluster_addresses(int index, const std::string& value);
+  void set_cluster_addresses(int index, std::string&& value);
+  void set_cluster_addresses(int index, const char* value);
+  void set_cluster_addresses(int index, const char* value, size_t size);
+  std::string* add_cluster_addresses();
+  void add_cluster_addresses(const std::string& value);
+  void add_cluster_addresses(std::string&& value);
+  void add_cluster_addresses(const char* value);
+  void add_cluster_addresses(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& cluster_addresses() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_cluster_addresses();
+  private:
+  const std::string& _internal_cluster_addresses(int index) const;
+  std::string* _internal_add_cluster_addresses();
+  public:
+
+  // @@protoc_insertion_point(class_scope:UserConfig)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> cluster_addresses_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_abeille_2eproto;
+};
+// -------------------------------------------------------------------
+
 class TaskState final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TaskState) */ {
  public:
@@ -746,7 +904,7 @@ class TaskState final :
                &_TaskState_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(TaskState& a, TaskState& b) {
     a.Swap(&b);
@@ -905,7 +1063,7 @@ class UserConnectRequest final :
                &_UserConnectRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(UserConnectRequest& a, UserConnectRequest& b) {
     a.Swap(&b);
@@ -1064,7 +1222,7 @@ class UserConnectResponse final :
                &_UserConnectResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(UserConnectResponse& a, UserConnectResponse& b) {
     a.Swap(&b);
@@ -1245,7 +1403,7 @@ class Task final :
                &_Task_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(Task& a, Task& b) {
     a.Swap(&b);
@@ -1446,7 +1604,7 @@ class AddRequest final :
                &_AddRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(AddRequest& a, AddRequest& b) {
     a.Swap(&b);
@@ -1585,7 +1743,7 @@ class MoveRequest final :
                &_MoveRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(MoveRequest& a, MoveRequest& b) {
     a.Swap(&b);
@@ -1735,7 +1893,7 @@ class Entry final :
                &_Entry_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(Entry& a, Entry& b) {
     a.Swap(&b);
@@ -1945,7 +2103,7 @@ class AppendEntryRequest final :
                &_AppendEntryRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(AppendEntryRequest& a, AppendEntryRequest& b) {
     a.Swap(&b);
@@ -2148,7 +2306,7 @@ class AppendEntryResponse final :
                &_AppendEntryResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    12;
 
   friend void swap(AppendEntryResponse& a, AppendEntryResponse& b) {
     a.Swap(&b);
@@ -2298,7 +2456,7 @@ class RequestVoteRequest final :
                &_RequestVoteRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(RequestVoteRequest& a, RequestVoteRequest& b) {
     a.Swap(&b);
@@ -2470,7 +2628,7 @@ class RequestVoteResponse final :
                &_RequestVoteResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    14;
 
   friend void swap(RequestVoteResponse& a, RequestVoteResponse& b) {
     a.Swap(&b);
@@ -2620,7 +2778,7 @@ class WorkerConnectRequest final :
                &_WorkerConnectRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   friend void swap(WorkerConnectRequest& a, WorkerConnectRequest& b) {
     a.Swap(&b);
@@ -2790,7 +2948,7 @@ class WorkerConnectResponse final :
                &_WorkerConnectResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    16;
 
   friend void swap(WorkerConnectResponse& a, WorkerConnectResponse& b) {
     a.Swap(&b);
@@ -2991,7 +3149,7 @@ class RaftConfig final :
                &_RaftConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    17;
 
   friend void swap(RaftConfig& a, RaftConfig& b) {
     a.Swap(&b);
@@ -3257,6 +3415,85 @@ inline void TaskResult::_internal_set_result(::PROTOBUF_NAMESPACE_ID::int32 valu
 inline void TaskResult::set_result(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_result(value);
   // @@protoc_insertion_point(field_set:TaskResult.result)
+}
+
+// -------------------------------------------------------------------
+
+// UserConfig
+
+// repeated string cluster_addresses = 1;
+inline int UserConfig::_internal_cluster_addresses_size() const {
+  return cluster_addresses_.size();
+}
+inline int UserConfig::cluster_addresses_size() const {
+  return _internal_cluster_addresses_size();
+}
+inline void UserConfig::clear_cluster_addresses() {
+  cluster_addresses_.Clear();
+}
+inline std::string* UserConfig::add_cluster_addresses() {
+  std::string* _s = _internal_add_cluster_addresses();
+  // @@protoc_insertion_point(field_add_mutable:UserConfig.cluster_addresses)
+  return _s;
+}
+inline const std::string& UserConfig::_internal_cluster_addresses(int index) const {
+  return cluster_addresses_.Get(index);
+}
+inline const std::string& UserConfig::cluster_addresses(int index) const {
+  // @@protoc_insertion_point(field_get:UserConfig.cluster_addresses)
+  return _internal_cluster_addresses(index);
+}
+inline std::string* UserConfig::mutable_cluster_addresses(int index) {
+  // @@protoc_insertion_point(field_mutable:UserConfig.cluster_addresses)
+  return cluster_addresses_.Mutable(index);
+}
+inline void UserConfig::set_cluster_addresses(int index, const std::string& value) {
+  cluster_addresses_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:UserConfig.cluster_addresses)
+}
+inline void UserConfig::set_cluster_addresses(int index, std::string&& value) {
+  cluster_addresses_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:UserConfig.cluster_addresses)
+}
+inline void UserConfig::set_cluster_addresses(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  cluster_addresses_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:UserConfig.cluster_addresses)
+}
+inline void UserConfig::set_cluster_addresses(int index, const char* value, size_t size) {
+  cluster_addresses_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:UserConfig.cluster_addresses)
+}
+inline std::string* UserConfig::_internal_add_cluster_addresses() {
+  return cluster_addresses_.Add();
+}
+inline void UserConfig::add_cluster_addresses(const std::string& value) {
+  cluster_addresses_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:UserConfig.cluster_addresses)
+}
+inline void UserConfig::add_cluster_addresses(std::string&& value) {
+  cluster_addresses_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:UserConfig.cluster_addresses)
+}
+inline void UserConfig::add_cluster_addresses(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  cluster_addresses_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:UserConfig.cluster_addresses)
+}
+inline void UserConfig::add_cluster_addresses(const char* value, size_t size) {
+  cluster_addresses_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:UserConfig.cluster_addresses)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+UserConfig::cluster_addresses() const {
+  // @@protoc_insertion_point(field_list:UserConfig.cluster_addresses)
+  return cluster_addresses_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+UserConfig::mutable_cluster_addresses() {
+  // @@protoc_insertion_point(field_mutable_list:UserConfig.cluster_addresses)
+  return &cluster_addresses_;
 }
 
 // -------------------------------------------------------------------
@@ -5306,6 +5543,8 @@ RaftConfig::mutable_workers() {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
