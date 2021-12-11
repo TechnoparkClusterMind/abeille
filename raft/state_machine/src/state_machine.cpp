@@ -33,7 +33,9 @@ StateMachine::Status StateMachine::applyCommand(
     auto add_task_status = entry.add_request().to();
     if (add_task_status == TaskStatus::TASK_STATUS_ASSIGNED) {
       assigned_.insert(task_pair);
-      core_->task_mgr_->ProcessTask(entry.task());
+      if (core_->raft_->IsLeader()) {
+        core_->task_mgr_->ProcessTask(entry.task());
+      }
     } else if (add_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
     } else {
@@ -56,7 +58,9 @@ StateMachine::Status StateMachine::applyCommand(
 
     if (move_to_task_status == TaskStatus::TASK_STATUS_ASSIGNED) {
       assigned_.insert(task_pair);
-      core_->task_mgr_->ProcessTask(entry.task());
+      if (core_->raft_->IsLeader()) {
+        core_->task_mgr_->ProcessTask(entry.task());
+      }
     } else if (move_to_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
     } else {
