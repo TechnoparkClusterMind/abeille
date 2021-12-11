@@ -11,7 +11,7 @@ message TaskResult { int32 result = 1; }
 // ----------------------------- User Service ----------------------------- //
 
 message TaskState {
-  uint64 task_number = 1;
+  uint64 task_id = 1;
   TaskResult task_result = 2;
 }
 
@@ -47,7 +47,7 @@ service UserService {
 // ----------------------------- Raft Entry ----------------------------- //
 
 message Task {
-  uint64 number = 1;
+  uint64 id = 1;
   uint64 client_id = 2;
   uint64 worker_id = 3;
   TaskData task_data = 4;
@@ -66,12 +66,9 @@ message MoveRequest {
   TaskStatus from = 2;
 }
 
-message DeleteRequest { TaskStatus from = 1; }
-
 enum RaftCommand {
   RAFT_COMMAND_ADD = 0;
   RAFT_COMMAND_MOVE = 1;
-  RAFT_COMMAND_DELETE = 2;
 }
 
 // Log entry to store
@@ -81,7 +78,6 @@ message Entry {
   Task task = 3;
   AddRequest add_request = 4;
   MoveRequest move_request = 5;
-  DeleteRequest delete_request = 6;
 }
 
 // ----------------------------- Raft Service ----------------------------- //

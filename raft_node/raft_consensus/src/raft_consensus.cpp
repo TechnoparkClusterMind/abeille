@@ -19,7 +19,7 @@ RaftConsensus::RaftConsensus(Core *core) noexcept
     : id_(core->config_.GetId()),
       core_(core),
       log_(new Log()),
-      state_machine_(new StateMachine(log_)) {}
+      state_machine_(new StateMachine(core)) {}
 
 RaftConsensus::~RaftConsensus() {
   if (!shutdown_) Shutdown();
@@ -131,9 +131,9 @@ void RaftConsensus::advanceCommitIndex() {
   }
 
   Index commit_idx = state_machine_->GetCommitIndex();
-  LOG_DEBUG("Commit idx from state machine: %lu", commit_idx);
+  // LOG_DEBUG("Commit idx from state machine: %lu", commit_idx);
   Index new_commit_idx = core_->raft_pool_->poolCommitIndex(commit_idx);
-  LOG_DEBUG("Commit idx from RaftPoo: %lu", new_commit_idx);
+  // LOG_DEBUG("Commit idx from RaftPoo: %lu", new_commit_idx);
 
   if (commit_idx >= new_commit_idx) {
     return;
@@ -176,7 +176,7 @@ void RaftConsensus::appendEntry(std::unique_lock<std::mutex> &, Peer &peer) {
 
   uint8_t entries_num = 0;
   if (log_->LastIndex() >= peer.next_index_) {
-    LOG_DEBUG("Task replicating ... ");
+    // LOG_DEBUG("Task replicating ... ");
     request.set_allocated_entry(log_->GetEntry(peer.next_index_));
     entries_num = 1;
     assert(request.has_entry());
@@ -333,16 +333,18 @@ void RaftConsensus::HandleAppendEntry(const AppendEntryRequest *msg,
 
   // Applying AppendEntry
   resp->set_success(true);
-
   if (msg->has_entry()) {
     LOG_DEBUG("Logging task ...");
-    log_->Purge(msg->prev_log_index());
+    size_t num = log_->Purge(msg->prev_log_index());
+    if (num != 0) {
+      LOG_INFO("Dropping %lu entries from log", num);
+    }
+
     log_->Append(msg->entry());
   }
 
   if (state_machine_->GetCommitIndex() < msg->leader_commit()) {
     LOG_INFO("Commiting new entries");
-    // Commits all entries to leader's commit idx
     state_machine_->Commit(msg->leader_commit());
   }
 }

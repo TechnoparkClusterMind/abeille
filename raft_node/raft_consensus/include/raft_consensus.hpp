@@ -20,6 +20,7 @@ namespace raft_node {
 // forward declaration
 class Peer;
 class Core;
+class StateMachine;
 
 class RaftConsensus {
  public:
@@ -122,6 +123,7 @@ class RaftConsensus {
 
   friend class RaftPool;
   friend class Peer;
+  friend class StateMachine;
 };
 
 }  // namespace raft_node

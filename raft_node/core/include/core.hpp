@@ -107,6 +107,7 @@ class Core {
   friend class Peer;
   friend class Worker;
   friend class TaskManager;
+  friend class StateMachine;
 };
 
 }  // namespace raft_node

@@ -11,9 +11,16 @@ namespace abeille {
 namespace raft_node {
 
 // FIXME: refactor to sigleton
+
 // Indexing starts with 1 !!!
 class Log {
  public:
+  typedef std::vector<Entry>::iterator iterator;
+  typedef std::vector<Entry>::const_iterator const_iterator;
+  typedef const Entry& EntryConstReference;
+  typedef Entry& EntryReference;
+  typedef Entry* EntryPointer;
+
   Log() noexcept = default;
   // explicit Log(const std::string& storage_dir);
   ~Log() noexcept = default;
@@ -23,25 +30,24 @@ class Log {
   size_t Purge(Index index) noexcept;
 
   // Append appends an entry to log
-  void Append(const Entry& entry) noexcept;
+  void Append(EntryConstReference entry) noexcept;
 
-  // LastTerm returns last registered term in the log
+  // LastTerm returns last registered term/index in the log
   Term LastTerm() const noexcept;
-
-  // LastIndex returns last registered index in the log
   Index LastIndex() const noexcept;
 
-  // Exists checks if given index is present in the log
-  bool Exists(Index index) const noexcept;
+  EntryPointer GetEntry(Index index) noexcept;
 
-  Entry* GetEntry(Index index) noexcept;
+  iterator begin() noexcept;
+  const_iterator cbegin() const noexcept;
+  iterator end() noexcept;
+  const_iterator cend() const noexcept;
 
-  // Check checks if an entry with given term and index is present in the log
-  bool Check(Index index, Term term) const noexcept;
+  EntryReference operator[] (Index pos);
+  EntryConstReference operator[] (Index pos) const;
 
  private:
   std::vector<Entry> log_;
-
 };
 
 }  // namespace raft_node

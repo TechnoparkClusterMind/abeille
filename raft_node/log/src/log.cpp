@@ -1,4 +1,5 @@
 #include "log.hpp"
+
 #include "logger.hpp"
 
 namespace abeille {
@@ -13,9 +14,9 @@ size_t Log::Purge(Index index) noexcept {
   return count;
 }
 
-void Log::Append(const Entry& entry) noexcept {
-    LOG_TRACE();
-    log_.push_back(entry);
+void Log::Append(Log::EntryConstReference entry) noexcept {
+  LOG_TRACE();
+  log_.push_back(entry);
 }
 
 Term Log::LastTerm() const noexcept {
@@ -25,20 +26,24 @@ Term Log::LastTerm() const noexcept {
   return log_.back().term();
 }
 
-Index Log::LastIndex() const noexcept {
-    return log_.size();
+Index Log::LastIndex() const noexcept { return log_.size(); }
+
+Log::iterator Log::begin() noexcept { return log_.begin(); }
+Log::const_iterator Log::cbegin() const noexcept { return log_.cbegin(); }
+Log::iterator Log::end() noexcept { return log_.end(); }
+Log::const_iterator Log::cend() const noexcept { return log_.cend(); }
+
+Log::EntryReference Log::operator[](size_t pos) {
+  assert(pos != 0);
+  return log_[pos - 1];
 }
 
-bool Log::Exists(Index index) const noexcept { return index <= log_.size(); }
-
-bool Log::Check(Index index, Term term) const noexcept {
-  if (index > log_.size() || log_[index - 1].term() != term) {
-    return false;
-  }
-  return true;
+Log::EntryConstReference Log::operator[](size_t pos) const {
+  assert(pos != 0);
+  return log_[pos - 1];
 }
 
-Entry* Log::GetEntry(Index index) noexcept {
+Log::EntryPointer Log::GetEntry(Index index) noexcept {
   assert(index != 0);
   return index > log_.size() || log_.size() == 0 ? nullptr : &log_[index - 1];
 }

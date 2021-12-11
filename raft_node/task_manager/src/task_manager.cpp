@@ -23,7 +23,7 @@ error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
   auto add_request = new AddRequest();
   if (!err.ok()) {
     LOG_DEBUG(err.what().c_str());
-    add_request->set_to(TASK_STATUS_UNASSIGNED);
+    // add_request->set_to(TASK_STATUS_UNASSIGNED);
   } else {
     LOG_INFO("successfully assigned task#[%llu] to [%s]", last_task_id_,
              uint2address(worker_id).c_str());
