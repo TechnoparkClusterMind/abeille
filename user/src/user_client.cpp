@@ -14,72 +14,96 @@ namespace abeille {
 namespace user {
 
 void Client::CommandHandler(const ConnResp &resp) {
+  error err;
   switch (resp.command()) {
     case USER_COMMAND_REDIRECT:
-      handleCommandRedirect(resp);
+      err = handleCommandRedirect(resp);
       break;
     case USER_COMMAND_ASSIGN:
-      handleCommandAssign(resp);
+      err = handleCommandAssign(resp);
       break;
     case USER_COMMAND_RESULT:
-      handleCommandResult(resp);
+      err = handleCommandResult(resp);
       break;
     default:
       break;
   }
+
+  if (!err.ok()) {
+    LOG_ERROR("%s", err.what().c_str());
+  }
 }
 
-error Client::UploadData(const Task::Data &task_data) {
+error Client::UploadData(const Task::Data &task_data, const std::string &filename) {
   status_ = USER_STATUS_UPLOAD_DATA;
+  Registry::Instance().filenames.push(filename);
   Registry::Instance().task_datas.push(task_data);
   std::unique_lock<std::mutex> lk(mutex_);
   cv_.wait(lk, [&] { return status_ == USER_STATUS_IDLE; });
   return error();
 }
 
-void Client::handleCommandRedirect(const ConnResp &resp) {
+error Client::handleCommandRedirect(const ConnResp &resp) {
   connected_ = false;
   leader_id_ = resp.leader_id();
   address_ = uint2address(resp.leader_id());
   LOG_INFO("got redirected to the [%s]", address_.c_str());
   connect();
+  return error();
 }
 
-void Client::handleCommandAssign(const ConnResp &resp) {
-  LOG_DEBUG("task number [%llu]", resp.task_state().task_id().number());
+error Client::handleCommandAssign(const ConnResp &resp) {
+  LOG_DEBUG("[%s] was assigned", resp.task_state().task_id().filename().c_str());
   LOG_DEBUG("your id [%llu]", resp.task_state().task_id().client_id());
   // TODO: implement me
+  return error();
 }
 
-void Client::handleCommandResult(const ConnResp &resp) {
+error Client::handleCommandResult(const ConnResp &resp) {
   // TODO: implement me
+  return error();
 }
 
 void Client::StatusHandler(ConnReq &req) {
   {
     std::lock_guard<std::mutex> lk(mutex_);
+
+    error err;
     switch (status_) {
       case USER_STATUS_UPLOAD_DATA:
-        handleStatusUploadData(req);
+        err = handleStatusUploadData(req);
         break;
       default:
         break;
     }
-  }
 
-  req.set_status(status_);
-  status_ = USER_STATUS_IDLE;
+    if (err.ok()) {
+      req.set_status(status_);
+    } else {
+      req.set_status(USER_STATUS_IDLE);
+    }
+    status_ = USER_STATUS_IDLE;
+  }
 
   cv_.notify_one();
 }
 
-void Client::handleStatusUploadData(ConnReq &req) {
+error Client::handleStatusUploadData(ConnReq &req) {
   if (Registry::Instance().task_datas.empty()) {
-    LOG_ERROR("empty task data queue");
-  } else {
-    Registry::Instance().task_datas.front().SerializeToString(req.mutable_task_data());
-    Registry::Instance().task_datas.pop();
+    return error("empty task data queue");
   }
+
+  if (Registry::Instance().filenames.empty()) {
+    return error("empty filenames queue");
+  }
+
+  req.set_filename(Registry::Instance().filenames.front());
+  Registry::Instance().filenames.front();
+
+  Registry::Instance().task_datas.front().SerializeToString(req.mutable_task_data());
+  Registry::Instance().task_datas.pop();
+
+  return error();
 }
 
 }  // namespace user

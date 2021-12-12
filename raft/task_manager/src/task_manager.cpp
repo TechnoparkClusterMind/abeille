@@ -24,7 +24,7 @@ error TaskManager::UploadTaskData(const Bytes &task_data, const TaskID &task_id)
   }
 
   auto add_request = new AddRequest();
-  LOG_DEBUG("assigned task#[%llu] to [%s]", task_id.number(), uint2address(worker_id).c_str());
+  LOG_DEBUG("assigned task#[%s] to [%s]", task_id.filename().c_str(), uint2address(worker_id).c_str());
   task_wrapper->set_worker_id(worker_id);
   add_request->set_to(TASK_STATUS_ASSIGNED);
 

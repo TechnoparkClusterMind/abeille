@@ -51,13 +51,10 @@ std::string UploadData(CLI::args_type args) {
     return status.message().as_string();
   }
 
-  error err = Wrapper::user_client.UploadData(task_data);
+  error err = Wrapper::user_client.UploadData(task_data, filepath);
   if (!err.ok()) {
     return err.what();
   }
-
-  // add the filepath to the registry for future identification
-  Registry::Instance().filepaths.push_back(filepath);
 
   return "successfully uploaded the data";
 }

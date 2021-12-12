@@ -128,7 +128,8 @@ error WorkerServiceImpl::ProcessTask(const TaskWrapper &task_wrapper) {
   it->second.commands.push(WORKER_COMMAND_PROCESS);
   it->second.task_wrapper = task_wrapper;
 
-  LOG_DEBUG("successfully sent [%llu] task to [%s]", task_wrapper.task_id().number(), uint2address(worker_id).c_str());
+  LOG_DEBUG("successfully sent [%s] task to [%s]", task_wrapper.task_id().filename().c_str(),
+            uint2address(worker_id).c_str());
 
   return error();
 }

@@ -31,7 +31,6 @@ class UserServiceImpl final : public UserServiceSpec {
 
   struct ClientWrapper {
     TaskState task_state;
-    uint64_t task_number = 0;
     std::queue<UserCommand> commands;
     UserStatus status = USER_STATUS_IDLE;
   };

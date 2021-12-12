@@ -18,7 +18,7 @@ struct Registry {
     return instance;
   }
 
-  std::vector<std::string> filepaths;
+  std::queue<std::string> filenames;
   std::queue<Task::Data> task_datas;
   std::vector<Task::Result> task_results;
 };

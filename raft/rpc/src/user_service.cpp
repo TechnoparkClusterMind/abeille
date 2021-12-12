@@ -79,7 +79,7 @@ void UserServiceImpl::handleStatusUploadData(ClientWrapper &cw, const ConnReq &r
   if (req.task_data().empty()) {
     LOG_ERROR("empty task data");
   } else {
-    cw.task_state.mutable_task_id()->set_number(cw.task_number++);
+    cw.task_state.mutable_task_id()->set_filename(req.filename());
     error err = task_mgr_->UploadTaskData(req.task_data(), cw.task_state.task_id());
     if (!err.ok()) {
       LOG_ERROR("%s", err.what().c_str());

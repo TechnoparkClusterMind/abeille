@@ -3,7 +3,7 @@ syntax = "proto3";
 // ----------------------------- Common ----------------------------- //
 
 message TaskID {
-  uint64 number = 1;
+  string filename = 1;
   uint64 client_id = 2;
 }
 
@@ -96,6 +96,7 @@ enum UserStatus {
 message UserConnectRequest {
   UserStatus status = 1;
   bytes task_data = 2;
+  string filename = 3;
 }
 
 enum UserCommand {

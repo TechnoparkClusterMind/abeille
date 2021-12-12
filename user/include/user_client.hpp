@@ -29,14 +29,14 @@ class Client : public UserClient {
   void CommandHandler(const ConnResp &resp) override;
   void StatusHandler(ConnReq &req) override;
 
-  error UploadData(const Task::Data &task_data);
+  error UploadData(const Task::Data &task_data, const std::string &filename);
 
  private:
-  void handleCommandRedirect(const ConnResp &resp);
-  void handleCommandAssign(const ConnResp &resp);
-  void handleCommandResult(const ConnResp &resp);
+  error handleCommandRedirect(const ConnResp &resp);
+  error handleCommandAssign(const ConnResp &resp);
+  error handleCommandResult(const ConnResp &resp);
 
-  void handleStatusUploadData(ConnReq &req);
+  error handleStatusUploadData(ConnReq &req);
 
  private:
   std::mutex mutex_;

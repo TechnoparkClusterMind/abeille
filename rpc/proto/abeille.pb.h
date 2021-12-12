@@ -396,16 +396,21 @@ class TaskID final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kNumberFieldNumber = 1,
+    kFilenameFieldNumber = 1,
     kClientIdFieldNumber = 2,
   };
-  // uint64 number = 1;
-  void clear_number();
-  ::PROTOBUF_NAMESPACE_ID::uint64 number() const;
-  void set_number(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  // string filename = 1;
+  void clear_filename();
+  const std::string& filename() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_filename(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_filename();
+  PROTOBUF_MUST_USE_RESULT std::string* release_filename();
+  void set_allocated_filename(std::string* filename);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_number() const;
-  void _internal_set_number(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  const std::string& _internal_filename() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_filename(const std::string& value);
+  std::string* _internal_mutable_filename();
   public:
 
   // uint64 client_id = 2;
@@ -424,7 +429,7 @@ class TaskID final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::uint64 number_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr filename_;
   ::PROTOBUF_NAMESPACE_ID::uint64 client_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
@@ -2076,6 +2081,7 @@ class UserConnectRequest final :
 
   enum : int {
     kTaskDataFieldNumber = 2,
+    kFilenameFieldNumber = 3,
     kStatusFieldNumber = 1,
   };
   // bytes task_data = 2;
@@ -2090,6 +2096,20 @@ class UserConnectRequest final :
   const std::string& _internal_task_data() const;
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_task_data(const std::string& value);
   std::string* _internal_mutable_task_data();
+  public:
+
+  // string filename = 3;
+  void clear_filename();
+  const std::string& filename() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_filename(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_filename();
+  PROTOBUF_MUST_USE_RESULT std::string* release_filename();
+  void set_allocated_filename(std::string* filename);
+  private:
+  const std::string& _internal_filename() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_filename(const std::string& value);
+  std::string* _internal_mutable_filename();
   public:
 
   // .UserStatus status = 1;
@@ -2109,6 +2129,7 @@ class UserConnectRequest final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_data_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr filename_;
   int status_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_abeille_2eproto;
@@ -3021,24 +3042,50 @@ class RaftConfig final :
 #endif  // __GNUC__
 // TaskID
 
-// uint64 number = 1;
-inline void TaskID::clear_number() {
-  number_ = uint64_t{0u};
+// string filename = 1;
+inline void TaskID::clear_filename() {
+  filename_.ClearToEmpty();
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 TaskID::_internal_number() const {
-  return number_;
+inline const std::string& TaskID::filename() const {
+  // @@protoc_insertion_point(field_get:TaskID.filename)
+  return _internal_filename();
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 TaskID::number() const {
-  // @@protoc_insertion_point(field_get:TaskID.number)
-  return _internal_number();
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TaskID::set_filename(ArgT0&& arg0, ArgT... args) {
+ 
+ filename_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:TaskID.filename)
 }
-inline void TaskID::_internal_set_number(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline std::string* TaskID::mutable_filename() {
+  std::string* _s = _internal_mutable_filename();
+  // @@protoc_insertion_point(field_mutable:TaskID.filename)
+  return _s;
+}
+inline const std::string& TaskID::_internal_filename() const {
+  return filename_.Get();
+}
+inline void TaskID::_internal_set_filename(const std::string& value) {
   
-  number_ = value;
+  filename_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
-inline void TaskID::set_number(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _internal_set_number(value);
-  // @@protoc_insertion_point(field_set:TaskID.number)
+inline std::string* TaskID::_internal_mutable_filename() {
+  
+  return filename_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* TaskID::release_filename() {
+  // @@protoc_insertion_point(field_release:TaskID.filename)
+  return filename_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void TaskID::set_allocated_filename(std::string* filename) {
+  if (filename != nullptr) {
+    
+  } else {
+    
+  }
+  filename_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), filename,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:TaskID.filename)
 }
 
 // uint64 client_id = 2;
@@ -4223,6 +4270,52 @@ inline void UserConnectRequest::set_allocated_task_data(std::string* task_data) 
   task_data_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), task_data,
       GetArenaForAllocation());
   // @@protoc_insertion_point(field_set_allocated:UserConnectRequest.task_data)
+}
+
+// string filename = 3;
+inline void UserConnectRequest::clear_filename() {
+  filename_.ClearToEmpty();
+}
+inline const std::string& UserConnectRequest::filename() const {
+  // @@protoc_insertion_point(field_get:UserConnectRequest.filename)
+  return _internal_filename();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void UserConnectRequest::set_filename(ArgT0&& arg0, ArgT... args) {
+ 
+ filename_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:UserConnectRequest.filename)
+}
+inline std::string* UserConnectRequest::mutable_filename() {
+  std::string* _s = _internal_mutable_filename();
+  // @@protoc_insertion_point(field_mutable:UserConnectRequest.filename)
+  return _s;
+}
+inline const std::string& UserConnectRequest::_internal_filename() const {
+  return filename_.Get();
+}
+inline void UserConnectRequest::_internal_set_filename(const std::string& value) {
+  
+  filename_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* UserConnectRequest::_internal_mutable_filename() {
+  
+  return filename_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* UserConnectRequest::release_filename() {
+  // @@protoc_insertion_point(field_release:UserConnectRequest.filename)
+  return filename_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void UserConnectRequest::set_allocated_filename(std::string* filename) {
+  if (filename != nullptr) {
+    
+  } else {
+    
+  }
+  filename_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), filename,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:UserConnectRequest.filename)
 }
 
 // -------------------------------------------------------------------
