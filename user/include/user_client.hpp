@@ -24,7 +24,7 @@ using UserClient = abeille::rpc::Client<ConnReq, ConnResp, UserService>;
 class Client : public UserClient {
  public:
   Client() = default;
-  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept : UserClient(cluster_addresses) {}
+  explicit Client(const std::vector<std::string> &cluster_addresses);
 
   void CommandHandler(const ConnResp &resp) override;
   void StatusHandler(ConnReq &req) override;

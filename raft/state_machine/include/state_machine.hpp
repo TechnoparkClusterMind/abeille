@@ -43,6 +43,8 @@ class StateMachine {
  private:
   error applyCommand(const Log::EntryConstReference entry) noexcept;
 
+  // error handleCommandAdd()
+
   // Reaching consensus on this data:
   HashTable assigned_;
   HashTable completed_;

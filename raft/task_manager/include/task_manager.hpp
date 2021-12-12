@@ -25,6 +25,9 @@ class TaskManager {
   error UploadTaskData(const Bytes &task_data, const TaskID &task_id);
   error ProcessTask(const TaskWrapper &task_wrapper);
 
+  error UploadTaskResult(const TaskID &task_id, const Bytes &task_result);
+  error SendTaskResult(const TaskWrapper &task_wrapper);
+
  private:
   Core *core_;
 };

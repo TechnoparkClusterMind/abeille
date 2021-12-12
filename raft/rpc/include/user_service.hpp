@@ -30,7 +30,8 @@ class UserServiceImpl final : public UserServiceSpec {
   using TaskManagerPtr = std::shared_ptr<TaskManager>;
 
   struct ClientWrapper {
-    TaskState task_state;
+    uint64_t client_id = 0;
+    std::queue<TaskState> task_state_queue;
     std::queue<UserCommand> commands;
     UserStatus status = USER_STATUS_IDLE;
   };
@@ -43,13 +44,14 @@ class UserServiceImpl final : public UserServiceSpec {
   void StatusHandler(uint64_t client_id, const ConnReq &req) override;
   void DisconnectHandler(uint64_t client_id) override;
 
- private:
-  void redirectToLeader(ConnResp &resp);
-  void handleCommandAssign(ClientWrapper &cw, ConnResp &resp);
-  void handleCommandProcess(ClientWrapper &cw, ConnResp &resp);
+  error SendTaskResult(const TaskWrapper &task_wrapper);
 
-  void handleStatusUploadData(ClientWrapper &cw, const ConnReq &req);
-  void handleStatusCompleted(ClientWrapper &cw, const ConnReq &req);
+ private:
+  error handleCommandAssign(ClientWrapper &cw, ConnResp &resp);
+  error handleCommandResult(ClientWrapper &cw, ConnResp &resp);
+
+  error handleStatusUploadData(ClientWrapper &cw, const ConnReq &req);
+  error handleStatusCompleted(ClientWrapper &cw, const ConnReq &req);
 
  private:
   RaftConsensusPtr raft_consensus_ = nullptr;

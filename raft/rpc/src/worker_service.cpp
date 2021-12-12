@@ -10,6 +10,7 @@ namespace abeille {
 namespace raft {
 
 void WorkerServiceImpl::ConnectHandler(uint64_t client_id) {
+  LOG_INFO("worker connection from [%s]", uint2address(client_id).c_str());
   client_ids_.push_back(client_id);
   auto &cw = client_wrappers_[client_id];
   cw.status = WORKER_STATUS_IDLE;
@@ -79,8 +80,8 @@ void WorkerServiceImpl::StatusHandler(uint64_t client_id, const ConnReq &req) {
 }
 
 void WorkerServiceImpl::handleStatusCompleted(ClientWrapper &cw, const ConnReq &req) {
-  LOG_DEBUG("worker has finished task#[%llu]", req.task_state().task_id());
-  // TODO: implement me
+  LOG_DEBUG("worker has finished task#[%s]", req.task_state().task_id().filename().c_str());
+  core_->task_mgr_->UploadTaskResult(req.task_state().task_id(), req.task_state().task_result());
 }
 
 // TODO: refactor this crap

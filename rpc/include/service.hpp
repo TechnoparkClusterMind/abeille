@@ -31,9 +31,7 @@ class Service : public Svc {
   Status Connect(ServerContext *context, ConnectStream *stream) override {
     std::string address = ExtractAddress(context->peer());
     uint64_t client_id = address2uint(address);
-
     ConnectHandler(client_id);
-    LOG_INFO("connection request from [%s]", address.c_str());
 
     ConnReq req;
     while (stream->Read(&req)) {

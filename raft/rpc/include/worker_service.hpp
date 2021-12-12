@@ -48,9 +48,9 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
   error GetResult(uint64_t worker_id, Bytes &task_result);
 
  private:
-  void redirectToLeader(ConnResp &resp);
   void handleCommandAssign(ClientWrapper &cw, ConnResp &resp);
   void handleCommandProcess(ClientWrapper &cw, ConnResp &resp);
+
   void handleStatusCompleted(ClientWrapper &cw, const ConnReq &req);
 
  private:

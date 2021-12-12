@@ -1,4 +1,5 @@
 BUILD_DIR=build
+BINARY_DIR=bin
 
 CMAKE_DEBUG_FLAGS=-DENABLE_DEBUG=ON -DENABLE_TESTS=OFF -DENABLE_CPPCHECK=OFF -DENABLE_SANITIZERS=ON
 CMAKE_TEST_FLAGS=${CMAKE_DEBUG_FLAGS} -DENABLE_COVERAGE=ON
@@ -33,6 +34,7 @@ test:
 
 clean:
 	rm -rf ${BUILD_DIR}
+	rm -rf ${BINARY_DIR}
 
 proto:
 	protoc -I ${PROTO_SRC_DIR} --grpc_out=${PROTO_SRC_DIR} --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` ${PROTO_SRC_DIR}/*.proto

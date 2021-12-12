@@ -43,5 +43,32 @@ error TaskManager::ProcessTask(const TaskWrapper &task_wrapper) {
   return err;
 }
 
+error TaskManager::UploadTaskResult(const TaskID &task_id, const Bytes &task_result) {
+  LOG_DEBUG("uploading task result...");
+
+  Entry entry;
+  entry.set_command(RAFT_COMMAND_MOVE);
+
+  auto move_request = new MoveRequest();
+  move_request->set_from(TASK_STATUS_ASSIGNED);
+  move_request->set_to(TASK_STATUS_COMPLETED);
+  entry.set_allocated_move_request(move_request);
+
+  auto task_wrapper = new TaskWrapper();
+  task_wrapper->set_allocated_task_id(new TaskID(task_id));
+  task_wrapper->set_task_result(task_result);
+  entry.set_allocated_task_wrapper(task_wrapper);
+
+  core_->raft_pool_->AppendAll(entry);
+
+  return error();
+}
+
+error TaskManager::SendTaskResult(const TaskWrapper &task_wrapper) {
+  auto svc = static_cast<UserServiceImpl *>(core_->user_service_.get());
+  error err = svc->SendTaskResult(task_wrapper);
+  return err;
+}
+
 }  // namespace raft
 }  // namespace abeille

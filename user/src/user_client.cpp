@@ -13,6 +13,8 @@ using grpc::Status;
 namespace abeille {
 namespace user {
 
+Client::Client(const std::vector<std::string> &cluster_addresses) : UserClient(cluster_addresses) {}
+
 void Client::CommandHandler(const ConnResp &resp) {
   error err;
   switch (resp.command()) {
@@ -60,7 +62,9 @@ error Client::handleCommandAssign(const ConnResp &resp) {
 }
 
 error Client::handleCommandResult(const ConnResp &resp) {
-  // TODO: implement me
+  Task::Result task_result;
+  task_result.ParseFromString(resp.task_state().task_result());
+  LOG_DEBUG("recieved result = [%d]", task_result.result());
   return error();
 }
 
@@ -82,6 +86,7 @@ void Client::StatusHandler(ConnReq &req) {
     } else {
       req.set_status(USER_STATUS_IDLE);
     }
+
     status_ = USER_STATUS_IDLE;
   }
 
