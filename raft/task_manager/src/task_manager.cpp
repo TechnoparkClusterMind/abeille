@@ -58,6 +58,7 @@ error TaskManager::UploadTaskResult(const TaskID &task_id, const Bytes &task_res
   task_wrapper->set_allocated_task_id(new TaskID(task_id));
   task_wrapper->set_task_result(task_result);
   entry.set_allocated_task_wrapper(task_wrapper);
+  entry.set_term(core_->raft_->GetTerm());
 
   core_->raft_pool_->AppendAll(entry);
 

@@ -19,6 +19,7 @@ void StateMachine::Commit(Index index) noexcept {
       LOG_ERROR("Error while applying commited entry");
     }
   }
+
   commit_index_ = index;
   // LOG_DEBUG("StateMachine: %lu - %lu", assigned_.size(), completed_.size());
 }

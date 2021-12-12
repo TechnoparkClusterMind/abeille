@@ -134,11 +134,13 @@ void RaftConsensus::advanceCommitIndex() {
   }
 
   if (log_->GetEntry(new_commit_idx)->term() != current_term_) {
-    // LOG_INFO("Returning from advance commit");
+    LOG_INFO("Returning from advance commit");
 
+    /*
     std::string msg_str;
     MessageToJsonString(*log_->GetEntry(new_commit_idx), &msg_str);
     std::cout << msg_str << std::endl;
+    */
 
     return;
   }
