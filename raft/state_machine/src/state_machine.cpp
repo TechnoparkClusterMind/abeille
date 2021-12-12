@@ -10,17 +10,18 @@ namespace raft {
 
 void StateMachine::Commit(Index index) noexcept {
   // log will be refactored to singleton
-  assert(core_->raft_->log_->LastIndex() >= index);
-  assert(index - commit_index_ >= 1);
+  LOG_TRACE();
+  Index last_log_index = core_->raft_->log_->LastIndex();
+  Index max_idx =  last_log_index >= index ? index : last_log_index;
 
-  for (Index idx = commit_index_ + 1; idx <= index; ++idx) {
+  for (Index idx = commit_index_ + 1; idx <= max_idx; ++idx) {
     auto status = applyCommand((*core_->raft_->log_)[idx]);
     if (!status.ok()) {
       LOG_ERROR("Error while applying commited entry");
     }
   }
 
-  commit_index_ = index;
+  commit_index_ = max_idx;
   // LOG_DEBUG("StateMachine: %lu - %lu", assigned_.size(), completed_.size());
 }
 
