@@ -135,24 +135,6 @@ error WorkerServiceImpl::ProcessTask(const TaskWrapper &task_wrapper) {
   return error();
 }
 
-error WorkerServiceImpl::GetResult(uint64_t worker_id, Bytes &task_result) {
-  auto it = client_wrappers_.find(worker_id);
-  if (it == client_wrappers_.end()) {
-    return error("worker with given id was not found");
-  }
-
-  if (it->second.status == WORKER_STATUS_IDLE) {
-    return error("worker is idle");
-  } else if (it->second.status == WORKER_STATUS_BUSY) {
-    return error("worker is busy");
-  }
-
-  task_result = it->second.task_wrapper.task_result();
-  LOG_DEBUG("successfully returned worker result");
-
-  return error();
-}
-
 void WorkerServiceImpl::DisconnectHandler(uint64_t client_id) {
   auto it = client_wrappers_.find(client_id);
   if (it == client_wrappers_.end()) {

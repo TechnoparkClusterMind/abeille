@@ -34,7 +34,10 @@ error StateMachine::applyCommand(const Log::EntryConstReference entry) noexcept 
     if (add_task_status == TaskStatus::TASK_STATUS_ASSIGNED) {
       assigned_.insert(task_pair);
       if (core_->raft_->IsLeader()) {
-        core_->task_mgr_->ProcessTask(entry.task_wrapper());
+        error err = core_->task_mgr_->ProcessTask(entry.task_wrapper());
+        if (!err.ok()) {
+          LOG_ERROR("%s", err.what().c_str());
+        }
       }
     } else if (add_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
@@ -59,13 +62,18 @@ error StateMachine::applyCommand(const Log::EntryConstReference entry) noexcept 
     if (move_to_task_status == TaskStatus::TASK_STATUS_ASSIGNED) {
       assigned_.insert(task_pair);
       if (core_->raft_->IsLeader()) {
-        core_->task_mgr_->ProcessTask(entry.task_wrapper());
+        error err = core_->task_mgr_->ProcessTask(entry.task_wrapper());
+        if (!err.ok()) {
+          LOG_ERROR("%s", err.what().c_str());
+        }
       }
     } else if (move_to_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
       if (core_->raft_->IsLeader()) {
-        LOG_TRACE();
-        core_->task_mgr_->SendTaskResult(entry.task_wrapper());
+        error err = core_->task_mgr_->SendTaskResult(entry.task_wrapper());
+        if (!err.ok()) {
+          LOG_ERROR("%s", err.what().c_str());
+        }
       }
     } else {
       LOG_ERROR("Unknown move_to task status");

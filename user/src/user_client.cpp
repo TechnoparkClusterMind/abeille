@@ -62,9 +62,14 @@ error Client::handleCommandAssign(const ConnResp &resp) {
 }
 
 error Client::handleCommandResult(const ConnResp &resp) {
+  if (resp.task_state().task_result().empty()) {
+    return error("empty result");
+  }
+
   Task::Result task_result;
   task_result.ParseFromString(resp.task_state().task_result());
   LOG_DEBUG("recieved result = [%d]", task_result.result());
+
   return error();
 }
 
@@ -105,7 +110,7 @@ error Client::handleStatusUploadData(ConnReq &req) {
   req.set_filename(Registry::Instance().filenames.front());
   Registry::Instance().filenames.front();
 
-  Registry::Instance().task_datas.front().SerializeToString(req.mutable_task_data());
+  req.set_task_data(Registry::Instance().task_datas.front().SerializeAsString());
   Registry::Instance().task_datas.pop();
 
   return error();

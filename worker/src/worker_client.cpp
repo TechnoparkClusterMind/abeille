@@ -58,12 +58,13 @@ void Client::processTaskData(const Bytes &task_data) {
 
   Task::Data td;
   td.ParseFromString(task_data);
+
   Task::Result ts;
   abeille::user::ProcessData(td, ts);
-  LOG_INFO("finished processing data");
-  LOG_DEBUG("result = [%d]", ts.result());
-  ts.SerializeToString(&task_result_);
+  task_result_ = ts.SerializeAsString();
+
   status_ = WORKER_STATUS_COMPLETED;
+  LOG_INFO("finished processing data");
 }
 
 void Client::StatusHandler(ConnReq &req) {
@@ -75,11 +76,12 @@ void Client::StatusHandler(ConnReq &req) {
     default:
       break;
   }
+  status_ = WORKER_STATUS_IDLE;
 }
 
 void Client::handleStatusCompleted(ConnReq &req) {
-  status_ = WORKER_STATUS_IDLE;
   auto task_state = new TaskState;
+  LOG_DEBUG("[%s], [%s]", task_id_.filename().c_str(), uint2address(task_id_.client_id()).c_str());
   task_state->set_allocated_task_id(new TaskID(task_id_));
   task_state->set_task_result(task_result_);
   req.set_allocated_task_state(task_state);

@@ -24,8 +24,7 @@ class Client {
   using SvcStub = typename Svc::Stub;
 
   Client() = default;
-  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept
-      : cluster_addresses_(cluster_addresses) {}
+  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept : cluster_addresses_(cluster_addresses) {}
   ~Client() = default;
 
   void SetClusterAddresses(const std::vector<std::string> &cluster_addresses) {
@@ -60,8 +59,7 @@ class Client {
       createStub();
       size_t index = 0;
       while (!handshake() && !shutdown_) {
-        LOG_ERROR("failed to connect to [%s], trying another node...",
-                  address_.c_str());
+        LOG_ERROR("failed to connect to [%s], trying another node...", address_.c_str());
 
         index = (index + 1) % cluster_addresses_.size();
         address_ = cluster_addresses_[index];
@@ -85,8 +83,7 @@ class Client {
   }
 
   void createStub() {
-    auto channel =
-        grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
+    auto channel = grpc::CreateChannel(address_, grpc::InsecureChannelCredentials());
     stub_ptr_ = Svc::NewStub(channel);
   }
 

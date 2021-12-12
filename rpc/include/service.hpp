@@ -17,6 +17,8 @@ using grpc::Status;
 namespace abeille {
 namespace rpc {
 
+static constexpr auto SERVICE_COOLDOWN = std::chrono::milliseconds(500);
+
 template <typename ConnReq, typename ConnResp, typename Svc>
 class Service : public Svc {
  public:
@@ -45,7 +47,7 @@ class Service : public Svc {
         break;
       }
 
-      std::this_thread::sleep_for(std::chrono::seconds(3));
+      std::this_thread::sleep_for(SERVICE_COOLDOWN);
     }
 
     DisconnectHandler(client_id);

@@ -49,7 +49,10 @@ void UserServiceImpl::CommandHandler(uint64_t client_id, ConnResp &resp) {
   switch (command) {
     case USER_COMMAND_ASSIGN:
       err = handleCommandAssign(cw, resp);
+      break;
     case USER_COMMAND_RESULT:
+      err = handleCommandResult(cw, resp);
+      break;
     default:
       break;
   }
@@ -137,10 +140,11 @@ error UserServiceImpl::SendTaskResult(const TaskWrapper &task_wrapper) {
   auto client_id = task_wrapper.task_id().client_id();
   auto it = client_wrappers_.find(client_id);
   if (it == client_wrappers_.end()) {
-    return error("unknown client id");
+    return error("unknown client id " + uint2address(client_id));
   }
 
   TaskState task_state;
+  task_state.set_allocated_task_id(new TaskID(task_wrapper.task_id()));
   task_state.set_task_result(task_wrapper.task_result());
 
   it->second.task_state_queue.push(std::move(task_state));
