@@ -9,6 +9,7 @@
 #include "raft/task_manager/include/task_manager.hpp"
 #include "rpc/include/service.hpp"
 #include "rpc/proto/abeille.grpc.pb.h"
+#include "utils/include/types.hpp"
 
 using grpc::ServerContext;
 using grpc::Status;
@@ -19,9 +20,7 @@ namespace raft {
 class TaskManager;
 class RaftConsensus;
 
-using UserServiceSpec =
-    abeille::rpc::Service<UserConnectRequest, UserConnectResponse,
-                          UserService::Service>;
+using UserServiceSpec = abeille::rpc::Service<UserConnectRequest, UserConnectResponse, UserService::Service>;
 
 class UserServiceImpl final : public UserServiceSpec {
  public:
@@ -37,25 +36,21 @@ class UserServiceImpl final : public UserServiceSpec {
     UserStatus status = USER_STATUS_IDLE;
   };
 
-  UserServiceImpl(RaftConsensusPtr raft_consensus,
-                  TaskManagerPtr task_mgr) noexcept
+  UserServiceImpl(RaftConsensusPtr raft_consensus, TaskManagerPtr task_mgr) noexcept
       : raft_consensus_(raft_consensus), task_mgr_(task_mgr){};
 
-  void CommandHandler(uint64_t client_id, ConnResp *resp) override;
-  void StatusHandler(uint64_t client_id, const ConnReq *req) override;
+  void ConnectHandler(uint64_t client_id) override;
+  void CommandHandler(uint64_t client_id, ConnResp &resp) override;
+  void StatusHandler(uint64_t client_id, const ConnReq &req) override;
   void DisconnectHandler(uint64_t client_id) override;
 
-  error AssignTask(uint64_t task_id, uint64_t &worker_id);
-  error SendTask(const Task &task);
-  error GetWorkerResult(uint64_t worker_id, TaskResult *task_result);
-
  private:
-  void redirectToLeader(ConnResp *resp);
-  void handleCommandAssign(ClientWrapper &cw, ConnResp *resp);
-  void handleCommandProcess(ClientWrapper &cw, ConnResp *resp);
+  void redirectToLeader(ConnResp &resp);
+  void handleCommandAssign(ClientWrapper &cw, ConnResp &resp);
+  void handleCommandProcess(ClientWrapper &cw, ConnResp &resp);
 
-  void handleStatusUploadData(ClientWrapper &cw, const ConnReq *req);
-  void handleStatusCompleted(ClientWrapper &cw, const ConnReq *req);
+  void handleStatusUploadData(ClientWrapper &cw, const ConnReq &req);
+  void handleStatusCompleted(ClientWrapper &cw, const ConnReq &req);
 
  private:
   RaftConsensusPtr raft_consensus_ = nullptr;

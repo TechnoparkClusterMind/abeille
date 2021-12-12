@@ -20,59 +20,6 @@
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 
-static const char* UserService_method_names[] = {
-  "/UserService/Connect",
-};
-
-std::unique_ptr< UserService::Stub> UserService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
-  (void)options;
-  std::unique_ptr< UserService::Stub> stub(new UserService::Stub(channel, options));
-  return stub;
-}
-
-UserService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
-  : channel_(channel), rpcmethod_Connect_(UserService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
-  {}
-
-::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::ConnectRaw(::grpc::ClientContext* context) {
-  return ::grpc::internal::ClientReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), rpcmethod_Connect_, context);
-}
-
-void UserService::Stub::async::Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) {
-  ::grpc::internal::ClientCallbackReaderWriterFactory< ::UserConnectRequest,::UserConnectResponse>::Create(stub_->channel_.get(), stub_->rpcmethod_Connect_, context, reactor);
-}
-
-::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
-  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, true, tag);
-}
-
-::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, false, nullptr);
-}
-
-UserService::Service::Service() {
-  AddMethod(new ::grpc::internal::RpcServiceMethod(
-      UserService_method_names[0],
-      ::grpc::internal::RpcMethod::BIDI_STREAMING,
-      new ::grpc::internal::BidiStreamingHandler< UserService::Service, ::UserConnectRequest, ::UserConnectResponse>(
-          [](UserService::Service* service,
-             ::grpc::ServerContext* ctx,
-             ::grpc::ServerReaderWriter<::UserConnectResponse,
-             ::UserConnectRequest>* stream) {
-               return service->Connect(ctx, stream);
-             }, this)));
-}
-
-UserService::Service::~Service() {
-}
-
-::grpc::Status UserService::Service::Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream) {
-  (void) context;
-  (void) stream;
-  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-}
-
-
 static const char* RaftService_method_names[] = {
   "/RaftService/AppendEntry",
   "/RaftService/RequestVote",
@@ -172,6 +119,59 @@ RaftService::Service::~Service() {
   (void) context;
   (void) request;
   (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
+static const char* UserService_method_names[] = {
+  "/UserService/Connect",
+};
+
+std::unique_ptr< UserService::Stub> UserService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< UserService::Stub> stub(new UserService::Stub(channel, options));
+  return stub;
+}
+
+UserService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
+  : channel_(channel), rpcmethod_Connect_(UserService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
+  {}
+
+::grpc::ClientReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::ConnectRaw(::grpc::ClientContext* context) {
+  return ::grpc::internal::ClientReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), rpcmethod_Connect_, context);
+}
+
+void UserService::Stub::async::Connect(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::UserConnectRequest,::UserConnectResponse>* reactor) {
+  ::grpc::internal::ClientCallbackReaderWriterFactory< ::UserConnectRequest,::UserConnectResponse>::Create(stub_->channel_.get(), stub_->rpcmethod_Connect_, context, reactor);
+}
+
+::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::AsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, true, tag);
+}
+
+::grpc::ClientAsyncReaderWriter< ::UserConnectRequest, ::UserConnectResponse>* UserService::Stub::PrepareAsyncConnectRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderWriterFactory< ::UserConnectRequest, ::UserConnectResponse>::Create(channel_.get(), cq, rpcmethod_Connect_, context, false, nullptr);
+}
+
+UserService::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      UserService_method_names[0],
+      ::grpc::internal::RpcMethod::BIDI_STREAMING,
+      new ::grpc::internal::BidiStreamingHandler< UserService::Service, ::UserConnectRequest, ::UserConnectResponse>(
+          [](UserService::Service* service,
+             ::grpc::ServerContext* ctx,
+             ::grpc::ServerReaderWriter<::UserConnectResponse,
+             ::UserConnectRequest>* stream) {
+               return service->Connect(ctx, stream);
+             }, this)));
+}
+
+UserService::Service::~Service() {
+}
+
+::grpc::Status UserService::Service::Connect(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::UserConnectResponse, ::UserConnectRequest>* stream) {
+  (void) context;
+  (void) stream;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 

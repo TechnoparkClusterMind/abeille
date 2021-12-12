@@ -2,7 +2,6 @@
 #define ABEILLE_USER_COMMANDS_HPP_
 
 #include "common/include/client_config.hpp"
-#include "rpc/proto/abeille.grpc.pb.h"
 #include "user_client.hpp"
 #include "utils/include/cli.hpp"
 

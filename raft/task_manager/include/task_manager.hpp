@@ -8,6 +8,7 @@
 #include "raft/core/include/core.hpp"
 #include "rpc/proto/abeille.grpc.pb.h"
 #include "utils/include/errors.hpp"
+#include "utils/include/types.hpp"
 
 namespace abeille {
 namespace raft {
@@ -21,12 +22,11 @@ class TaskManager {
   explicit TaskManager(Core *core) : core_(core) {}
   ~TaskManager() = default;
 
-  error UploadData(const TaskData &task_data, uint64_t &task_id);
-  error ProcessTask(const Task &task);
+  error UploadTaskData(const Bytes &task_data, const TaskID &task_id);
+  error ProcessTask(const TaskWrapper &task_wrapper);
 
  private:
   Core *core_;
-  uint64_t last_task_id_ = 1;  // TODO: remove in big refactor
 };
 
 }  // namespace raft

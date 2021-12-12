@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "user/include/registry.hpp"
+#include "user/model/proto/task.pb.h"
 #include "utils/include/errors.hpp"
 #include "utils/include/logger.hpp"
 
@@ -44,8 +45,8 @@ std::string UploadData(CLI::args_type args) {
   input << file.rdbuf();
 
   // and convert it into the proto message
-  auto task_data = new TaskData();
-  auto status = JsonStringToMessage(input.str(), task_data);
+  Task::Data task_data;
+  auto status = JsonStringToMessage(input.str(), &task_data);
   if (!status.ok()) {
     return status.message().as_string();
   }

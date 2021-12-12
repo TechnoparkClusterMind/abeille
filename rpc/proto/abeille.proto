@@ -2,60 +2,23 @@ syntax = "proto3";
 
 // ----------------------------- Common ----------------------------- //
 
-message Empty {}
-
-message TaskData { repeated int32 data = 1; }
-
-message TaskResult { int32 result = 1; }
-
-// ----------------------------- User Service ----------------------------- //
-
-message UserConfig {
-  repeated string cluster_addresses = 1;
+message TaskID {
+  uint64 number = 1;
+  uint64 client_id = 2;
 }
 
 message TaskState {
-  uint64 task_id = 1;
-  TaskResult task_result = 2;
-}
-
-enum UserStatus {
-  USER_STATUS_DOWN = 0;
-  USER_STATUS_IDLE = 1;
-  USER_STATUS_UPLOAD_DATA = 2;
-}
-
-message UserConnectRequest {
-  UserStatus status = 1;
-  TaskData task_data = 2;
-}
-
-enum UserCommand {
-  USER_COMMAND_NONE = 0;
-  USER_COMMAND_REDIRECT = 1;
-  USER_COMMAND_ASSIGN = 2;
-  USER_COMMAND_RESULT = 3;
-}
-
-message UserConnectResponse {
-  UserCommand command = 1;
-  uint64 leader_id = 2;
-  uint64 task_id = 3;
-  TaskResult task_result = 4;
-}
-
-service UserService {
-  rpc Connect(stream UserConnectRequest) returns (stream UserConnectResponse) {}
+  TaskID task_id = 1;
+  bytes task_result = 2;
 }
 
 // ----------------------------- Raft Entry ----------------------------- //
 
-message Task {
-  uint64 id = 1;
-  uint64 client_id = 2;
-  uint64 worker_id = 3;
-  TaskData task_data = 4;
-  TaskResult task_result = 5;
+message TaskWrapper {
+  TaskID task_id = 1;
+  uint64 worker_id = 2;
+  bytes task_data = 3;
+  bytes task_result = 4;
 }
 
 enum TaskStatus {
@@ -79,7 +42,7 @@ enum RaftCommand {
 message Entry {
   RaftCommand command = 1;
   uint64 term = 2;
-  Task task = 3;
+  TaskWrapper task_wrapper = 3;
   AddRequest add_request = 4;
   MoveRequest move_request = 5;
 }
@@ -121,6 +84,37 @@ message RequestVoteResponse {
   bool vote_granted = 2; // true if candidate recieved vote
 }
 
+// ----------------------------- User Service ----------------------------- //
+
+enum UserStatus {
+  USER_STATUS_DOWN = 0;
+  USER_STATUS_IDLE = 1;
+  USER_STATUS_UPLOAD_DATA = 2;
+  USER_STATUS_GET_RESULT = 3;
+}
+
+message UserConnectRequest {
+  UserStatus status = 1;
+  bytes task_data = 2;
+}
+
+enum UserCommand {
+  USER_COMMAND_NONE = 0;
+  USER_COMMAND_REDIRECT = 1;
+  USER_COMMAND_ASSIGN = 2;
+  USER_COMMAND_RESULT = 3;
+}
+
+message UserConnectResponse {
+  UserCommand command = 1;
+  uint64 leader_id = 2;
+  TaskState task_state = 3;
+}
+
+service UserService {
+  rpc Connect(stream UserConnectRequest) returns (stream UserConnectResponse) {}
+}
+
 // ----------------------------- Worker Service ----------------------------- //
 
 enum WorkerStatus {
@@ -132,8 +126,7 @@ enum WorkerStatus {
 
 message WorkerConnectRequest {
   WorkerStatus status = 1;
-  uint64 task_id = 2;
-  TaskResult task_result = 3;
+  TaskState task_state = 2;
 }
 
 enum WorkerCommand {
@@ -145,17 +138,20 @@ enum WorkerCommand {
 
 message WorkerConnectResponse {  
   WorkerCommand command = 1;
-  uint64 task_id = 2;
-  uint64 leader_id = 3;
-  TaskData task_data = 4;
-  TaskResult task_result = 5;
+  uint64 leader_id = 2;
+  TaskID task_id = 3;
+  bytes task_data = 4;
 }
 
 service WorkerService {
   rpc Connect(stream WorkerConnectRequest) returns (stream WorkerConnectResponse) {}
 }
 
-// ----------------------------- Raft Config ----------------------------- //
+// ----------------------------- Configs ----------------------------- //
+
+message ClientRPCConfig {
+  repeated string cluster_addresses = 1;
+}
 
 message RaftConfig {
   string user_address = 1;

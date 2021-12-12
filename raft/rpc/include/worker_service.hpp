@@ -21,14 +21,12 @@ namespace raft {
 
 class Core;
 
-using WorkerServiceSpec =
-    abeille::rpc::Service<WorkerConnectRequest, WorkerConnectResponse,
-                          WorkerService::Service>;
+using WorkerServiceSpec = abeille::rpc::Service<WorkerConnectRequest, WorkerConnectResponse, WorkerService::Service>;
 
 class WorkerServiceImpl final : public WorkerServiceSpec {
  public:
   struct ClientWrapper {
-    Task task;
+    TaskWrapper task_wrapper;
     uint64_t payload = 0;
     std::queue<WorkerCommand> commands;
     WorkerStatus status = WORKER_STATUS_IDLE;
@@ -41,19 +39,19 @@ class WorkerServiceImpl final : public WorkerServiceSpec {
   explicit WorkerServiceImpl(Core *core) noexcept : core_(core){};
 
   void ConnectHandler(uint64_t client_id) override;
-  void CommandHandler(uint64_t client_id, ConnResp *resp) override;
-  void StatusHandler(uint64_t client_id, const ConnReq *req) override;
+  void CommandHandler(uint64_t client_id, ConnResp &resp) override;
+  void StatusHandler(uint64_t client_id, const ConnReq &req) override;
   void DisconnectHandler(uint64_t client_id) override;
 
-  error AssignTask(uint64_t task_id, uint64_t &worker_id);
-  error ProcessTask(const Task &task);
-  error GetResult(uint64_t worker_id, TaskResult *task_result);
+  error AssignTask(const TaskID &task_id, uint64_t &worker_id);
+  error ProcessTask(const TaskWrapper &task_wrapper);
+  error GetResult(uint64_t worker_id, Bytes &task_result);
 
  private:
-  void redirectToLeader(ConnResp *resp);
-  void handleCommandAssign(ClientWrapper &cw, ConnResp *resp);
-  void handleCommandProcess(ClientWrapper &cw, ConnResp *resp);
-  void handleStatusCompleted(ClientWrapper &cw, const ConnReq *req);
+  void redirectToLeader(ConnResp &resp);
+  void handleCommandAssign(ClientWrapper &cw, ConnResp &resp);
+  void handleCommandProcess(ClientWrapper &cw, ConnResp &resp);
+  void handleStatusCompleted(ClientWrapper &cw, const ConnReq &req);
 
  private:
   ClientsMap client_wrappers_;

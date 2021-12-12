@@ -29,7 +29,7 @@ void Client::CommandHandler(const ConnResp &resp) {
   }
 }
 
-error Client::UploadData(TaskData *task_data) {
+error Client::UploadData(const Task::Data &task_data) {
   status_ = USER_STATUS_UPLOAD_DATA;
   Registry::Instance().task_datas.push(task_data);
   std::unique_lock<std::mutex> lk(mutex_);
@@ -46,7 +46,8 @@ void Client::handleCommandRedirect(const ConnResp &resp) {
 }
 
 void Client::handleCommandAssign(const ConnResp &resp) {
-  LOG_DEBUG("task was given id [%llu]", resp.task_id());
+  LOG_DEBUG("task number [%llu]", resp.task_state().task_id().number());
+  LOG_DEBUG("your id [%llu]", resp.task_state().task_id().client_id());
   // TODO: implement me
 }
 
@@ -55,26 +56,30 @@ void Client::handleCommandResult(const ConnResp &resp) {
 }
 
 void Client::StatusHandler(ConnReq &req) {
-  req.set_status(status_);
-  switch (status_) {
-    case USER_STATUS_UPLOAD_DATA:
-      handleStatusUploadData(req);
-      break;
-    default:
-      break;
+  {
+    std::lock_guard<std::mutex> lk(mutex_);
+    switch (status_) {
+      case USER_STATUS_UPLOAD_DATA:
+        handleStatusUploadData(req);
+        break;
+      default:
+        break;
+    }
   }
+
+  req.set_status(status_);
+  status_ = USER_STATUS_IDLE;
+
+  cv_.notify_one();
 }
 
 void Client::handleStatusUploadData(ConnReq &req) {
-  status_ = USER_STATUS_IDLE;
   if (Registry::Instance().task_datas.empty()) {
-    LOG_ERROR("user status upload data, but empty task data queue");
+    LOG_ERROR("empty task data queue");
   } else {
-    std::lock_guard<std::mutex> lk(mutex_);
-    req.set_allocated_task_data(Registry::Instance().task_datas.front());
+    Registry::Instance().task_datas.front().SerializeToString(req.mutable_task_data());
     Registry::Instance().task_datas.pop();
   }
-  cv_.notify_one();
 }
 
 }  // namespace user

@@ -15,27 +15,26 @@ void WorkerServiceImpl::ConnectHandler(uint64_t client_id) {
   cw.status = WORKER_STATUS_IDLE;
 }
 
-void WorkerServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
-  resp->set_leader_id(core_->raft_->LeaderID());
+void WorkerServiceImpl::CommandHandler(uint64_t client_id, ConnResp &resp) {
+  resp.set_leader_id(core_->raft_->LeaderID());
 
   // check if we are the leader
   if (!core_->raft_->IsLeader()) {
-    LOG_INFO("redirecting [%s] to the leader...",
-             uint2address(client_id).c_str());
-    resp->set_command(WORKER_COMMAND_REDIRECT);
+    LOG_INFO("redirecting [%s] to the leader...", uint2address(client_id).c_str());
+    resp.set_command(WORKER_COMMAND_REDIRECT);
     return;
   }
 
   auto &cw = client_wrappers_[client_id];
   if (cw.commands.empty()) {
-    resp->set_command(WORKER_COMMAND_NONE);
+    resp.set_command(WORKER_COMMAND_NONE);
     return;
   }
 
   auto command = cw.commands.front();
   cw.commands.pop();
 
-  resp->set_command(command);
+  resp.set_command(command);
 
   switch (command) {
     case WORKER_COMMAND_ASSIGN:
@@ -49,28 +48,26 @@ void WorkerServiceImpl::CommandHandler(uint64_t client_id, ConnResp *resp) {
   }
 }
 
-void WorkerServiceImpl::handleCommandAssign(ClientWrapper &cw, ConnResp *resp) {
-  resp->set_task_id(cw.task.id());
+void WorkerServiceImpl::handleCommandAssign(ClientWrapper &cw, ConnResp &resp) {
+  resp.set_allocated_task_id(new TaskID(cw.task_wrapper.task_id()));
 }
 
-void WorkerServiceImpl::handleCommandProcess(ClientWrapper &cw,
-                                             ConnResp *resp) {
+void WorkerServiceImpl::handleCommandProcess(ClientWrapper &cw, ConnResp &resp) {
   LOG_TRACE();
-  if (cw.task.has_task_data()) {
-    resp->set_task_id(cw.task.id());
-    // TODO: get rid of reallocation
-    auto task_data = new TaskData(cw.task.task_data());
-    resp->set_allocated_task_data(task_data);
-  } else {
-    LOG_ERROR("process command, but null task data");
+  if (cw.task_wrapper.task_data().empty()) {
+    LOG_ERROR("empty task data");
+    return;
   }
+
+  resp.set_allocated_task_id(new TaskID(cw.task_wrapper.task_id()));
+  resp.set_task_data(cw.task_wrapper.task_data());
 }
 
-void WorkerServiceImpl::StatusHandler(uint64_t client_id, const ConnReq *req) {
+void WorkerServiceImpl::StatusHandler(uint64_t client_id, const ConnReq &req) {
   auto &cw = client_wrappers_[client_id];
 
   // update the status of the worker
-  cw.status = req->status();
+  cw.status = req.status();
 
   switch (cw.status) {
     case WORKER_STATUS_COMPLETED:
@@ -81,15 +78,13 @@ void WorkerServiceImpl::StatusHandler(uint64_t client_id, const ConnReq *req) {
   }
 }
 
-void WorkerServiceImpl::handleStatusCompleted(ClientWrapper &cw,
-                                              const ConnReq *req) {
-  LOG_DEBUG("worker has finished task#[%llu], result = [%d]", req->task_id(),
-            req->task_result().result());
+void WorkerServiceImpl::handleStatusCompleted(ClientWrapper &cw, const ConnReq &req) {
+  LOG_DEBUG("worker has finished task#[%llu]", req.task_state().task_id());
   // TODO: implement me
 }
 
 // TODO: refactor this crap
-error WorkerServiceImpl::AssignTask(uint64_t task_id, uint64_t &worker_id) {
+error WorkerServiceImpl::AssignTask(const TaskID &task_id, uint64_t &worker_id) {
   LOG_DEBUG("assigning task#[%llu]", task_id);
 
   while (client_ids_.empty()) {
@@ -111,37 +106,34 @@ error WorkerServiceImpl::AssignTask(uint64_t task_id, uint64_t &worker_id) {
     cw = client_wrappers_[client_ids_[curr_client_id_]];
   }
 
-  cw.task.set_id(task_id);
+  cw.task_wrapper.set_allocated_task_id(new TaskID(task_id));
   cw.status = WORKER_STATUS_BUSY;
   cw.commands.push(WORKER_COMMAND_ASSIGN);
 
   worker_id = client_ids_[curr_client_id_];
-  LOG_DEBUG("assigned task#[%llu] to [%s]", task_id,
-            uint2address(worker_id).c_str());
+  LOG_DEBUG("assigned task#[%llu] to [%s]", task_id, uint2address(worker_id).c_str());
 
   curr_client_id_ = (curr_client_id_ + 1) % client_ids_.size();
 
   return error();
 }
 
-error WorkerServiceImpl::ProcessTask(const Task &task) {
-  uint64_t worker_id = task.worker_id();
+error WorkerServiceImpl::ProcessTask(const TaskWrapper &task_wrapper) {
+  uint64_t worker_id = task_wrapper.worker_id();
   auto it = client_wrappers_.find(worker_id);
   if (it == client_wrappers_.end()) {
     return error("worker with given id was not found");
   }
 
   it->second.commands.push(WORKER_COMMAND_PROCESS);
-  it->second.task = task;
+  it->second.task_wrapper = task_wrapper;
 
-  LOG_DEBUG("successfully sent [%llu] task to [%s]", task.id(),
-            uint2address(worker_id).c_str());
+  LOG_DEBUG("successfully sent [%llu] task to [%s]", task_wrapper.task_id().number(), uint2address(worker_id).c_str());
 
   return error();
 }
 
-error WorkerServiceImpl::GetResult(uint64_t worker_id,
-                                   TaskResult *task_result) {
+error WorkerServiceImpl::GetResult(uint64_t worker_id, Bytes &task_result) {
   auto it = client_wrappers_.find(worker_id);
   if (it == client_wrappers_.end()) {
     return error("worker with given id was not found");
@@ -153,7 +145,7 @@ error WorkerServiceImpl::GetResult(uint64_t worker_id,
     return error("worker is busy");
   }
 
-  task_result = it->second.task.mutable_task_result();
+  task_result = it->second.task_wrapper.task_result();
   LOG_DEBUG("successfully returned worker result");
 
   return error();

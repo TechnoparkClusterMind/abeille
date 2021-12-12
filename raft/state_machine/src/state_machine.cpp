@@ -23,11 +23,10 @@ void StateMachine::Commit(Index index) noexcept {
   // LOG_DEBUG("StateMachine: %lu - %lu", assigned_.size(), completed_.size());
 }
 
-StateMachine::Status StateMachine::applyCommand(
-    const Log::EntryConstReference entry) noexcept {
-  auto task_id = entry.task().id();
-  auto task_pair = std::make_pair(task_id, entry.task());
-  auto failure = Status(Status::Code::FAILURE);
+error StateMachine::applyCommand(const Log::EntryConstReference entry) noexcept {
+  auto tw = TaskIDWrapper("duck", entry.task_wrapper().task_id().client_id());
+  auto task_pair = std::make_pair(tw, entry.task_wrapper());
+  auto failure = error(error::Code::FAILURE);
 
   if (entry.command() == RaftCommand::RAFT_COMMAND_ADD) {
     auto add_task_status = entry.add_request().to();
@@ -35,7 +34,7 @@ StateMachine::Status StateMachine::applyCommand(
       assigned_.insert(task_pair);
       if (core_->raft_->IsLeader()) {
         LOG_TRACE();
-        core_->task_mgr_->ProcessTask(entry.task());
+        core_->task_mgr_->ProcessTask(entry.task_wrapper());
       }
     } else if (add_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
@@ -48,10 +47,10 @@ StateMachine::Status StateMachine::applyCommand(
     auto move_from_task_status = entry.move_request().from();
 
     if (move_from_task_status == TaskStatus::TASK_STATUS_ASSIGNED) {
-      assigned_.erase(task_id);
+      assigned_.erase(tw);
     } else if (move_from_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       LOG_WARN("Deleting completed task from state machine");
-      completed_.erase(task_id);
+      completed_.erase(tw);
     } else {
       LOG_ERROR("Unknown move_from task status");
       return failure;
@@ -61,7 +60,7 @@ StateMachine::Status StateMachine::applyCommand(
       assigned_.insert(task_pair);
       if (core_->raft_->IsLeader()) {
         LOG_TRACE();
-        core_->task_mgr_->ProcessTask(entry.task());
+        core_->task_mgr_->ProcessTask(entry.task_wrapper());
       }
     } else if (move_to_task_status == TaskStatus::TASK_STATUS_COMPLETED) {
       completed_.insert(task_pair);
@@ -74,7 +73,7 @@ StateMachine::Status StateMachine::applyCommand(
     return failure;
   }
 
-  return Status();
+  return error();
 }
 
 }  // namespace raft

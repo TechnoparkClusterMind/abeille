@@ -19,8 +19,8 @@ struct Registry {
   }
 
   std::vector<std::string> filepaths;
-  std::queue<TaskData *> task_datas;
-  std::vector<TaskResult *> task_results;
+  std::queue<Task::Data> task_datas;
+  std::vector<Task::Result> task_results;
 };
 
 }  // namespace user

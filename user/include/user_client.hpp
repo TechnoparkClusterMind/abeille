@@ -4,15 +4,11 @@
 #include <grpcpp/grpcpp.h>
 
 #include <condition_variable>
-#include <memory>
 #include <mutex>
-#include <queue>
-#include <thread>
-#include <unordered_map>
-#include <vector>
 
 #include "rpc/include/client.hpp"
 #include "rpc/proto/abeille.grpc.pb.h"
+#include "user/model/proto/task.pb.h"
 #include "utils/include/errors.hpp"
 
 using grpc::Channel;
@@ -28,14 +24,12 @@ using UserClient = abeille::rpc::Client<ConnReq, ConnResp, UserService>;
 class Client : public UserClient {
  public:
   Client() = default;
-  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept
-      : UserClient(cluster_addresses) {}
+  explicit Client(const std::vector<std::string> &cluster_addresses) noexcept : UserClient(cluster_addresses) {}
 
   void CommandHandler(const ConnResp &resp) override;
-
   void StatusHandler(ConnReq &req) override;
 
-  error UploadData(TaskData *task_data);
+  error UploadData(const Task::Data &task_data);
 
  private:
   void handleCommandRedirect(const ConnResp &resp);

@@ -13,6 +13,7 @@ add_compile_options(-g)
 
 add_compile_options(-Wpedantic -Wall -Wextra -Wshadow)
 add_compile_options(-Wno-unused-parameter -Wno-unused-function)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 if(ENABLE_DEBUG)
   add_compile_definitions(DEBUG)

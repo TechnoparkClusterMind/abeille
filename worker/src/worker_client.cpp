@@ -1,8 +1,5 @@
 #include "worker/include/worker_client.hpp"
 
-#include <chrono>
-#include <vector>
-
 #include "user/include/data_processor.hpp"
 #include "utils/include/convert.hpp"
 #include "utils/include/logger.hpp"
@@ -30,20 +27,21 @@ void Client::CommandHandler(const ConnResp &resp) {
 }
 
 void Client::handleCommandAssign(const ConnResp &resp) {
-  if (resp.task_id() == 0) {
-    LOG_ERROR("got assigned zero task");
-  } else {
-    task_id_ = resp.task_id();
-    status_ = WORKER_STATUS_BUSY;
-    LOG_INFO("got assigned [%llu] task", resp.task_id());
+  if (resp.task_id().client_id() == 0) {
+    LOG_ERROR("client id is zero");
+    return;
   }
+
+  task_id_ = resp.task_id();
+  status_ = WORKER_STATUS_BUSY;
+  LOG_INFO("got assigned [%llu] task", resp.task_id());
 }
 
 void Client::handleCommandProcess(const ConnResp &resp) {
-  if (!resp.has_task_data()) {
-    LOG_ERROR("got asked to process null data");
+  if (resp.task_data().empty()) {
+    LOG_ERROR("empty task data");
   } else {
-    std::thread(&Client::processData, this, resp.task_data()).detach();
+    std::thread(&Client::processTaskData, this, resp.task_data()).detach();
   }
 }
 
@@ -55,11 +53,16 @@ void Client::handleCommandRedirect(const ConnResp &resp) {
   connect();
 }
 
-void Client::processData(const TaskData &task_data) {
+void Client::processTaskData(const Bytes &task_data) {
   LOG_INFO("processing data...");
-  task_result_ = new TaskResult();
-  abeille::user::ProcessData(task_data, task_result_);
+
+  Task::Data td;
+  td.ParseFromString(task_data);
+  Task::Result ts;
+  abeille::user::ProcessData(td, ts);
   LOG_INFO("finished processing data");
+  LOG_DEBUG("result = [%d]", ts.result());
+  ts.SerializeToString(&task_result_);
   status_ = WORKER_STATUS_COMPLETED;
 }
 
@@ -76,8 +79,10 @@ void Client::StatusHandler(ConnReq &req) {
 
 void Client::handleStatusCompleted(ConnReq &req) {
   status_ = WORKER_STATUS_IDLE;
-  req.set_task_id(task_id_);
-  req.set_allocated_task_result(task_result_);
+  auto task_state = new TaskState;
+  task_state->set_allocated_task_id(new TaskID(task_id_));
+  task_state->set_task_result(task_result_);
+  req.set_allocated_task_state(task_state);
 }
 
 }  // namespace worker

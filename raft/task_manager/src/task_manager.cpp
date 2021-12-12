@@ -8,44 +8,38 @@
 namespace abeille {
 namespace raft {
 
-error TaskManager::UploadData(const TaskData &task_data, uint64_t &task_id) {
-  auto task = new Task();
-  task->set_allocated_task_data(new TaskData(task_data));
-  task->set_id(last_task_id_);
+error TaskManager::UploadTaskData(const Bytes &task_data, const TaskID &task_id) {
+  auto task_wrapper = new TaskWrapper();
+  task_wrapper->set_task_data(task_data);
+  task_wrapper->set_allocated_task_id(new TaskID(task_id));
 
   Entry entry;
   entry.set_command(RAFT_COMMAND_ADD);
 
   uint64_t worker_id = 0;
   auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
-  error err = svc->AssignTask(last_task_id_, worker_id);
-
-  auto add_request = new AddRequest();
+  error err = svc->AssignTask(task_id, worker_id);
   if (!err.ok()) {
-    LOG_DEBUG(err.what().c_str());
-    // add_request->set_to(TASK_STATUS_UNASSIGNED);
-  } else {
-    LOG_INFO("successfully assigned task#[%llu] to [%s]", last_task_id_,
-             uint2address(worker_id).c_str());
-    task->set_worker_id(worker_id);
-    add_request->set_to(TASK_STATUS_ASSIGNED);
+    return err.what();
   }
 
-  entry.set_allocated_add_request(add_request);
-  entry.set_allocated_task(task);
-  entry.set_term(core_->raft_->GetTerm());
+  auto add_request = new AddRequest();
+  LOG_DEBUG("assigned task#[%llu] to [%s]", task_id.number(), uint2address(worker_id).c_str());
+  task_wrapper->set_worker_id(worker_id);
+  add_request->set_to(TASK_STATUS_ASSIGNED);
 
-  task_id = last_task_id_;
-  ++last_task_id_;
+  entry.set_allocated_add_request(add_request);
+  entry.set_allocated_task_wrapper(task_wrapper);
+  entry.set_term(core_->raft_->GetTerm());
 
   core_->raft_pool_->AppendAll(entry);
 
   return error();
 }
 
-error TaskManager::ProcessTask(const Task &task) {
+error TaskManager::ProcessTask(const TaskWrapper &task_wrapper) {
   auto svc = static_cast<WorkerServiceImpl *>(core_->worker_service_.get());
-  error err = svc->ProcessTask(task);
+  error err = svc->ProcessTask(task_wrapper);
   return err;
 }
 

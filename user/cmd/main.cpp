@@ -33,7 +33,9 @@ void RunCLI() {
     }
     linenoise::AddHistory(line.c_str());
   }
-  Shutdown();
+  if (!shutdown) {
+    Shutdown();
+  }
 }
 
 void SignalHandler(int signal) { shutdown = true; }
@@ -58,16 +60,13 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  wrapper.user_client.SetClusterAddresses(
-      ClientConfig::Instance().cluster_addresses);
+  wrapper.user_client.SetClusterAddresses(ClientConfig::Instance().cluster_addresses);
 
   std::signal(SIGINT, SignalHandler);
   std::thread(ListenShutdown).detach();
 
-  std::thread([] {
-    wrapper.RunUserClient();
-    RunCLI();
-  }).join();
+  wrapper.RunUserClient();
+  std::thread([] { RunCLI(); }).join();
 
   return 0;
 }

@@ -23,8 +23,8 @@ class Service : public Svc {
   using ConnectStream = grpc::ServerReaderWriter<ConnResp, ConnReq>;
 
   virtual void ConnectHandler(uint64_t client_id) {}
-  virtual void CommandHandler(uint64_t client_id, ConnResp *resp) = 0;
-  virtual void StatusHandler(uint64_t client_id, const ConnReq *req) = 0;
+  virtual void CommandHandler(uint64_t client_id, ConnResp &resp) = 0;
+  virtual void StatusHandler(uint64_t client_id, const ConnReq &req) = 0;
   virtual void DisconnectHandler(uint64_t client_id) {}
 
  private:
@@ -35,14 +35,14 @@ class Service : public Svc {
     ConnectHandler(client_id);
     LOG_INFO("connection request from [%s]", address.c_str());
 
-    auto req = std::make_unique<ConnReq>();
-    while (stream->Read(req.get())) {
-      auto resp = std::make_unique<ConnResp>();
-      CommandHandler(client_id, resp.get());
+    ConnReq req;
+    while (stream->Read(&req)) {
+      ConnResp resp;
+      CommandHandler(client_id, resp);
 
-      StatusHandler(client_id, req.get());
+      StatusHandler(client_id, req);
 
-      bool ok = stream->Write(*resp);
+      bool ok = stream->Write(resp);
       if (!ok) {
         break;
       }
